@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
+import { registrationStyle as styles } from '../styles/style';
+
 const RegistrationScreen = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -52,44 +54,5 @@ const RegistrationScreen = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  title: {
-    fontSize: 35,
-    marginBottom: 75,
-    marginTop: -100,
-
-  },
-
-  input: {
-    width: '75%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 16,
-    paddingLeft: 8,
-    borderRadius: 8,
-    backgroundColor: '#F4EAFF',
-  },
-  button: {
-    width: '25%',
-    height: 40,
-    backgroundColor: 'blue',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-});
 
 export default RegistrationScreen;
