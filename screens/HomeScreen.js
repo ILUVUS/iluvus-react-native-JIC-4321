@@ -76,15 +76,15 @@ function communityScreen() {
 
         <View style={communityStyles.buttonContainer}>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-            <Image source={loginImage} style={styles.image} />
+                <Image source={loginImage} style={communityStyles.communityImage} />
                 <Text style={communityStyles.buttonText}>Group A</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Image source={loginImage} style={styles.image} />
+                <Image source={loginImage} style={communityStyles.communityImage} />
                 <Text style={communityStyles.buttonText}>Group B</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Image source={loginImage} style={styles.image} />
+                <Image source={loginImage} style={communityStyles.communityImage} />
                 <Text style={communityStyles.buttonText}>Group C</Text>
             </TouchableOpacity>
         </View>
@@ -101,11 +101,11 @@ function communityScreen() {
                 <Text style={communityStyles.buttonText}>Group D</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Image source={loginImage} style={styles.image} />
+                <Image source={loginImage} style={communityStyles.communityImage} />
                 <Text style={communityStyles.buttonText}>Group E</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Image source={loginImage} style={styles.image} />
+                <Image source={loginImage} style={communityStyles.communityImage} />
                 <Text style={communityStyles.buttonText} color="#250059" >Group F</Text>
             </TouchableOpacity>
         </View>

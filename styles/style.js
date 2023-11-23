@@ -155,7 +155,8 @@ export const communityStyles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   communityImage: {
-    width:20,
-    height: 20,
+    width:60,
+    height: 60,
+    marginBottom: 5,
   }
 });
