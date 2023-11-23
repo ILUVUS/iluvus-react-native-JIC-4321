@@ -107,7 +107,7 @@ export const homeStyle = StyleSheet.create({
 export const communityStyles = StyleSheet.create({
     header: {
     fontWeight: 'bold',
-    color: 'purple',
+    color: '#250059',
     fontSize: 30,
     },
     input: {
