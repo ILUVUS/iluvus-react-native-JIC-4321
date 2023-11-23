@@ -55,7 +55,7 @@ function communityScreen() {
 
         <View style={communityStyles.buttonContainer}>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Icon name="plus-square" size={50} color="#250059" />
+                <Icon name="plus" size={50} color="#250059" />
                 <Text style={communityStyles.buttonText}>New Group</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
@@ -97,7 +97,7 @@ function communityScreen() {
 
         <View style={communityStyles.buttonContainer}>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Image source={loginImage} style={styles.image} />
+                <Image source={loginImage} style={communityStyles.communityImage} />
                 <Text style={communityStyles.buttonText}>Group D</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
