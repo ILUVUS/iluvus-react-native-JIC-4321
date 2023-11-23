@@ -9,6 +9,7 @@ import { homeStyle as styles } from '../styles/style';
 import { communityStyles} from '../styles/style';
 import { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { SearchBar } from 'react-native-elements';
 
 const Stack = createStackNavigator();
 
@@ -30,17 +31,24 @@ function communityScreen() {
         Alert.alert("Search", "Searching for:")
         setSearchTerm("")
   }
+
+  const updateSearch = (searchText) => {
+    setSearch({searchText});
+  }
+
   return (
     <View>
-        <View style={communityStyles.searchContainer}>
-             <TextInput
-                style={communityStyles.input}
-                //value=input
-                onChangeText={(text) => setSearchTerm(text)}
-                placeholder='Explore Communities'
-                />
+          <SearchBar 
+            placeholder='Explore Communities'
+            onChangeText={this.updateSearch}
+            value = {searchText}
+            containerStyle={{ backgroundColor: '#F4EAFF', borderBottomColor: '#F4EAFF', borderTopColor: '#F4EAFF' }}
+            inputStyle={{ backgroundColor: '#F4EAFF', color: 'purple' }}
+            placeholderTextColor='gray'
+            searchIcon={{ color: '#F4EAFF' }}
+            clearIcon={{ color: '#F4EAFF' }}
+          />
 
-        </View>
         <View style={communityStyles.buttonContainer}>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
                 <Icon name="plus-square" size={50} color="black" />
@@ -80,7 +88,7 @@ function communityScreen() {
         </View>
         
         </View>
-  )
+  );
 }
 
 function profileScreen() {

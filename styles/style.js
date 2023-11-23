@@ -125,6 +125,7 @@ export const communityStyles = StyleSheet.create({
     width: 92,
     height: 92,
     backgroundColor: '#F4EAFF',
+    borderColor: 'gray',
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
@@ -138,6 +139,9 @@ export const communityStyles = StyleSheet.create({
     paddingHorizontal: 20, 
     width: '100%',
   },
+    searchBar: {
+      backgroundColor: '#F4EAFF'
+    },
     searchContainer: {
     justifyContent: "center",
     alignItems: "center",
