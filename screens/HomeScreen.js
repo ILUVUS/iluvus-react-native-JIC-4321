@@ -1,12 +1,13 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { homeStyle as styles } from '../styles/style';
-
+import { communityStyles} from '../styles/style';
+import { useState } from 'react';
 const Stack = createStackNavigator();
 
 
@@ -20,11 +21,60 @@ function homeScreen() {
 }
 
 function communityScreen() {
+  const [searchText, setSearchText] = useState('');
+
+  const handleSearch = () => {
+        // search logic
+        Alert.alert("Search", "Searching for:")
+        setSearchTerm("")
+  }
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Community!</Text>
-    </View>
-  );
+    <View>
+        <View style={communityStyles.searchContainer}>
+             <TextInput
+                style={communityStyles.input}
+                //value=input
+                onChangeText={(text) => setSearchTerm(text)}
+                placeholder='Explore Communities'
+                />
+        </View>
+        <View style={communityStyles.buttonContainer}>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Text style={communityStyles.buttonText}>New Group</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Text style={communityStyles.buttonText}>My Groups</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Text style={communityStyles.buttonText}>My Friends</Text>
+            </TouchableOpacity>
+        </View>
+        <View>
+            <Text style={communityStyles.header}>
+                Popular
+            </Text>
+        </View>
+
+        <View>
+          <Text>
+            popular communities
+          </Text>
+        </View>
+
+        <View>
+            <Text style={communityStyles.header}>
+                Developing
+            </Text>
+        </View>
+
+        <View>
+          <Text>
+            popular communities
+          </Text>
+        </View>
+        
+        </View>
+  )
 }
 
 function profileScreen() {

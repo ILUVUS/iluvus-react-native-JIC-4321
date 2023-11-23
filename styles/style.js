@@ -103,3 +103,51 @@ export const homeStyle = StyleSheet.create({
       justifyContent: 'center',
     },
   });
+
+export const communityStyles = StyleSheet.create({
+    header: {
+    fontWeight: 'bold',
+    color: 'purple',
+    fontSize: 30,
+    },
+    input: {
+    width: 300,
+    height: 44,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 16,
+    paddingLeft: 8,
+    borderRadius: 10,
+    fontSize: 15,
+    backgroundColor: '#F4EAFF',
+  },
+    button: {
+    width: 92,
+    height: 50,
+    backgroundColor: '#F4EAFF',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 20,
+  },
+    buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    paddingHorizontal: 20, 
+    width: '100%',
+  },
+    searchContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    marginTop: 20,
+    height: 50,
+  },
+    searchInput: {
+    width: "100%",
+    height: "100%",
+    paddingHorizontal: 30,
+  },
+});
