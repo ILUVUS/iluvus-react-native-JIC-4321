@@ -9,8 +9,8 @@ import { homeStyle as styles } from '../styles/style';
 import { communityStyles} from '../styles/style';
 import { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { SearchBar } from 'react-native-elements';
-
+import { SearchBar, Image} from 'react-native-elements';
+import loginImage from '../assets/images/loginImage.png';
 const Stack = createStackNavigator();
 
 
@@ -42,7 +42,11 @@ function communityScreen() {
             placeholder='Explore Communities'
             onChangeText={this.updateSearch}
             value = {searchText}
-            containerStyle={{ backgroundColor: '#F4EAFF', borderBottomColor: '#F4EAFF', borderTopColor: '#F4EAFF' }}
+            containerStyle={{ 
+              backgroundColor: '#F4EAFF', 
+              borderBottomColor: '#F4EAFF', 
+              borderTopColor: '#F4EAFF',
+            }}
             inputStyle={{ backgroundColor: '#F4EAFF', color: 'purple' }}
             placeholderTextColor='gray'
             searchIcon={{ color: '#F4EAFF' }}
@@ -51,28 +55,38 @@ function communityScreen() {
 
         <View style={communityStyles.buttonContainer}>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Icon name="plus-square" size={50} color="black" />
+                <Icon name="plus-square" size={50} color="#250059" />
                 <Text style={communityStyles.buttonText}>New Group</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Icon name="users" size={50} color="black" />
+                <Icon name="users" size={50} color="#250059" />
                 <Text style={communityStyles.buttonText}>My Groups</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Icon name="child" size={50} color="black" />
+                <Icon name="child" size={50} color="#250059" />
                 <Text style={communityStyles.buttonText}>My Friends</Text>
             </TouchableOpacity>
         </View>
+
         <View>
             <Text style={communityStyles.header}>
                 Popular
             </Text>
         </View>
 
-        <View>
-          <Text>
-            popular communities
-          </Text>
+        <View style={communityStyles.buttonContainer}>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+            <Image source={loginImage} style={styles.image} />
+                <Text style={communityStyles.buttonText}>Group A</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Image source={loginImage} style={styles.image} />
+                <Text style={communityStyles.buttonText}>Group B</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Image source={loginImage} style={styles.image} />
+                <Text style={communityStyles.buttonText}>Group C</Text>
+            </TouchableOpacity>
         </View>
 
         <View>
@@ -81,10 +95,19 @@ function communityScreen() {
             </Text>
         </View>
 
-        <View>
-          <Text>
-            popular communities
-          </Text>
+        <View style={communityStyles.buttonContainer}>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Image source={loginImage} style={styles.image} />
+                <Text style={communityStyles.buttonText}>Group D</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Image source={loginImage} style={styles.image} />
+                <Text style={communityStyles.buttonText}>Group E</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Image source={loginImage} style={styles.image} />
+                <Text style={communityStyles.buttonText} color="#250059" >Group F</Text>
+            </TouchableOpacity>
         </View>
         
         </View>
