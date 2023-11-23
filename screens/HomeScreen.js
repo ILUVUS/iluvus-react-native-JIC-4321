@@ -8,6 +8,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { homeStyle as styles } from '../styles/style';
 import { communityStyles} from '../styles/style';
 import { useState } from 'react';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+
 const Stack = createStackNavigator();
 
 
@@ -40,12 +42,15 @@ function communityScreen() {
         </View>
         <View style={communityStyles.buttonContainer}>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Icon name="plus-square" size={50} color="black" />
                 <Text style={communityStyles.buttonText}>New Group</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Icon name="users" size={50} color="black" />
                 <Text style={communityStyles.buttonText}>My Groups</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Icon name="child" size={50} color="black" />
                 <Text style={communityStyles.buttonText}>My Friends</Text>
             </TouchableOpacity>
         </View>

@@ -123,7 +123,7 @@ export const communityStyles = StyleSheet.create({
   },
     button: {
     width: 92,
-    height: 50,
+    height: 92,
     backgroundColor: '#F4EAFF',
     borderRadius: 8,
     justifyContent: 'center',
@@ -134,7 +134,7 @@ export const communityStyles = StyleSheet.create({
     buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    marginTop: 0,
     paddingHorizontal: 20, 
     width: '100%',
   },
