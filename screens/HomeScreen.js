@@ -39,6 +39,7 @@ function communityScreen() {
                 onChangeText={(text) => setSearchTerm(text)}
                 placeholder='Explore Communities'
                 />
+
         </View>
         <View style={communityStyles.buttonContainer}>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
