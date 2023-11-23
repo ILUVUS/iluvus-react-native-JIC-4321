@@ -4,12 +4,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import { homeStyle as styles } from '../styles/style';
 import { communityStyles} from '../styles/style';
 import { useState } from 'react';
-const Stack = createStackNavigator();
 
+const Stack = createStackNavigator();
 
 // Tab navigation bar for the app
 function homeScreen() {
@@ -28,6 +27,13 @@ function communityScreen() {
         Alert.alert("Search", "Searching for:")
         setSearchTerm("")
   }
+
+  const handleNewGroup = () => {
+    // Navigate to the 'SetupCommunity' screen when the "New Group" button is pressed
+    navigation.navigate('SetupCommunity');
+
+  }
+
   return (
     <View>
         <View style={communityStyles.searchContainer}>
@@ -39,7 +45,7 @@ function communityScreen() {
                 />
         </View>
         <View style={communityStyles.buttonContainer}>
-            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+            <TouchableOpacity style={communityStyles.button} onPress={handleNewGroup}>
                 <Text style={communityStyles.buttonText}>New Group</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>

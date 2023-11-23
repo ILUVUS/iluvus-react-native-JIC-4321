@@ -4,8 +4,8 @@ import RegistrationScreen from './login/simpleRegistration';
 import HomeScreen from './screens/HomeScreen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import { appStyle as styles } from './styles/style';
+import SetupCommunity from './screens/SetupCommunity';
 
 const Stack = createStackNavigator();
 
@@ -13,7 +13,7 @@ export default function App() {
   return (
     <NavigationContainer>
 
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="SetupCommunity">
         <Stack.Screen 
         name="Login" 
         component={LoginScreen} 
@@ -37,6 +37,15 @@ export default function App() {
           title: "Home",
           headerShown:false
         }}/>
+
+        <Stack.Screen 
+          name="SetupCommunity" 
+          component={SetupCommunity} 
+          options={{
+            title: "SetupCommunity",
+            headerShown:true
+          }}/>
+
       </Stack.Navigator>
 
 
