@@ -47,6 +47,11 @@ function communityScreen() {
               borderBottomColor: '#F4EAFF', 
               borderTopColor: '#F4EAFF',
             }}
+            inputContainerStyle = {{
+              backgroundColor: '#250059', 
+              borderBottomColor: '#F4EAFF', 
+              borderTopColor: '#F4EAFF',
+            }}
             inputStyle={{ backgroundColor: '#F4EAFF', color: 'purple' }}
             placeholderTextColor='gray'
             searchIcon={{ color: '#F4EAFF' }}
