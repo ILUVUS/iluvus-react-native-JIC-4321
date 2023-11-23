@@ -69,6 +69,10 @@ export const registrationStyle = StyleSheet.create({
     marginTop: -100,
 
   },
+  dropDown: {
+    marginBottom:10,
+    height:10,
+  },
 
   input: {
     width: '75%',

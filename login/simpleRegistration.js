@@ -1,31 +1,84 @@
 // RegistrationScreen.js
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
-
+import {Picker} from '@react-native-picker/picker';
 import { registrationStyle as styles } from '../styles/style';
+import { SelectList } from 'react-native-dropdown-select-list';
 
 const RegistrationScreen = ({ navigation }) => {
-  const [name, setName] = useState('');
+  const [fName, setFname] = useState('');
+  const [lName, setLname] = useState('');
+  const [DOB, setDOB] = useState('');
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
+  const [race, setRace] = useState("");
+  const [gender, setGender] = useState("");
+  const [location, setLocation] = React.useState("");
   const handleRegister = () => {
     // Implement your registration logic here
     // You can send the user details to your backend for processing
 
     // For simplicity, we'll just navigate to a success screen
-    navigation.navigate('RegistrationSuccess');
+    console.log("Binaya Timsina is the best");
+    console.log(gender);
+    console.log(race);
+    navigation.navigate('Home');
   };
+  const Race = [
+    {key: 'White', value: "White"},
+    {key: 'African American', value: "African American"},
+    {key: 'Hispanic', value: "Hispanic"},
+    {key: 'Asian', value: "Asian"},
+    {key: 'American Indian', value: "American Indian"},
+    {key: 'Other', value: "Other"},
+  ];
+  const Gender = [
+    {key: 'Male', value: "Male"},
+    {key: 'Female', value: "Female"},
+    {key: 'Non-Binary', value: "Non-Binary"},
+    {key: 'Other', value: "Other"},
+  ];
 
   return (
     <View style={styles.container}>
+      
       <Text style={styles.title}>Registration</Text>
       <TextInput
         style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={(text) => setName(text)}
+        placeholder="First Name"
+        value={fName}
+        onChangeText={(text) => setFname(text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Last Name"
+        value={lName}
+        onChangeText={(text) => setLname(text)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="DOB in mm-dd-yyyy"
+        value={DOB}
+        onChangeText={(text) => setDOB(text)}
+      />
+      <SelectList
+        data={Race} 
+        setSelected={setRace}
+        value= {race} 
+        boxStyles={{marginBottom: 10, backgroundColor: "#F4EAFF"}}
+        dropdownStyles={{marginBottom: 10, marginRight: 10}}
+        placeholder="Race"
+        maxHeight={75}
+      />
+      <SelectList
+        data={Gender} 
+        setSelected={setGender} 
+        value= {gender}
+        boxStyles={{marginBottom: 10, backgroundColor: "#F4EAFF"}}
+        dropdownStyles={{marginBottom: 10}}
+        placeholder="Gender"
+        maxHeight={75}
       />
       <TextInput
         style={styles.input}
@@ -47,6 +100,14 @@ const RegistrationScreen = ({ navigation }) => {
         onChangeText={(text) => setPassword(text)}
         secureTextEntry
       />
+      <TextInput
+        style={styles.input}
+        placeholder="Location"
+        value={location}
+        onChangeText={(text) => setLocation(text)}
+        secureTextEntry
+      />
+      
 
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Register</Text>
