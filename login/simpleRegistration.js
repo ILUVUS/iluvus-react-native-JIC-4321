@@ -1,6 +1,6 @@
 // RegistrationScreen.js
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { ScrollView, View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import { registrationStyle as styles } from '../styles/style';
 import { SelectList } from 'react-native-dropdown-select-list';
@@ -38,7 +38,7 @@ const RegistrationScreen = ({ navigation }) => {
   ];
 
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>First Name</Text>
       <TextInput
         style={styles.input}
@@ -114,7 +114,7 @@ const RegistrationScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 };
 
