@@ -20,9 +20,6 @@ const RegistrationScreen = ({ navigation }) => {
     // You can send the user details to your backend for processing
 
     // For simplicity, we'll just navigate to a success screen
-    console.log("Binaya Timsina is the best");
-    console.log(gender);
-    console.log(race);
     navigation.navigate('Home');
   };
   const Race = [
