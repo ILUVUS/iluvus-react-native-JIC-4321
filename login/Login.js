@@ -44,12 +44,14 @@ const LoginScreen = () => {
 
         <TextInput
           style={styles.input}
+          placeholderTextColor="#cc9eff"
           placeholder="Username"
           value={username}
           onChangeText={(text) => setUsername(text)}
         />
         <TextInput
           style={styles.input}
+          placeholderTextColor="#cc9eff"
           placeholder="Password"
           secureTextEntry={true}
           value={password}

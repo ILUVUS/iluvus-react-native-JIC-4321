@@ -38,10 +38,13 @@ const RegistrationScreen = ({ navigation }) => {
   ];
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
+    <ScrollView style={styles.scrollContainer}>
+
       <Text style={styles.title}>First Name</Text>
       <TextInput
         style={styles.input}
+        placeholderTextColor="#cc9eff"
         placeholder="First Name"
         value={fName}
         onChangeText={(text) => setFname(text)}
@@ -49,6 +52,7 @@ const RegistrationScreen = ({ navigation }) => {
       <Text style={styles.title}>Last Name</Text>
       <TextInput
         style={styles.input}
+        placeholderTextColor="#cc9eff"
         placeholder="Last Name"
         value={lName}
         onChangeText={(text) => setLname(text)}
@@ -56,31 +60,40 @@ const RegistrationScreen = ({ navigation }) => {
       <Text style={styles.title}>Date of Birth</Text>
       <TextInput
         style={styles.input}
+        placeholderTextColor="#cc9eff"
         placeholder="DOB in mm-dd-yyyy"
         value={DOB}
         onChangeText={(text) => setDOB(text)}
       />
+
+      <Text style={styles.title}>Race</Text>
       <SelectList
         data={Race} 
         setSelected={setRace}
         value= {race} 
-        boxStyles={{marginBottom: 10, backgroundColor: "#F4EAFF", borderColor: '#ddd', left: 20}}
-        dropdownStyles={{marginBottom: 10, marginRight: 10}}
-        placeholder="Race"
+        boxStyles={styles.dropDown}
+        dropdownStyles={styles.dropDownActive}
+        // placeholder="Race"
         maxHeight={75}
+        search={false}
       />
+
+
+<Text style={styles.title}>Gender</Text>
       <SelectList
         data={Gender} 
         setSelected={setGender} 
         value= {gender}
-        boxStyles={{marginBottom: 10, backgroundColor: "#F4EAFF", borderColor: '#ddd', left: 20}}
-        dropdownStyles={{marginBottom: 10}}
-        placeholder="Gender"
+        boxStyles={styles.dropDown}
+        dropdownStyles={styles.dropDownActive}
+        // placeholder="Gender"
         maxHeight={75}
+        search={false}
       />
       <Text style={styles.title}>Email</Text>
       <TextInput
         style={styles.input}
+        placeholderTextColor="#cc9eff"
         placeholder="Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
@@ -89,6 +102,7 @@ const RegistrationScreen = ({ navigation }) => {
       <Text style={styles.title}>Username</Text>
       <TextInput
         style={styles.input}
+        placeholderTextColor="#cc9eff"
         placeholder="Username"
         value={username}
         onChangeText={(text) => setUsername(text)}
@@ -96,6 +110,7 @@ const RegistrationScreen = ({ navigation }) => {
       <Text style={styles.title}>Password</Text>
       <TextInput
         style={styles.input}
+        placeholderTextColor="#cc9eff"
         placeholder="Password"
         value={password}
         onChangeText={(text) => setPassword(text)}
@@ -104,17 +119,19 @@ const RegistrationScreen = ({ navigation }) => {
       <Text style={styles.title}>Location</Text>
       <TextInput
         style={styles.input}
+        placeholderTextColor="#cc9eff"
         placeholder="Location"
         value={location}
         onChangeText={(text) => setLocation(text)}
         secureTextEntry
       />
       
-
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
+
     </ScrollView>
+    </View>
   );
 };
 
