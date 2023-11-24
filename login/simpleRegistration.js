@@ -42,20 +42,21 @@ const RegistrationScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      
-      <Text style={styles.title}>Registration</Text>
+      <Text style={styles.title}>First Name</Text>
       <TextInput
         style={styles.input}
         placeholder="First Name"
         value={fName}
         onChangeText={(text) => setFname(text)}
       />
+      <Text style={styles.title}>Last Name</Text>
       <TextInput
         style={styles.input}
         placeholder="Last Name"
         value={lName}
         onChangeText={(text) => setLname(text)}
       />
+      <Text style={styles.title}>Date of Birth</Text>
       <TextInput
         style={styles.input}
         placeholder="DOB in mm-dd-yyyy"
@@ -66,7 +67,7 @@ const RegistrationScreen = ({ navigation }) => {
         data={Race} 
         setSelected={setRace}
         value= {race} 
-        boxStyles={{marginBottom: 10, backgroundColor: "#F4EAFF"}}
+        boxStyles={{marginBottom: 10, backgroundColor: "#F4EAFF", borderColor: '#ddd', left: 20}}
         dropdownStyles={{marginBottom: 10, marginRight: 10}}
         placeholder="Race"
         maxHeight={75}
@@ -75,11 +76,12 @@ const RegistrationScreen = ({ navigation }) => {
         data={Gender} 
         setSelected={setGender} 
         value= {gender}
-        boxStyles={{marginBottom: 10, backgroundColor: "#F4EAFF"}}
+        boxStyles={{marginBottom: 10, backgroundColor: "#F4EAFF", borderColor: '#ddd', left: 20}}
         dropdownStyles={{marginBottom: 10}}
         placeholder="Gender"
         maxHeight={75}
       />
+      <Text style={styles.title}>Email</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -87,12 +89,14 @@ const RegistrationScreen = ({ navigation }) => {
         onChangeText={(text) => setEmail(text)}
         keyboardType="email-address"
       />
+      <Text style={styles.title}>Username</Text>
       <TextInput
         style={styles.input}
         placeholder="Username"
         value={username}
         onChangeText={(text) => setUsername(text)}
       />
+      <Text style={styles.title}>Password</Text>
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -100,6 +104,7 @@ const RegistrationScreen = ({ navigation }) => {
         onChangeText={(text) => setPassword(text)}
         secureTextEntry
       />
+      <Text style={styles.title}>Location</Text>
       <TextInput
         style={styles.input}
         placeholder="Location"

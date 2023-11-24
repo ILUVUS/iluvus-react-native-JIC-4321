@@ -21,11 +21,12 @@ export const loginStyle = StyleSheet.create({
       width: 92,
       height: 50,
       backgroundColor: '#FFE79B', // Set button background color here
-      borderRadius: 8,
+      borderRadius: 30,
       justifyContent: 'center',
       alignItems: 'center',
       marginTop: 40,
       marginBottom: 80,
+      color: '#40128B',
     },
     forgotPassword: {
       justifyContent: 'center',
@@ -54,47 +55,55 @@ export const loginStyle = StyleSheet.create({
       height: 200,
       marginBottom: 16,
     },
+    buttonText: {
+      color: '#40128B',
+      fontSize: 16,
+    },
+  
   });
 
 export const registrationStyle = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  title: {
-    fontSize: 35,
-    marginBottom: 75,
-    marginTop: -100,
-
+    justifyContent: 'top',
+    alignItems: 'start', 
+    padding: 10,
   },
   dropDown: {
+    borderColor: '#ddd',
     marginBottom:10,
     height:10,
   },
+  title: { 
+    fontSize: 15,
+    marginBottom: 5,
+    left: 20, 
+   },
 
   input: {
-    width: '75%',
+    width: '90%',
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#ddd',
     borderWidth: 1,
-    marginBottom: 16,
-    paddingLeft: 8,
     borderRadius: 8,
+    paddingLeft: 8,
+    marginBottom: 10,
     backgroundColor: '#F4EAFF',
+    left: 20,
+  
   },
   button: {
     width: '25%',
     height: 40,
-    backgroundColor: 'blue',
-    borderRadius: 8,
+    backgroundColor: '#FFE79B',
+    borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 16,
+    left: 140,
   },
   buttonText: {
-    color: 'white',
+    color: '#40128B',
     fontSize: 16,
   },
 });

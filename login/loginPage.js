@@ -27,7 +27,7 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <Image source={loginImage} style={styles.image} />
-      <Text style={[styles.title, { color: 'blue' }]}>ILUVUS</Text>
+      <Text style={[styles.title, { color: '#40128B' }]}>ILUVUS</Text>
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -45,10 +45,10 @@ const LoginScreen = () => {
         <Text style={styles.buttonText}>Sign in</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleRegistration}>
-        <Text style={styles.forgotPassword}>Register</Text>
+        <Text style={styles.forgotPassword}>Create an account</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={handleSignin}>
-        <Text style={styles.forgotPassword}>Forgot Password</Text>
+        <Text style={styles.forgotPassword}>Forgot Password ?</Text>
       </TouchableOpacity>
       
     </View>

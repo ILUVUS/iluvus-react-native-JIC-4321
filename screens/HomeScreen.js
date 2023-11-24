@@ -78,7 +78,7 @@ export default function HomeScreen() {
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: '#250059',
+          tabBarActiveTintColor: '#40128B',
           tabBarInactiveTintColor: 'gray',
         })}
       >
