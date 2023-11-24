@@ -1,14 +1,14 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { homeStyle as styles } from '../styles/style';
 import { communityStyles} from '../styles/style';
+import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 
 const Stack = createStackNavigator();
+
+
 
 // Tab navigation bar for the app
 function homeScreen() {
@@ -27,7 +27,8 @@ function communityScreen() {
         Alert.alert("Search", "Searching for:")
         setSearchTerm("")
   }
-
+  const navigation = useNavigation();
+  
   const handleNewGroup = () => {
     // Navigate to the 'SetupCommunity' screen when the "New Group" button is pressed
     navigation.navigate('SetupCommunity');
