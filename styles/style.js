@@ -68,6 +68,7 @@ export const registrationStyle = StyleSheet.create({
     justifyContent: 'top',
     alignItems: 'start', 
     padding: 10,
+    backgroundColor: 'white',
   },
   dropDown: {
     borderColor: '#ddd',
