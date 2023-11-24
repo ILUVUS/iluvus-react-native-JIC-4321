@@ -122,8 +122,8 @@ export const communityStyles = StyleSheet.create({
     backgroundColor: '#F4EAFF',
   },
     button: {
-    width: 92,
-    height: 92,
+    width: 75,
+    height: 75,
     backgroundColor: '#F4EAFF',
     borderColor: 'gray',
     borderRadius: 8,
@@ -155,8 +155,8 @@ export const communityStyles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   communityImage: {
-    width:60,
-    height: 60,
+    width:50,
+    height: 50,
     marginBottom: 5,
   }
 });
