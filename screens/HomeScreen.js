@@ -5,7 +5,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity} from 'react-native
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { homeStyle as styles } from '../styles/style';
+import { appStyle as styles } from '../styles/style';
 import { communityStyles} from '../styles/style';
 import { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -37,38 +37,40 @@ function communityScreen() {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
           <SearchBar 
             placeholder='Explore Communities'
             onChangeText={this.updateSearch}
             value = {searchText}
             containerStyle={{ 
+              backgroundColor: '#ddddd', 
+              borderBottomColor: 'white', 
+              borderTopColor: 'white',
+              width: '100%',
+            }}
+            inputContainerStyle = {{
               backgroundColor: '#F4EAFF', 
               borderBottomColor: '#F4EAFF', 
               borderTopColor: '#F4EAFF',
-            }}
-            inputContainerStyle = {{
-              backgroundColor: '#250059', 
-              borderBottomColor: '#F4EAFF', 
-              borderTopColor: '#F4EAFF',
+              borderRadius: 20,
             }}
             inputStyle={{ backgroundColor: '#F4EAFF', color: 'purple' }}
-            placeholderTextColor='gray'
-            searchIcon={{ color: '#F4EAFF' }}
+            placeholderTextColor='#6B4EA2'
+            searchIcon={{ color: '#6B4EA2', size: 25 }}
             clearIcon={{ color: '#F4EAFF' }}
           />
 
         <View style={communityStyles.buttonContainer}>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Icon name="plus" size={50} color="#250059" />
+                <Icon name="plus" size={50} color="#40128B" />
                 <Text style={communityStyles.buttonText}>New Group</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Icon name="users" size={50} color="#250059" />
+                <Icon name="users" size={50} color="#40128B" />
                 <Text style={communityStyles.buttonText}>My Groups</Text>
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
-                <Icon name="child" size={50} color="#250059" />
+                <Icon name="child" size={50} color="#40128B" />
                 <Text style={communityStyles.buttonText}>My Friends</Text>
             </TouchableOpacity>
         </View>
@@ -111,7 +113,22 @@ function communityScreen() {
             </TouchableOpacity>
             <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
                 <Image source={loginImage} style={communityStyles.communityImage} />
-                <Text style={communityStyles.buttonText} color="#250059" >Group F</Text>
+                <Text style={communityStyles.buttonText} color="#40128B" >Group F</Text>
+            </TouchableOpacity>
+        </View>
+
+        <View style={communityStyles.buttonContainer}>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Image source={loginImage} style={communityStyles.communityImage} />
+                <Text style={communityStyles.buttonText}>Group G</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Image source={loginImage} style={communityStyles.communityImage} />
+                <Text style={communityStyles.buttonText}>Group H</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={communityStyles.button} onPress={handleSearch}>
+                <Image source={loginImage} style={communityStyles.communityImage} />
+                <Text style={communityStyles.buttonText} color="#40128B" >Group I</Text>
             </TouchableOpacity>
         </View>
         
@@ -170,7 +187,7 @@ export default function HomeScreen() {
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: '#250059',
+          tabBarActiveTintColor: '#40128B',
           tabBarInactiveTintColor: 'gray',
         })}
       >

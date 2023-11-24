@@ -3,9 +3,9 @@ import { StyleSheet } from 'react-native';
 export const appStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'start',
+    padding: 10,
+    backgroundColor: 'white',
   },
 });
 
@@ -98,7 +98,7 @@ export const registrationStyle = StyleSheet.create({
 export const homeStyle = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: 'white',
       alignItems: 'center',
       justifyContent: 'center',
     },
@@ -107,8 +107,9 @@ export const homeStyle = StyleSheet.create({
 export const communityStyles = StyleSheet.create({
     header: {
     fontWeight: 'bold',
-    color: '#250059',
+    color: '#40128B',
     fontSize: 30,
+    left: 10,
     },
     input: {
     width: 300,
@@ -126,7 +127,7 @@ export const communityStyles = StyleSheet.create({
     height: 75,
     backgroundColor: '#F4EAFF',
     borderColor: 'gray',
-    borderRadius: 8,
+    borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 20,
@@ -140,7 +141,7 @@ export const communityStyles = StyleSheet.create({
     width: '100%',
   },
     searchBar: {
-      backgroundColor: '#F4EAFF'
+      backgroundColor: '#F4EAFF',
     },
     searchContainer: {
     justifyContent: "center",
@@ -158,5 +159,9 @@ export const communityStyles = StyleSheet.create({
     width:50,
     height: 50,
     marginBottom: 5,
-  }
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 12,
+  },
 });
