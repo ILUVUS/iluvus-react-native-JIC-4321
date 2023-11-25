@@ -1,9 +1,11 @@
 // RegistrationScreen.js
 import React, { useState } from 'react';
 import { ScrollView, View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import {Picker} from '@react-native-picker/picker';
 import { registrationStyle as styles } from '../styles/style';
 import { SelectList } from 'react-native-dropdown-select-list';
+import axios from "axios";
+import { BASE_URL} from '@env';
+// import { useRouter } from "next/navigation";
 
 const RegistrationScreen = ({ navigation }) => {
   const [fName, setFname] = useState('');
@@ -15,13 +17,90 @@ const RegistrationScreen = ({ navigation }) => {
   const [race, setRace] = useState("");
   const [gender, setGender] = useState("");
   const [location, setLocation] = React.useState("");
-  const handleRegister = () => {
-    // Implement your registration logic here
-    // You can send the user details to your backend for processing
+  // const [msg, setMsg] = useState("");
+  // const router = useRouter();
 
-    // For simplicity, we'll just navigate to a success screen
-    navigation.navigate('Home');
-  };
+// 
+
+
+  // const handleRegister = async () => {
+  //   try {
+  //     const response = await axios.post(`${BASE_URL}/user/create`,  {
+  //       "username": "exampleUsername",
+  //       "email": "example@email.com",
+  //       "password": "examplePassword",
+  //       "fname": "John",
+  //       "lname": "Doe",
+  //       "gender": "Male",
+  //       "dob": "1990-01-01",
+  //       "race": "Caucasian",
+  //       "location": "123 Street, City, GA, US, 00000",
+  //       "interests": "",
+  //       "education": "",
+  //       "work": "",
+  //       "skills": "",
+  //       "hobbies": "",
+  //       "posts": "",
+  //       "friends": "",
+  //       "groups": ""
+  //     }, {
+  //       headers: {
+  //         'accept': 'application/json',
+  //         // Add other headers as needed
+  //       },
+  //   });
+  //     if (response.data) {
+  //       console.log("POST request response:", response.data);
+  //       setMsg(response.data);
+  //       setTimeout(() => {
+  //         router.push("/");
+  //       }, 1000); // wait 1s to make it cool
+  //     }
+  //   } catch (error) {
+  //     if (error.response) {
+  //       console.error("Error sending POST request:", error.response.data);
+  //       setMsg(error.response.data);
+  //     } else {
+  //       console.error("Error sending POST request:", error.message);
+  //       setMsg("An error occurred while processing your request.");
+  //     }
+  //   }
+  // };
+
+
+  const handleRegister = () => {
+    axios({
+      method: "POST",
+      url: `${BASE_URL}/user/create`,
+      data: {
+        "username": String(username),
+        "email": String(email),
+        "password": String(password),
+        "fname": String(fName),
+        "lname": String(lName),
+        "gender": String(gender),
+        "dob": String(DOB),
+        "race": String(Race),
+        "location": String(location),
+        "interests": "",
+        "education": "",
+        "work": "",
+        "skills": "",
+        "hobbies": "",
+        "posts": "",
+        "friends": "",
+        "groups": ""
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then(res => {
+      console.log(res.data);
+      navigation.navigate("Home");
+    }
+      
+      ).catch(err => console.log(err))
+  }
   const Race = [
     {key: 'White', value: "White"},
     {key: 'African American', value: "African American"},
@@ -61,7 +140,7 @@ const RegistrationScreen = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholderTextColor="#cc9eff"
-        placeholder="DOB in mm-dd-yyyy"
+        placeholder="mm-dd-yyyy"
         value={DOB}
         onChangeText={(text) => setDOB(text)}
       />
@@ -79,7 +158,7 @@ const RegistrationScreen = ({ navigation }) => {
       />
 
 
-<Text style={styles.title}>Gender</Text>
+      <Text style={styles.title}>Gender</Text>
       <SelectList
         data={Gender} 
         setSelected={setGender} 
