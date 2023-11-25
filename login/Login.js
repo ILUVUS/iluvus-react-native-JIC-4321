@@ -1,6 +1,7 @@
 // LoginScreen.js
 import React, { useState } from "react";
 import {
+  View,
   KeyboardAvoidingView,
   ScrollView,
   Text,
@@ -17,6 +18,7 @@ import { inputStyle } from "../styles/style";
 import { buttonStyle } from "../styles/style";
 import { textStyle } from "../styles/style";
 import loginImage from "../assets/images/loginImage.png";
+import {Keyboard} from 'react-native'
 
 const LoginScreen = () => {
   const [username, setUsername] = useState("");
@@ -43,7 +45,7 @@ const LoginScreen = () => {
       style={styles.container}
       keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container} onTouchStart={Keyboard.dismiss}>
      
         <Image source={loginImage} style={styles.image} />
         <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
@@ -75,7 +77,7 @@ const LoginScreen = () => {
           <Text style={[styles.forgotPasswordButton, textStyle.shadow]}>Forgot Password?</Text>
         </TouchableOpacity>
         
-    </ScrollView>
+    </View>
     </KeyboardAvoidingView>
   );
 };
