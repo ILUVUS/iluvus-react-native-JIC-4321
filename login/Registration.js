@@ -16,56 +16,7 @@ const RegistrationScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [race, setRace] = useState("");
   const [gender, setGender] = useState("");
-  const [location, setLocation] = React.useState("");
-  // const [msg, setMsg] = useState("");
-  // const router = useRouter();
-
-// 
-
-
-  // const handleRegister = async () => {
-  //   try {
-  //     const response = await axios.post(`${BASE_URL}/user/create`,  {
-  //       "username": "exampleUsername",
-  //       "email": "example@email.com",
-  //       "password": "examplePassword",
-  //       "fname": "John",
-  //       "lname": "Doe",
-  //       "gender": "Male",
-  //       "dob": "1990-01-01",
-  //       "race": "Caucasian",
-  //       "location": "123 Street, City, GA, US, 00000",
-  //       "interests": "",
-  //       "education": "",
-  //       "work": "",
-  //       "skills": "",
-  //       "hobbies": "",
-  //       "posts": "",
-  //       "friends": "",
-  //       "groups": ""
-  //     }, {
-  //       headers: {
-  //         'accept': 'application/json',
-  //         // Add other headers as needed
-  //       },
-  //   });
-  //     if (response.data) {
-  //       console.log("POST request response:", response.data);
-  //       setMsg(response.data);
-  //       setTimeout(() => {
-  //         router.push("/");
-  //       }, 1000); // wait 1s to make it cool
-  //     }
-  //   } catch (error) {
-  //     if (error.response) {
-  //       console.error("Error sending POST request:", error.response.data);
-  //       setMsg(error.response.data);
-  //     } else {
-  //       console.error("Error sending POST request:", error.message);
-  //       setMsg("An error occurred while processing your request.");
-  //     }
-  //   }
-  // };
+  const [proEmail, setProfEmail] = React.useState("");
 
 
   const handleRegister = () => {
@@ -81,7 +32,7 @@ const RegistrationScreen = ({ navigation }) => {
         "gender": String(gender),
         "dob": String(DOB),
         "race": String(Race),
-        "location": String(location),
+        "proEmail": String(proEmail),
         "interests": "",
         "education": "",
         "work": "",
@@ -140,7 +91,7 @@ const RegistrationScreen = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholderTextColor="#cc9eff"
-        placeholder="mm-dd-yyyy"
+        placeholder="yyyy-mm-dd"
         value={DOB}
         onChangeText={(text) => setDOB(text)}
       />
@@ -178,6 +129,14 @@ const RegistrationScreen = ({ navigation }) => {
         onChangeText={(text) => setEmail(text)}
         keyboardType="email-address"
       />
+      <Text style={styles.title}>Professional Email</Text>
+      <TextInput
+        style={styles.input}
+        placeholderTextColor="#cc9eff"
+        placeholder="Only for Professional user"
+        value={proEmail}
+        onChangeText={(text) => setProfEmail(text)}
+      />
       <Text style={styles.title}>Username</Text>
       <TextInput
         style={styles.input}
@@ -193,15 +152,6 @@ const RegistrationScreen = ({ navigation }) => {
         placeholder="Password"
         value={password}
         onChangeText={(text) => setPassword(text)}
-        secureTextEntry
-      />
-      <Text style={styles.title}>Location</Text>
-      <TextInput
-        style={styles.input}
-        placeholderTextColor="#cc9eff"
-        placeholder="Location"
-        value={location}
-        onChangeText={(text) => setLocation(text)}
         secureTextEntry
       />
       
