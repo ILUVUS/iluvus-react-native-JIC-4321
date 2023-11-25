@@ -1,142 +1,191 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
+import colors from "../constants/colors";
+import sizes from "../constants/sizes";
+
+const screenWidth = sizes.screenWidth;
+const screenHeight = sizes.screenHeight;
 
 export const appStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
 export const loginStyle = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 16,
-      backgroundColor: 'white',
-    },
-    button: {
-      width: 92,
-      height: 50,
-      backgroundColor: '#FFE79B', // Set button background color here
-      borderRadius: 30,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 40,
-      marginBottom: 80,
-      color: '#40128B',
-    },
-    forgotPassword: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 5,
-      color: '#40128B',
-    },
-  
-    title: {
-      fontSize: 30,
-      marginBottom: 105,
-    },
-    input: {
-      width: 300,
-      height: 44,
-      borderColor: 'transparent',
-      borderWidth: 0,
-      marginBottom: 16,
-      paddingLeft: 8,
-      borderRadius: 10,
-      fontSize: 15,
-      backgroundColor: '#F4EAFF',
-      color: '#40128B'
-    },
-    image: {
-      width: 200,
-      height: 200,
-      marginBottom: 16,
-    },
-    buttonText: {
-      color: '#40128B',
-      fontSize: 16,
-    },
-  
-  });
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: colors.white,
+  },
+  button: {
+    display: "flex",
+    backgroundColor: colors.yellow,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: screenHeight / 30,
+    marginBottom: screenHeight / 8,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  createAccountButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 5,
+    color: colors.darkViolet,
+    fontSize: sizes.normalSize,
+    marginBottom: 5,
+  },
+  forgotPasswordButton: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 5,
+    color: "#6641a2",
+    fontSize: 14,
+    marginBottom: 5,
+  },
+  title: {
+    height: 50,
+    fontSize: 30,
+    marginBottom: screenHeight / 10,
+  },
+  input: {
+    width: screenWidth - 100,
+    maxWidth: 300,
+    marginBottom: 15,
+  },
+  image: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: colors.darkViolet,
+    fontSize: sizes.normalSize,
+  },
+});
 
 export const registrationStyle = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'top',
-    alignItems: 'start', 
+    justifyContent: "center",
+    alignItems: "top",
     padding: 10,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
   },
   scrollContainer: {
     flexGrow: 1,
-    width: '100%',
+    width: "100%",
   },
   dropDown: {
-    backgroundColor: "#F4EAFF",
-    borderColor: '#ddd',
-    borderWidth: 0,
-    marginBottom:10,
-    height:10,
-    paddingLeft: 8,
-    paddingRight: 8,
     marginLeft: 20,
     marginRight: 20,
-    width: '90%',
-    height: 40,
   },
   dropDownActive: {
-    marginBottom: 10, 
-    marginRight: 20, 
+    borderWidth: 1,
+    borderColor: colors.violet,
+    marginRight: 20,
     marginLeft: 20,
-    marginTop: -5,
+    marginTop: 10,
   },
-  title: { 
+  dropDownItem: {
+    backgroundColor: colors.lightViolet,
+    marginLeft: 15,
+    marginRight: 15,
+    marginBottom: 5,
+    borderRadius: 8,
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  title: {
     fontSize: 15,
     marginBottom: 5,
-    left: 20, 
-    color: '#40128B',
-   },
-
+    marginTop: 15,
+    left: 20,
+  },
   input: {
-    width: '90%',
-    height: 40,
-    borderColor: 'transparent',
-    borderWidth: 0,
-    borderRadius: 8,
-    paddingLeft: 8,
-    paddingRight: 8,
-    marginBottom: 10,
-    backgroundColor: '#F4EAFF',
-    color: '#40128B',
     marginLeft: 20,
     marginRight: 20,
-  
   },
   button: {
-    width: '25%',
-    height: 40,
-    backgroundColor: '#FFE79B',
+    display: "flex",
+    backgroundColor: colors.yellow,
     borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 16,
-    left: 140,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    marginTop: 10,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 20,
+    paddingRight: 20,
+    marginTop: 20,
+    marginBottom: 30,
   },
   buttonText: {
-    color: '#40128B',
-    fontSize: 16,
+    color: colors.darkViolet,
+    fontSize: sizes.normalSize,
+  },
+});
+
+export const inputStyle = StyleSheet.create({
+  input: {
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderColor: "transparent",
+    borderWidth: 0,
+    borderRadius: 10,
+    fontSize: sizes.normalSize,
+    backgroundColor: colors.lightViolet,
+    color: colors.darkViolet,
+  },
+  inputShadow: {
+    //shadow
+    shadowColor: colors.darkViolet,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+});
+
+export const buttonStyle = StyleSheet.create({
+  buttonShadow: {
+    //shadow
+    shadowColor: colors.darkViolet,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+});
+
+export const textStyle = StyleSheet.create({
+  titleColor: {
+    color: colors.darkViolet,
+  },
+  shadow: {
+    //shadow
+    shadowColor: colors.darkViolet,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
 });
 
 export const homeStyle = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
+  container: {
+    flex: 1,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});

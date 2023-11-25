@@ -1,18 +1,27 @@
 // LoginScreen.js
 import React, { useState } from "react";
 import {
+  View,
   KeyboardAvoidingView,
-  ScrollView,
   Text,
   TextInput,
-  Button,
-  StyleSheet,
   Image,
   TouchableOpacity,
+  Platform,
+  Keyboard,
 } from "react-native";
+import {
+  loginStyle as styles,
+  inputStyle,
+  buttonStyle,
+  textStyle,
+} from "../styles/style";
+
 import { useNavigation } from "@react-navigation/native";
-import { loginStyle as styles } from "../styles/style";
 import loginImage from "../assets/images/loginImage.png";
+
+import strings from "../constants/strings";
+import color from "../constants/colors";
 
 const LoginScreen = () => {
   const [username, setUsername] = useState("");
@@ -25,7 +34,7 @@ const LoginScreen = () => {
       navigation.navigate("Home");
     } else {
       // Show an error or alert for empty fields
-      alert("Please enter username and password");
+      alert(strings.loginAlert);
     }
   };
 
@@ -34,40 +43,50 @@ const LoginScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <KeyboardAvoidingView
-        behavior="padding"
-        style={styles.container}
-      >
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+    >
+      <View style={styles.container} onTouchStart={Keyboard.dismiss}>
         <Image source={loginImage} style={styles.image} />
-        <Text style={[styles.title, { color: "#40128B" }]}>ILUVUS</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          {strings.appName}
+        </Text>
 
         <TextInput
-          style={styles.input}
-          placeholderTextColor="#cc9eff"
-          placeholder="Username"
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
+          placeholderTextColor={color.lightDarkviolet}
+          placeholder={strings.usernameExample}
           value={username}
           onChangeText={(text) => setUsername(text)}
         />
         <TextInput
-          style={styles.input}
-          placeholderTextColor="#cc9eff"
-          placeholder="Password"
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
+          placeholderTextColor={color.lightDarkviolet}
+          placeholder={strings.passwordExample}
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-        <TouchableOpacity style={styles.button} onPress={handleSignin}>
+        <TouchableOpacity
+          style={[styles.button, buttonStyle.buttonShadow]}
+          onPress={handleSignin}
+        >
           <Text style={styles.buttonText}>Sign in</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleRegistration}>
-          <Text style={styles.forgotPassword}>Create an account</Text>
+          <Text style={[styles.createAccountButton, textStyle.shadow]}>
+            {strings.createAnAccount}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleSignin}>
-          <Text style={styles.forgotPassword}>Forgot Password ?</Text>
+          <Text style={[styles.forgotPasswordButton, textStyle.shadow]}>
+            {strings.forgotPassword}
+          </Text>
         </TouchableOpacity>
-      </KeyboardAvoidingView>
-    </ScrollView>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 
