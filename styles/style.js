@@ -89,10 +89,19 @@ export const registrationStyle = StyleSheet.create({
     height: 40,
   },
   dropDownActive: {
+    borderWidth: 1,
+    borderColor: '#cc9eff',
     marginBottom: 10, 
     marginRight: 20, 
     marginLeft: 20,
     marginTop: -5,
+  },
+  dropDownItem: {
+    backgroundColor: "#F4EAFF",
+    marginLeft: 20,
+    marginRight: 20,
+    marginBottom: 2,
+    borderRadius: 8,
   },
   title: { 
     fontSize: 15,

@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 
 
 // Tab navigation bar for the app
-function homeScreen() {
+function HomeScreenNav() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Home!</Text>
@@ -19,7 +19,7 @@ function homeScreen() {
   );
 }
 
-function communityScreen() {
+function CommunityScreenNav() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Community!</Text>
@@ -27,7 +27,7 @@ function communityScreen() {
   );
 }
 
-function profileScreen() {
+function ProfileScreenNav() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>ProfileScreen!</Text>
@@ -35,7 +35,7 @@ function profileScreen() {
   );
 }
 
-function messageScreen() {
+function MessageScreenNav() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>MessageScreen!</Text>
@@ -43,7 +43,7 @@ function messageScreen() {
   );
 }
 
-function settingsScreen() {
+function SettingsScreenNav() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Settings!</Text>
@@ -73,7 +73,6 @@ export default function HomeScreen() {
             }else if (route.name === 'Settings') {
               iconName = focused ? 'ios-list' : 'ios-list-outline';
             }
-            
 
             // You can return any component that you like here!
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -82,11 +81,11 @@ export default function HomeScreen() {
           tabBarInactiveTintColor: 'gray',
         })}
       >
-        <Tab.Screen name="Home" component={homeScreen} />
-        <Tab.Screen name="Community" component={communityScreen} />
-        <Tab.Screen name="Profile" component={profileScreen} />
-        <Tab.Screen name="Message" component={messageScreen} />
-        <Tab.Screen name="Settings" component={settingsScreen} />
+        <Tab.Screen name="Home" component={HomeScreenNav} />
+        <Tab.Screen name="Community" component={CommunityScreenNav} />
+        <Tab.Screen name="Profile" component={ProfileScreenNav} />
+        <Tab.Screen name="Message" component={MessageScreenNav} />
+        <Tab.Screen name="Settings" component={SettingsScreenNav} />
       </Tab.Navigator>
   );
 }

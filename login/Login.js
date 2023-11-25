@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Platform
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { loginStyle as styles } from "../styles/style";
@@ -34,11 +35,13 @@ const LoginScreen = () => {
   };
 
   return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+    >
     <ScrollView contentContainerStyle={styles.container}>
-      <KeyboardAvoidingView
-        behavior="padding"
-        style={styles.container}
-      >
+     
         <Image source={loginImage} style={styles.image} />
         <Text style={[styles.title, { color: "#40128B" }]}>ILUVUS</Text>
 
@@ -66,8 +69,9 @@ const LoginScreen = () => {
         <TouchableOpacity onPress={handleSignin}>
           <Text style={styles.forgotPassword}>Forgot Password ?</Text>
         </TouchableOpacity>
-      </KeyboardAvoidingView>
+        
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
