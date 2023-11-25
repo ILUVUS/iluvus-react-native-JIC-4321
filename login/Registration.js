@@ -58,7 +58,7 @@ const RegistrationScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholderTextColor="#9f88c5"
-          placeholder="First Name"
+          placeholder="First Name (e.g. John)"
           value={fName}
           onChangeText={(text) => setFname(text)}
         />
@@ -66,7 +66,7 @@ const RegistrationScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholderTextColor="#9f88c5"
-          placeholder="Last Name"
+          placeholder="Last Name (e.g. Smith)"
           value={lName}
           onChangeText={(text) => setLname(text)}
         />
@@ -74,7 +74,7 @@ const RegistrationScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholderTextColor="#9f88c5"
-          placeholder="DOB in mm-dd-yyyy"
+          placeholder="mm-dd-yyyy (e.g. 01-01-2000)"
           value={DOB}
           onChangeText={(text) => setDOB(text)}
         />
@@ -108,7 +108,7 @@ const RegistrationScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholderTextColor="#9f88c5"
-          placeholder="Email"
+          placeholder="Email (e.g. user@mail.com)"
           value={email}
           onChangeText={(text) => setEmail(text)}
           keyboardType="email-address"
@@ -117,7 +117,7 @@ const RegistrationScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholderTextColor="#9f88c5"
-          placeholder="Username"
+          placeholder="Username (e.g. user123)"
           value={username}
           onChangeText={(text) => setUsername(text)}
         />
@@ -125,7 +125,7 @@ const RegistrationScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholderTextColor="#9f88c5"
-          placeholder="Password"
+          placeholder="Password (e.g. password123)"
           value={password}
           onChangeText={(text) => setPassword(text)}
           secureTextEntry
@@ -134,7 +134,7 @@ const RegistrationScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholderTextColor="#9f88c5"
-          placeholder="Location"
+          placeholder="Location (e.g. 123 Main St, City, State, Zip)"
           value={location}
           onChangeText={(text) => setLocation(text)}
           secureTextEntry
