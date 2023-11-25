@@ -57,7 +57,7 @@ const RegistrationScreen = ({ navigation }) => {
         <Text style={styles.title}>First Name</Text>
         <TextInput
           style={styles.input}
-          placeholderTextColor="#cc9eff"
+          placeholderTextColor="#9f88c5"
           placeholder="First Name"
           value={fName}
           onChangeText={(text) => setFname(text)}
@@ -65,7 +65,7 @@ const RegistrationScreen = ({ navigation }) => {
         <Text style={styles.title}>Last Name</Text>
         <TextInput
           style={styles.input}
-          placeholderTextColor="#cc9eff"
+          placeholderTextColor="#9f88c5"
           placeholder="Last Name"
           value={lName}
           onChangeText={(text) => setLname(text)}
@@ -73,7 +73,7 @@ const RegistrationScreen = ({ navigation }) => {
         <Text style={styles.title}>Date of Birth</Text>
         <TextInput
           style={styles.input}
-          placeholderTextColor="#cc9eff"
+          placeholderTextColor="#9f88c5"
           placeholder="DOB in mm-dd-yyyy"
           value={DOB}
           onChangeText={(text) => setDOB(text)}
@@ -107,7 +107,7 @@ const RegistrationScreen = ({ navigation }) => {
         <Text style={styles.title}>Email</Text>
         <TextInput
           style={styles.input}
-          placeholderTextColor="#cc9eff"
+          placeholderTextColor="#9f88c5"
           placeholder="Email"
           value={email}
           onChangeText={(text) => setEmail(text)}
@@ -116,7 +116,7 @@ const RegistrationScreen = ({ navigation }) => {
         <Text style={styles.title}>Username</Text>
         <TextInput
           style={styles.input}
-          placeholderTextColor="#cc9eff"
+          placeholderTextColor="#9f88c5"
           placeholder="Username"
           value={username}
           onChangeText={(text) => setUsername(text)}
@@ -124,7 +124,7 @@ const RegistrationScreen = ({ navigation }) => {
         <Text style={styles.title}>Password</Text>
         <TextInput
           style={styles.input}
-          placeholderTextColor="#cc9eff"
+          placeholderTextColor="#9f88c5"
           placeholder="Password"
           value={password}
           onChangeText={(text) => setPassword(text)}
@@ -133,7 +133,7 @@ const RegistrationScreen = ({ navigation }) => {
         <Text style={styles.title}>Location</Text>
         <TextInput
           style={styles.input}
-          placeholderTextColor="#cc9eff"
+          placeholderTextColor="#9f88c5"
           placeholder="Location"
           value={location}
           onChangeText={(text) => setLocation(text)}

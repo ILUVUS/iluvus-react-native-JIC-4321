@@ -47,14 +47,14 @@ const LoginScreen = () => {
 
         <TextInput
           style={styles.input}
-          placeholderTextColor="#cc9eff"
+          placeholderTextColor="#9f88c5"
           placeholder="Username"
           value={username}
           onChangeText={(text) => setUsername(text)}
         />
         <TextInput
           style={styles.input}
-          placeholderTextColor="#cc9eff"
+          placeholderTextColor="#9f88c5"
           placeholder="Password"
           secureTextEntry={true}
           value={password}
@@ -64,10 +64,10 @@ const LoginScreen = () => {
           <Text style={styles.buttonText}>Sign in</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleRegistration}>
-          <Text style={styles.forgotPassword}>Create an account</Text>
+          <Text style={styles.createAccountButton}>Create an account</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleSignin}>
-          <Text style={styles.forgotPassword}>Forgot Password ?</Text>
+          <Text style={styles.forgotPasswordButton}>Forgot Password?</Text>
         </TouchableOpacity>
         
     </ScrollView>
