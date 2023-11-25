@@ -13,6 +13,9 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { loginStyle as styles } from "../styles/style";
+import { inputStyle } from "../styles/style";
+import { buttonStyle } from "../styles/style";
+import { textStyle } from "../styles/style";
 import loginImage from "../assets/images/loginImage.png";
 
 const LoginScreen = () => {
@@ -43,31 +46,33 @@ const LoginScreen = () => {
     <ScrollView contentContainerStyle={styles.container}>
      
         <Image source={loginImage} style={styles.image} />
-        <Text style={[styles.title, { color: "#40128B" }]}>ILUVUS</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          ILUVUS
+          </Text>
 
         <TextInput
-          style={styles.input}
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
           placeholderTextColor="#9f88c5"
           placeholder="Username"
           value={username}
           onChangeText={(text) => setUsername(text)}
         />
         <TextInput
-          style={styles.input}
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
           placeholderTextColor="#9f88c5"
           placeholder="Password"
           secureTextEntry={true}
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-        <TouchableOpacity style={styles.button} onPress={handleSignin}>
+        <TouchableOpacity style={[styles.button, buttonStyle.buttonShadow]} onPress={handleSignin}>
           <Text style={styles.buttonText}>Sign in</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleRegistration}>
-          <Text style={styles.createAccountButton}>Create an account</Text>
+          <Text style={[styles.createAccountButton, textStyle.shadow]}>Create an account</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleSignin}>
-          <Text style={styles.forgotPasswordButton}>Forgot Password?</Text>
+          <Text style={[styles.forgotPasswordButton, textStyle.shadow]}>Forgot Password?</Text>
         </TouchableOpacity>
         
     </ScrollView>

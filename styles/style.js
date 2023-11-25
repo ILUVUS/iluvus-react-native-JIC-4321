@@ -36,11 +36,6 @@ export const loginStyle = StyleSheet.create({
     paddingBottom: 15,
     paddingLeft: 20,
     paddingRight: 20,
-    //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
   },
   createAccountButton: {
     justifyContent: "center",
@@ -49,11 +44,6 @@ export const loginStyle = StyleSheet.create({
     color: "#40128B",
     fontSize: 16,
     marginBottom: 5,
-    //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
   },
   forgotPasswordButton: {
     justifyContent: "center",
@@ -62,40 +52,16 @@ export const loginStyle = StyleSheet.create({
     color: "#6641a2",
     fontSize: 14,
     marginBottom: 5,
-    //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
   },
   title: {
     height: 50,
     fontSize: 30,
     marginBottom: (screenHeight / 10),
-    //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
   },
   input: {
     width: screenWidth - 100,
     maxWidth: 300,
-    height: 40,
-    borderColor: "transparent",
-    borderWidth: 0,
-    borderRadius: 8,
-    paddingLeft: 8,
-    paddingRight: 8,
     marginBottom: 15,
-    fontSize: 16,
-    backgroundColor: "#F4EAFF",
-    color: "#40128B",
-    //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
   },
   image: {
     width: 200,
@@ -121,29 +87,15 @@ export const registrationStyle = StyleSheet.create({
     width: "100%",
   },
   dropDown: {
-    backgroundColor: "#F4EAFF",
-    borderColor: "#ddd",
-    borderWidth: 0,
-    marginBottom: 10,
-    height: 10,
-    paddingLeft: 8,
-    paddingRight: 8,
     marginLeft: 20,
     marginRight: 20,
-    height: 40,
-    //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
   },
   dropDownActive: {
     borderWidth: 1,
     borderColor: "#cc9eff",
-    marginBottom: 10,
     marginRight: 20,
     marginLeft: 20,
-    marginTop: -5,
+    marginTop: 10,
   },
   dropDownItem: {
     backgroundColor: "#F4EAFF",
@@ -157,33 +109,12 @@ export const registrationStyle = StyleSheet.create({
   title: {
     fontSize: 15,
     marginBottom: 5,
-    marginTop: 5,
+    marginTop: 15,
     left: 20,
-    color: "#40128B",
-    //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
   },
-
   input: {
-    height: 40,
-    borderColor: "transparent",
-    borderWidth: 0,
-    borderRadius: 8,
-    paddingLeft: 8,
-    paddingRight: 8,
-    marginBottom: 10,
-    backgroundColor: "#F4EAFF",
-    color: "#40128B",
     marginLeft: 20,
     marginRight: 20,
-    //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
   },
   button: {
     display: "flex",
@@ -197,16 +128,59 @@ export const registrationStyle = StyleSheet.create({
     paddingBottom: 15,
     paddingLeft: 20,
     paddingRight: 20,
-    //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
+    marginTop: 20,
+    marginBottom: 30,
   },
   buttonText: {
     color: "#40128B",
     fontSize: 16,
   },
+});
+
+export const inputStyle = StyleSheet.create({
+  input: {
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingLeft: 10,  
+    paddingRight: 10,
+    borderColor: "transparent",
+    borderWidth: 0,
+    borderRadius: 10,
+    fontSize: 16,
+    backgroundColor: "#F4EAFF",
+    color: "#40128B",
+  },
+  inputShadow: {
+    //shadow
+    shadowColor: '#40128B',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  }
+});
+
+export const buttonStyle = StyleSheet.create({
+  buttonShadow: {
+    //shadow
+    shadowColor: '#40128B',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  }
+
+});
+
+export const textStyle = StyleSheet.create({
+  titleColor : {
+    color: "#40128B"
+  },
+  shadow: {
+    //shadow
+    shadowColor: '#40128B',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  }
 });
 
 export const homeStyle = StyleSheet.create({

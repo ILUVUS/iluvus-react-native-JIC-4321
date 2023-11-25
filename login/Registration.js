@@ -13,6 +13,10 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { registrationStyle as styles } from "../styles/style";
+import { inputStyle } from "../styles/style";
+import { buttonStyle } from "../styles/style";
+import { textStyle } from "../styles/style";
+
 import { SelectList } from "react-native-dropdown-select-list";
 
 const RegistrationScreen = ({ navigation }) => {
@@ -54,37 +58,37 @@ const RegistrationScreen = ({ navigation }) => {
       keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 20}
     >
       <ScrollView style={styles.scrollContainer}>
-        <Text style={styles.title}>First Name</Text>
+        <Text style={[[styles.title, textStyle.titleColor, textStyle.shadow], textStyle.titleColor, textStyle.shadow]}>First Name</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
           placeholderTextColor="#9f88c5"
           placeholder="First Name (e.g. John)"
           value={fName}
           onChangeText={(text) => setFname(text)}
         />
-        <Text style={styles.title}>Last Name</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Last Name</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
           placeholderTextColor="#9f88c5"
           placeholder="Last Name (e.g. Smith)"
           value={lName}
           onChangeText={(text) => setLname(text)}
         />
-        <Text style={styles.title}>Date of Birth</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Date of Birth</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
           placeholderTextColor="#9f88c5"
           placeholder="mm-dd-yyyy (e.g. 01-01-2000)"
           value={DOB}
           onChangeText={(text) => setDOB(text)}
         />
 
-        <Text style={styles.title}>Race</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Race</Text>
         <SelectList
           data={Race}
           setSelected={setRace}
           value={race}
-          boxStyles={styles.dropDown}
+          boxStyles={[styles.dropDown, inputStyle.input, inputStyle.inputShadow]}
           dropdownStyles={styles.dropDownActive}
           dropdownItemStyles={styles.dropDownItem}
           maxHeight={75}
@@ -92,47 +96,47 @@ const RegistrationScreen = ({ navigation }) => {
           placeholder="Please select your race"
         />
 
-        <Text style={styles.title}>Gender</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Gender</Text>
         <SelectList
           data={Gender}
           setSelected={setGender}
           value={gender}
-          boxStyles={styles.dropDown}
+          boxStyles={[styles.dropDown,inputStyle.input, inputStyle.inputShadow]}
           dropdownStyles={styles.dropDownActive}
           dropdownItemStyles={styles.dropDownItem}
           maxHeight={75}
           search={false}
           placeholder="Please select your gender"
         />
-        <Text style={styles.title}>Email</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Email</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
           placeholderTextColor="#9f88c5"
           placeholder="Email (e.g. user@mail.com)"
           value={email}
           onChangeText={(text) => setEmail(text)}
           keyboardType="email-address"
         />
-        <Text style={styles.title}>Username</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Username</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
           placeholderTextColor="#9f88c5"
           placeholder="Username (e.g. user123)"
           value={username}
           onChangeText={(text) => setUsername(text)}
         />
-        <Text style={styles.title}>Password</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Password</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
           placeholderTextColor="#9f88c5"
           placeholder="Password (e.g. password123)"
           value={password}
           onChangeText={(text) => setPassword(text)}
           secureTextEntry
         />
-        <Text style={styles.title}>Location</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Location</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
           placeholderTextColor="#9f88c5"
           placeholder="Location (e.g. 123 Main St, City, State, Zip)"
           value={location}
@@ -140,7 +144,7 @@ const RegistrationScreen = ({ navigation }) => {
           secureTextEntry
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <TouchableOpacity style={[styles.button, buttonStyle.buttonShadow]} onPress={handleRegister}>
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
       </ScrollView>
