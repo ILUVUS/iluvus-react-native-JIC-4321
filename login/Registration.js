@@ -3,19 +3,22 @@ import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   ScrollView,
-  View,
   Text,
   TextInput,
   TouchableOpacity,
-  Image,
-  StyleSheet,
-  Platform
+  Platform,
 } from "react-native";
-import { Picker } from "@react-native-picker/picker";
-import { registrationStyle as styles } from "../styles/style";
-import { inputStyle } from "../styles/style";
-import { buttonStyle } from "../styles/style";
-import { textStyle } from "../styles/style";
+
+import {
+  registrationStyle as styles,
+  inputStyle,
+  buttonStyle,
+  textStyle,
+} from "../styles/style";
+
+import strings from "../constants/strings";
+import colors from "../constants/colors";
+import sizes from "../constants/sizes";
 
 import { SelectList } from "react-native-dropdown-select-list";
 
@@ -36,20 +39,6 @@ const RegistrationScreen = ({ navigation }) => {
     // For simplicity, we'll just navigate to a success screen
     navigation.navigate("Home");
   };
-  const Race = [
-    { key: "White", value: "White" },
-    { key: "African American", value: "African American" },
-    { key: "Hispanic", value: "Hispanic" },
-    { key: "Asian", value: "Asian" },
-    { key: "American Indian", value: "American Indian" },
-    { key: "Other", value: "Other" },
-  ];
-  const Gender = [
-    { key: "Male", value: "Male" },
-    { key: "Female", value: "Female" },
-    { key: "Non-Binary", value: "Non-Binary" },
-    { key: "Other", value: "Other" },
-  ];
 
   return (
     <KeyboardAvoidingView
@@ -58,93 +47,128 @@ const RegistrationScreen = ({ navigation }) => {
       keyboardVerticalOffset={Platform.OS === "ios" ? 120 : 20}
     >
       <ScrollView style={styles.scrollContainer}>
-        <Text style={[[styles.title, textStyle.titleColor, textStyle.shadow], textStyle.titleColor, textStyle.shadow]}>First Name</Text>
+        <Text
+          style={[
+            [styles.title, textStyle.titleColor, textStyle.shadow],
+            textStyle.titleColor,
+            textStyle.shadow,
+          ]}
+        >
+          First Name
+        </Text>
         <TextInput
           style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
-          placeholderTextColor="#9f88c5"
-          placeholder="First Name (e.g. John)"
+          placeholderTextColor={colors.lightDarkviolet}
+          placeholder={strings.fnameExample}
           value={fName}
           onChangeText={(text) => setFname(text)}
         />
-        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Last Name</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          Last Name
+        </Text>
         <TextInput
           style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
-          placeholderTextColor="#9f88c5"
-          placeholder="Last Name (e.g. Smith)"
+          placeholderTextColor={colors.lightDarkviolet}
+          placeholder={strings.lnameExample}
           value={lName}
           onChangeText={(text) => setLname(text)}
         />
-        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Date of Birth</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          Date of Birth
+        </Text>
         <TextInput
           style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
-          placeholderTextColor="#9f88c5"
-          placeholder="mm-dd-yyyy (e.g. 01-01-2000)"
+          placeholderTextColor={colors.lightDarkviolet}
+          placeholder={strings.dobExample}
           value={DOB}
           onChangeText={(text) => setDOB(text)}
         />
 
-        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Race</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          Race
+        </Text>
         <SelectList
-          data={Race}
+          data={strings.races}
           setSelected={setRace}
           value={race}
-          boxStyles={[styles.dropDown, inputStyle.input, inputStyle.inputShadow]}
+          boxStyles={[
+            styles.dropDown,
+            inputStyle.input,
+            inputStyle.inputShadow,
+          ]}
           dropdownStyles={styles.dropDownActive}
           dropdownItemStyles={styles.dropDownItem}
-          maxHeight={75}
+          maxHeight={sizes.dropDownMaxHeight}
           search={false}
-          placeholder="Please select your race"
+          placeholder={strings.race}
         />
 
-        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Gender</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          Gender
+        </Text>
         <SelectList
-          data={Gender}
+          data={strings.genders}
           setSelected={setGender}
           value={gender}
-          boxStyles={[styles.dropDown,inputStyle.input, inputStyle.inputShadow]}
+          boxStyles={[
+            styles.dropDown,
+            inputStyle.input,
+            inputStyle.inputShadow,
+          ]}
           dropdownStyles={styles.dropDownActive}
           dropdownItemStyles={styles.dropDownItem}
-          maxHeight={75}
+          maxHeight={sizes.dropDownMaxHeight}
           search={false}
-          placeholder="Please select your gender"
+          placeholder={strings.gender}
         />
-        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Email</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          Email
+        </Text>
         <TextInput
           style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
-          placeholderTextColor="#9f88c5"
-          placeholder="Email (e.g. user@mail.com)"
+          placeholderTextColor={colors.lightDarkviolet}
+          placeholder={strings.emailExample}
           value={email}
           onChangeText={(text) => setEmail(text)}
           keyboardType="email-address"
         />
-        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Username</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          Username
+        </Text>
         <TextInput
           style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
-          placeholderTextColor="#9f88c5"
-          placeholder="Username (e.g. user123)"
+          placeholderTextColor={colors.lightDarkviolet}
+          placeholder={strings.usernameExample}
           value={username}
           onChangeText={(text) => setUsername(text)}
         />
-        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Password</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          Password
+        </Text>
         <TextInput
           style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
-          placeholderTextColor="#9f88c5"
-          placeholder="Password (e.g. password123)"
+          placeholderTextColor={colors.lightDarkviolet}
+          placeholder={strings.passwordExample}
           value={password}
           onChangeText={(text) => setPassword(text)}
           secureTextEntry
         />
-        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>Location</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          Location
+        </Text>
         <TextInput
           style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
-          placeholderTextColor="#9f88c5"
-          placeholder="Location (e.g. 123 Main St, City, State, Zip)"
+          placeholderTextColor={colors.lightDarkviolet}
+          placeholder={strings.locationExample}
           value={location}
           onChangeText={(text) => setLocation(text)}
           secureTextEntry
         />
 
-        <TouchableOpacity style={[styles.button, buttonStyle.buttonShadow]} onPress={handleRegister}>
+        <TouchableOpacity
+          style={[styles.button, buttonStyle.buttonShadow]}
+          onPress={handleRegister}
+        >
           <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
       </ScrollView>

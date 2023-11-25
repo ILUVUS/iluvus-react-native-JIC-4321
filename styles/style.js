@@ -1,15 +1,14 @@
 import { StyleSheet } from "react-native";
+import colors from "../constants/colors";
+import sizes from "../constants/sizes";
 
-import { Dimensions } from 'react-native';
-
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
-
+const screenWidth = sizes.screenWidth;
+const screenHeight = sizes.screenHeight;
 
 export const appStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -21,17 +20,17 @@ export const loginStyle = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
-    backgroundColor: "white",
+    backgroundColor: colors.white,
   },
   button: {
     display: "flex",
-    backgroundColor: "#FFE79B",
+    backgroundColor: colors.yellow,
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: 'center',
-    marginTop: (screenHeight / 30),
-    marginBottom: (screenHeight / 8),
+    alignSelf: "center",
+    marginTop: screenHeight / 30,
+    marginBottom: screenHeight / 8,
     paddingTop: 15,
     paddingBottom: 15,
     paddingLeft: 20,
@@ -41,8 +40,8 @@ export const loginStyle = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginTop: 5,
-    color: "#40128B",
-    fontSize: 16,
+    color: colors.darkViolet,
+    fontSize: sizes.normalSize,
     marginBottom: 5,
   },
   forgotPasswordButton: {
@@ -56,7 +55,7 @@ export const loginStyle = StyleSheet.create({
   title: {
     height: 50,
     fontSize: 30,
-    marginBottom: (screenHeight / 10),
+    marginBottom: screenHeight / 10,
   },
   input: {
     width: screenWidth - 100,
@@ -69,8 +68,8 @@ export const loginStyle = StyleSheet.create({
     marginBottom: 20,
   },
   buttonText: {
-    color: "#40128B",
-    fontSize: 16,
+    color: colors.darkViolet,
+    fontSize: sizes.normalSize,
   },
 });
 
@@ -80,7 +79,7 @@ export const registrationStyle = StyleSheet.create({
     justifyContent: "center",
     alignItems: "top",
     padding: 10,
-    backgroundColor: "white",
+    backgroundColor: colors.white,
   },
   scrollContainer: {
     flexGrow: 1,
@@ -92,13 +91,13 @@ export const registrationStyle = StyleSheet.create({
   },
   dropDownActive: {
     borderWidth: 1,
-    borderColor: "#cc9eff",
+    borderColor: colors.violet,
     marginRight: 20,
     marginLeft: 20,
     marginTop: 10,
   },
   dropDownItem: {
-    backgroundColor: "#F4EAFF",
+    backgroundColor: colors.lightViolet,
     marginLeft: 15,
     marginRight: 15,
     marginBottom: 5,
@@ -118,11 +117,11 @@ export const registrationStyle = StyleSheet.create({
   },
   button: {
     display: "flex",
-    backgroundColor: "#FFE79B",
+    backgroundColor: colors.yellow,
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: 'center',
+    alignSelf: "center",
     marginTop: 10,
     paddingTop: 15,
     paddingBottom: 15,
@@ -132,8 +131,8 @@ export const registrationStyle = StyleSheet.create({
     marginBottom: 30,
   },
   buttonText: {
-    color: "#40128B",
-    fontSize: 16,
+    color: colors.darkViolet,
+    fontSize: sizes.normalSize,
   },
 });
 
@@ -141,52 +140,51 @@ export const inputStyle = StyleSheet.create({
   input: {
     paddingTop: 12,
     paddingBottom: 12,
-    paddingLeft: 10,  
+    paddingLeft: 10,
     paddingRight: 10,
     borderColor: "transparent",
     borderWidth: 0,
     borderRadius: 10,
-    fontSize: 16,
-    backgroundColor: "#F4EAFF",
-    color: "#40128B",
+    fontSize: sizes.normalSize,
+    backgroundColor: colors.lightViolet,
+    color: colors.darkViolet,
   },
   inputShadow: {
     //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
+    shadowColor: colors.darkViolet,
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-  }
+  },
 });
 
 export const buttonStyle = StyleSheet.create({
   buttonShadow: {
     //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
+    shadowColor: colors.darkViolet,
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-  }
-
+  },
 });
 
 export const textStyle = StyleSheet.create({
-  titleColor : {
-    color: "#40128B"
+  titleColor: {
+    color: colors.darkViolet,
   },
   shadow: {
     //shadow
-    shadowColor: '#40128B',
-    shadowOffset: {width: 0, height: 3},
+    shadowColor: colors.darkViolet,
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
-  }
+  },
 });
 
 export const homeStyle = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
   },
