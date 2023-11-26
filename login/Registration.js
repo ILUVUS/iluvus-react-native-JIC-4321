@@ -85,7 +85,6 @@ const RegistrationScreen = ({ navigation }) => {
     {key: 'Non-Binary', value: "Non-Binary"},
     {key: 'Other', value: "Other"},
   ];
-  //////////////////////////////////////
 
 
   return (
@@ -180,11 +179,13 @@ const RegistrationScreen = ({ navigation }) => {
           onChangeText={(text) => setEmail(text)}
           keyboardType="email-address"
         />
-        <Text style={styles.title}>Professional Email</Text>
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          Professional Email
+        </Text>
         <TextInput
-          style={styles.input}
-          placeholderTextColor="#cc9eff"
-          placeholder="Only for Professional user"
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
+          placeholderTextColor={colors.lightDarkviolet}
+          placeholder="Only Required for Professional user"
           value={proEmail}
           onChangeText={(text) => setProfEmail(text)}
         />
