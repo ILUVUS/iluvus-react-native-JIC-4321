@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { Text, View, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { Text, View, TouchableOpacity, Alert, ScrollView, RefreshControl } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { SearchBar, Image } from "react-native-elements";
 import { useNavigation } from '@react-navigation/native';
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
+import { BASE_URL} from '@env';
 // import Images
 import sampleIcon from "../../assets/images/sampleicon.jpg";
 
@@ -27,6 +29,50 @@ const Community = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [searchValue, setSearchValue] = useState("");
+    const [communityList, setCommunityList] = useState([]);
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(() => {
+      setRefreshing(true);
+      // refresh the communityList
+      fetchCommunityList();
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 1000);
+    }, []);
+
+    useEffect(() => {
+      fetchCommunityList();
+    }, []);  
+    
+    const fetchCommunityList = async () => {
+      axios({
+        method: "GET",
+        url: `${BASE_URL}/community/all`,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(res => {
+        console.log(res.data);
+        setCommunityList(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    };
+    
+    const groupedCommunityList = communityList.reduce((resultArray, item, index) => { 
+      const chunkIndex = Math.floor(index/3)
+    
+      if(!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = [] // start a new chunk
+      }
+    
+      resultArray[chunkIndex].push(item)
+    
+      return resultArray
+    }, [])
 
     const newCommunity = () => {
         navigation.navigate('SetupCommunity');
@@ -61,7 +107,11 @@ const Community = () => {
           searchIcon={searchBarStyle.seachIcon}
           clearIcon={searchBarStyle.clearIcon}
         />
-        <ScrollView contentContainerStyle={styles.scrollableContainer}>
+        <ScrollView contentContainerStyle={styles.scrollableContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        >
           <View style={communityStyles.buttonContainer}>
             <TouchableOpacity
               style={[
@@ -102,112 +152,29 @@ const Community = () => {
             </TouchableOpacity>
           </View>
 
-          <View>
-            <Text style={[communityStyles.header, inputStyle.inputShadow]}>Popular</Text>
-          </View>
-
-          <View style={communityStyles.buttonContainer}>
-            <TouchableOpacity
-              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
-              onPress={communityClick}
-            >
-              <Image
-                source={sampleIcon}
-                style={communityStyles.communityImage}
-              />
-              <Text style={communityStyles.buttonText}>Group A</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[[communityStyles.buttonImage, inputStyle.inputShadow], inputStyle.inputShadow]}
-              onPress={communityClick}
-            >
-              <Image
-                source={sampleIcon}
-                style={communityStyles.communityImage}
-              />
-              <Text style={communityStyles.buttonText}>Group B</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
-              onPress={communityClick}
-            >
-              <Image
-                source={sampleIcon}
-                style={communityStyles.communityImage}
-              />
-              <Text style={communityStyles.buttonText}>Group C</Text>
-            </TouchableOpacity>
-          </View>
 
           <View>
             <Text style={[communityStyles.header, inputStyle.inputShadow]}>Developing</Text>
           </View>
 
-          <View style={communityStyles.buttonContainer}>
-            <TouchableOpacity
-              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
-              onPress={communityClick}
-            >
-              <Image
-                source={sampleIcon}
-                style={communityStyles.communityImage}
-              />
-              <Text style={communityStyles.buttonText}>Group A</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
-              onPress={communityClick}
-            >
-              <Image
-                source={sampleIcon}
-                style={communityStyles.communityImage}
-              />
-              <Text style={communityStyles.buttonText}>Group B</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
-              onPress={communityClick}
-            >
-              <Image
-                source={sampleIcon}
-                style={communityStyles.communityImage}
-              />
-              <Text style={communityStyles.buttonText}>Group C</Text>
-            </TouchableOpacity>
-          </View>
+          {groupedCommunityList.map((group, index) => (
+            <View key={index} style={communityStyles.buttonContainer}>
+              {group.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={[communityStyles.buttonImage, inputStyle.inputShadow]}
+                  onPress={communityClick}
+                >
+                  <Image
+                    source={sampleIcon}
+                    style={communityStyles.communityImage}
+                  />
+                  <Text style={communityStyles.buttonText}>{item}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ))}
 
-          <View style={communityStyles.buttonContainer}>
-            <TouchableOpacity
-              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
-              onPress={communityClick}
-            >
-              <Image
-                source={sampleIcon}
-                style={communityStyles.communityImage}
-              />
-              <Text style={communityStyles.buttonText}>Group A</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
-              onPress={communityClick}
-            >
-              <Image
-                source={sampleIcon}
-                style={communityStyles.communityImage}
-              />
-              <Text style={communityStyles.buttonText}>Group B</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
-              onPress={communityClick}
-            >
-              <Image
-                source={sampleIcon}
-                style={communityStyles.communityImage}
-              />
-              <Text style={communityStyles.buttonText}>Group C</Text>
-            </TouchableOpacity>
-          </View>
         </ScrollView>
       </View>
     );
