@@ -1,50 +1,60 @@
 import React, { Component } from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { Text, View, TouchableOpacity, Alert, ScrollView } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
-import {
-  appStyle as styles,
-  communityStyles,
-  searchBarStyle,
-} from "../../styles/style";
-import { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { SearchBar, Image } from "react-native-elements";
-import loginImage from "../../assets/images/loginImage.png";
+import { useNavigation } from '@react-navigation/native';
+import { useState } from "react";
+
+// import Images
 import sampleIcon from "../../assets/images/sampleicon.jpg";
 
+// import styles
+import {
+    appStyle as styles,
+    communityStyles,
+    searchBarStyle,
+    inputStyle
+  } from "../../styles/style";
+
+// import constants
 import strings from "../../constants/strings";
 import colors from "../../constants/colors";
 import sizes from "../../constants/sizes";
 
-export default class Community extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-      error: null,
-      searchValue: "",
+const Community = () => {
+    const navigation = useNavigation();
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [searchValue, setSearchValue] = useState("");
+
+    const newCommunity = () => {
+        navigation.navigate('SetupCommunity');
+    }
+
+    const myCommunity = () => {
+        navigation.navigate('SetupCommunity');
+    }
+
+    const myFriend = () => {
+        navigation.navigate('SetupCommunity');
+    }
+
+    const communityClick = () => {
+        Alert.alert("Search", "Search for a group");
+    }
+
+    const searchFunction = (text) => {
+        // bla bla things here
+        setSearchValue(text);
     };
-  }
-
-  handleCommunityClick = () => {
-    Alert.alert("Search", "Search for a group");
-  };
-
-  searchFunction = (text) => {
-    // bla bla things here
-    this.setState({ searchValue: text });
-  };
-
-  render() {
     return (
       <View style={styles.homeContainer}>
         <SearchBar
           placeholder={strings.communitySearchBar}
-          onChangeText={(text) => this.searchFunction(text)}
-          value={this.state.searchValue}
-          containerStyle={searchBarStyle.containerSearchBar}
+          onChangeText={(text) => searchFunction(text)}
+          value={searchValue}
+          containerStyle={[searchBarStyle.containerSearchBar, inputStyle.inputShadow]}
           inputContainerStyle={searchBarStyle.inputSearchBar}
           inputStyle={searchBarStyle.input}
           placeholderTextColor={colors.lightDarkviolet}
@@ -54,48 +64,48 @@ export default class Community extends Component {
         <ScrollView contentContainerStyle={styles.scrollableContainer}>
           <View style={communityStyles.buttonContainer}>
             <TouchableOpacity
-              style={communityStyles.buttonIcon}
-              onPress={this.handleCommunityClick}
+              style={[[communityStyles.buttonIcon, inputStyle.inputShadow], inputStyle.inputShadow]}
+              onPress={newCommunity}
             >
               <Icon
                 name="plus"
                 size={sizes.communityIconSize}
                 color={colors.darkViolet}
               />
-              <Text style={communityStyles.buttonText}>New Group</Text>
+              <Text style={communityStyles.buttonText}>{strings.newCommunity}</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={communityStyles.buttonIcon}
-              onPress={this.handleCommunityClick}
+              style={[communityStyles.buttonIcon, inputStyle.inputShadow]}
+              onPress={myCommunity}
             >
               <Icon
                 name="users"
                 size={sizes.communityIconSize}
                 color={colors.darkViolet}
               />
-              <Text style={communityStyles.buttonText}>My Groups</Text>
+              <Text style={communityStyles.buttonText}>{strings.myCommunity}</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={communityStyles.buttonIcon}
-              onPress={this.handleCommunityClick}
+              style={[communityStyles.buttonIcon, inputStyle.inputShadow]}
+              onPress={myFriend}
             >
               <Icon
                 name="child"
                 size={sizes.communityIconSize}
                 color={colors.darkViolet}
               />
-              <Text style={communityStyles.buttonText}>My Friends</Text>
+              <Text style={communityStyles.buttonText}>{strings.myFriends}</Text>
             </TouchableOpacity>
           </View>
 
           <View>
-            <Text style={communityStyles.header}>Popular</Text>
+            <Text style={[communityStyles.header, inputStyle.inputShadow]}>Popular</Text>
           </View>
 
           <View style={communityStyles.buttonContainer}>
             <TouchableOpacity
-              style={communityStyles.buttonImage}
-              onPress={this.handleCommunityClick}
+              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
+              onPress={communityClick}
             >
               <Image
                 source={sampleIcon}
@@ -104,8 +114,8 @@ export default class Community extends Component {
               <Text style={communityStyles.buttonText}>Group A</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={communityStyles.buttonImage}
-              onPress={this.handleCommunityClick}
+              style={[[communityStyles.buttonImage, inputStyle.inputShadow], inputStyle.inputShadow]}
+              onPress={communityClick}
             >
               <Image
                 source={sampleIcon}
@@ -114,8 +124,8 @@ export default class Community extends Component {
               <Text style={communityStyles.buttonText}>Group B</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={communityStyles.buttonImage}
-              onPress={this.handleCommunityClick}
+              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
+              onPress={communityClick}
             >
               <Image
                 source={sampleIcon}
@@ -126,13 +136,13 @@ export default class Community extends Component {
           </View>
 
           <View>
-            <Text style={communityStyles.header}>Developing</Text>
+            <Text style={[communityStyles.header, inputStyle.inputShadow]}>Developing</Text>
           </View>
 
           <View style={communityStyles.buttonContainer}>
             <TouchableOpacity
-              style={communityStyles.buttonImage}
-              onPress={this.handleCommunityClick}
+              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
+              onPress={communityClick}
             >
               <Image
                 source={sampleIcon}
@@ -141,8 +151,8 @@ export default class Community extends Component {
               <Text style={communityStyles.buttonText}>Group A</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={communityStyles.buttonImage}
-              onPress={this.handleCommunityClick}
+              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
+              onPress={communityClick}
             >
               <Image
                 source={sampleIcon}
@@ -151,8 +161,8 @@ export default class Community extends Component {
               <Text style={communityStyles.buttonText}>Group B</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={communityStyles.buttonImage}
-              onPress={this.handleCommunityClick}
+              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
+              onPress={communityClick}
             >
               <Image
                 source={sampleIcon}
@@ -164,8 +174,8 @@ export default class Community extends Component {
 
           <View style={communityStyles.buttonContainer}>
             <TouchableOpacity
-              style={communityStyles.buttonImage}
-              onPress={this.handleCommunityClick}
+              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
+              onPress={communityClick}
             >
               <Image
                 source={sampleIcon}
@@ -174,8 +184,8 @@ export default class Community extends Component {
               <Text style={communityStyles.buttonText}>Group A</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={communityStyles.buttonImage}
-              onPress={this.handleCommunityClick}
+              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
+              onPress={communityClick}
             >
               <Image
                 source={sampleIcon}
@@ -184,8 +194,8 @@ export default class Community extends Component {
               <Text style={communityStyles.buttonText}>Group B</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={communityStyles.buttonImage}
-              onPress={this.handleCommunityClick}
+              style={[communityStyles.buttonImage, inputStyle.inputShadow]}
+              onPress={communityClick}
             >
               <Image
                 source={sampleIcon}
@@ -198,4 +208,5 @@ export default class Community extends Component {
       </View>
     );
   }
-}
+  export default Community;
+

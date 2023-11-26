@@ -16,12 +16,39 @@ export default {
   add: "Add",
   search: "Search",
   post: "Post",
+  publish: "Publish",
+  picture: "Picture",
 
+  // navigation
   home: "Home",
   community: "Community",
   profile: "Profile",
   message: "Message",
   settings: "Settings",
+
+  // navigation Community
+  setupCommunity: "SetupCommunity",
+  // community buttons
+  newCommunity: "New Group",
+  myCommunity: "My Groups",
+  myFriends: "My Friends",
+
+  // setup community
+  setupCommunityName: "New Community Name",
+  setupCommunityNamePlaceholder: "Please input new community name...",
+
+  setupCommunityDescription: "Description",
+  setupCommunityDescriptionPlaceholder: "Please input description about the community...",
+
+  setupCommunityRules: "Rules",
+  setupCommunityRulesPlaceholder: "Please input rules for the community...",
+
+  setupCommunityVisibility: "New Group's Visibility",
+  setupCommunityVisibilityPlaceholder: "Please select the visibility",
+  Visibility : [
+    { key: 'Private', value: "Private" },
+    { key: 'Public', value: "Public" },
+],
 
   //register
   races: [
@@ -54,5 +81,5 @@ export default {
   forgotPassword: "Forgot Password?",
 
   //community
-  communitySearchBar: "Explore communities"
+  communitySearchBar: "Explore communities",
 };

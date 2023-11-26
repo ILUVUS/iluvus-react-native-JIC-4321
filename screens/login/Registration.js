@@ -37,7 +37,7 @@ const RegistrationScreen = ({ navigation }) => {
     // You can send the user details to your backend for processing
 
     // For simplicity, we'll just navigate to a success screen
-    navigation.navigate(strings.home);
+    navigation.navigate(strings.h);
   };
 
   return (

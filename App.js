@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
-import LoginScreen from "./screens/login/Login";
-import RegistrationScreen from "./screens/login/Registration";
-import HomeScreen from "./screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { appStyle as styles } from "./styles/style";
+// Screens imports
+import LoginScreen from "./screens/login/Login";
+import RegistrationScreen from "./screens/login/Registration";
+import HomeScreen from "./screens/HomeScreen";
+import SetupCommunity from "./screens/community/SetupCommunity";
+
+// Constants imports
 import strings from "./constants/strings";
 
 const Stack = createStackNavigator();
@@ -13,7 +15,7 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={strings.login}>
+      <Stack.Navigator initialRouteName={strings.home}>
         <Stack.Screen
           name={strings.login}
           component={LoginScreen}
@@ -38,6 +40,15 @@ export default function App() {
           options={{
             title: strings.home,
             headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name={strings.setupCommunity}
+          component={SetupCommunity}
+          options={{
+            title: strings.newCommunity,
+            headerShown: true,
           }}
         />
       </Stack.Navigator>

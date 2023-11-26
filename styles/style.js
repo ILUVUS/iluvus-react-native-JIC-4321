@@ -22,7 +22,7 @@ export const appStyle = StyleSheet.create({
   scrollableContainer: {
     width: "100%",
     justifyContent: "start",
-    alignItems: "start",
+    // alignItems: "start",
     padding: 10,
   },
 });
@@ -273,5 +273,73 @@ export const communityStyles = StyleSheet.create({
     color: "black",
     fontSize: 12,
     marginTop: 10,
+  },
+});
+
+export const setUpCommunityStyles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.white,
+    height: sizes.screenHeight,
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 18,
+    color: colors.darkViolet,
+    marginBottom: 10,
+    marginLeft: 10,
+  },
+  input: {
+    width: "100%",
+    height: 100,
+    borderColor: 'transparent',
+    borderWidth: 0,
+    borderRadius: sizes.inputBorderRadius,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 15,
+    paddingRight: 15,
+    backgroundColor: colors.lightViolet,
+    marginBottom: 15,
+  },
+  buttonContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "start",
+    marginTop: 15,
+  },
+  actionButton: {
+    padding: 20,
+    backgroundColor: colors.lightViolet,
+    borderWidth: 0,
+    borderRadius: sizes.communityIconRadius,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginRight: 10,
+  },
+  buttonText: {
+    color: colors.darkViolet,
+    fontWeight: 'normal',
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  dropDown: {
+    width: "100%",
+  },
+  dropDownActive: {
+    borderWidth: 1,
+    borderColor: colors.violet,
+    marginRight: 20,
+    marginLeft: 20,
+    marginTop: 10,
+  },
+  dropDownItem: {
+    backgroundColor: colors.lightViolet,
+    marginLeft: 15,
+    marginRight: 15,
+    marginBottom: 5,
+    borderRadius: 8,
+    paddingTop: 8,
+    paddingBottom: 8,
   },
 });

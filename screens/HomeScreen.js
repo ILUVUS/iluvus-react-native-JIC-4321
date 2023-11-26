@@ -21,6 +21,7 @@ import Community from "./community/Community";
 
 // const [searchText, setSearchText] = useState("");
 
+
 // Tab navigation bar for the app
 function HomeScreenNav() {
   return (
@@ -32,9 +33,7 @@ function HomeScreenNav() {
 
 function CommunityScreenNav() {
   return (
-    // <View style={styles.homeContainer}>
       <Community />
-    // </View>
   )
 }
 
