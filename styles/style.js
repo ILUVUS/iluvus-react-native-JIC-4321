@@ -21,9 +21,11 @@ export const appStyle = StyleSheet.create({
   },
   scrollableContainer: {
     width: "100%",
+    height: "100%",
     justifyContent: "start",
     // alignItems: "start",
     padding: 10,
+    backgroundColor: colors.white,
   },
 });
 
@@ -279,7 +281,7 @@ export const communityStyles = StyleSheet.create({
 export const setUpCommunityStyles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
-    height: sizes.screenHeight,
+    // height: sizes.screenHeight,
     paddingHorizontal: 20,
   },
   title: {

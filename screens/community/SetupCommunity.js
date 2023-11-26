@@ -8,6 +8,7 @@ import {
   Image,
   Switch,
   TouchableOpacity,
+  ScrollView
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { setUpCommunityStyles as styles } from "../../styles/style";
@@ -34,7 +35,7 @@ export default function SetupCommunity() {
     }
   };
   return (
-    <View style={[appStyle.scrollableContainer, styles.container]}>
+    <ScrollView contentContainerStyle={[appStyle.scrollableContainer, styles.container]} automaticallyAdjustKeyboardInsets={true}>
       <Text style={[styles.title, inputStyle.inputShadow]}>{strings.setupCommunityName}</Text>
       <TextInput
         style={[styles.input, inputStyle.inputShadow]}
@@ -98,6 +99,6 @@ export default function SetupCommunity() {
           <Text style={styles.buttonText}>Publish</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </ScrollView>
   );
 }
