@@ -66,9 +66,8 @@ const RegistrationScreen = ({ navigation }) => {
         'Content-Type': 'application/json',
       },
     }).then(res => {
-      // always success
-      Alert.alert("Success", "You have successfully registered");
-      navigation.navigate("Login");
+      console.log(res.data);
+      navigation.navigate("Home");
     }
       ).catch(err => console.log(err))
   }
