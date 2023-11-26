@@ -14,11 +14,11 @@ import {
   inputStyle,
   buttonStyle,
   textStyle,
-} from "../styles/style";
+} from "../../styles/style";
 
-import strings from "../constants/strings";
-import colors from "../constants/colors";
-import sizes from "../constants/sizes";
+import strings from "../../constants/strings";
+import colors from "../../constants/colors";
+import sizes from "../../constants/sizes";
 
 import { SelectList } from "react-native-dropdown-select-list";
 
@@ -37,7 +37,7 @@ const RegistrationScreen = ({ navigation }) => {
     // You can send the user details to your backend for processing
 
     // For simplicity, we'll just navigate to a success screen
-    navigation.navigate("Home");
+    navigation.navigate(strings.home);
   };
 
   return (

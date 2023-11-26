@@ -1,15 +1,25 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { Text, View, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
+import {
+  appStyle as styles,
+  communityStyles,
+  searchBarStyle,
+} from "../styles/style";
+import { useState } from "react";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import { SearchBar, Image } from "react-native-elements";
+import loginImage from "../assets/images/loginImage.png";
+import sampleIcon from "../assets/images/sampleicon.jpg";
 
-import { homeStyle as styles } from "../styles/style";
 import strings from "../constants/strings";
 import colors from "../constants/colors";
+import sizes from "../constants/sizes";
 
-const Stack = createStackNavigator();
+import Community from "./community/Community";
+
+// const [searchText, setSearchText] = useState("");
 
 // Tab navigation bar for the app
 function HomeScreenNav() {
@@ -22,10 +32,10 @@ function HomeScreenNav() {
 
 function CommunityScreenNav() {
   return (
-    <View style={styles.container}>
-      <Text>Community!</Text>
-    </View>
-  );
+    // <View style={styles.homeContainer}>
+      <Community />
+    // </View>
+  )
 }
 
 function ProfileScreenNav() {

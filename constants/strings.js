@@ -52,4 +52,7 @@ export default {
   loginAlert: "Please enter username and password",
   createAnAccount: "Create an account",
   forgotPassword: "Forgot Password?",
+
+  //community
+  communitySearchBar: "Explore communities"
 };

@@ -15,13 +15,13 @@ import {
   inputStyle,
   buttonStyle,
   textStyle,
-} from "../styles/style";
+} from "../../styles/style";
 
 import { useNavigation } from "@react-navigation/native";
-import loginImage from "../assets/images/loginImage.png";
+import loginImage from "../../assets/images/loginImage.png";
 
-import strings from "../constants/strings";
-import color from "../constants/colors";
+import strings from "../../constants/strings";
+import color from "../../constants/colors";
 
 const LoginScreen = () => {
   const [username, setUsername] = useState("");
@@ -31,7 +31,7 @@ const LoginScreen = () => {
     // Here, you can add your authentication logic
     // For simplicity, we'll just navigate to a home screen if the fields are not empty
     if (username !== "" && password !== "") {
-      navigation.navigate("Home");
+      navigation.navigate(strings.home);
     } else {
       // Show an error or alert for empty fields
       alert(strings.loginAlert);
@@ -39,7 +39,7 @@ const LoginScreen = () => {
   };
 
   const handleRegistration = () => {
-    navigation.navigate("Registration");
+    navigation.navigate(strings.register);
   };
 
   return (

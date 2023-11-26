@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from "react-native";
-import LoginScreen from "./login/Login";
-import RegistrationScreen from "./login/Registration";
+import LoginScreen from "./screens/login/Login";
+import RegistrationScreen from "./screens/login/Registration";
 import HomeScreen from "./screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -24,10 +24,10 @@ export default function App() {
         />
 
         <Stack.Screen
-          name="Registration"
+          name={strings.register}
           component={RegistrationScreen}
           options={{
-            title: "Registration",
+            title: strings.register,
             headerShown: true,
           }}
         />
