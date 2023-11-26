@@ -26,14 +26,14 @@ import { useNavigation } from "@react-navigation/native";
 import loginImage from "../../assets/images/loginImage.png";
 
 import strings from "../../constants/strings";
-import color from "../../constants/colors";
+import color from "../../constants/colors"; 
 
 const LoginScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
-  const handleSignin = () => {
+  const handleSignin = async () => {
     axios({
       method: "POST",
       url: `${BASE_URL}/user/login`,
@@ -46,7 +46,6 @@ const LoginScreen = () => {
       },
     }).then(async res => {
       // Alert.alert("Successful", res.data);
-
       console.log(res.data);
       try {
         await AsyncStorage.setItem('userId', res.data);
@@ -104,7 +103,7 @@ const LoginScreen = () => {
             {strings.createAnAccount}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleSignin}>
+        <TouchableOpacity onPress= {handleSignin}>
           <Text style={[styles.forgotPasswordButton, textStyle.shadow]}>
             {strings.forgotPassword}
           </Text>
