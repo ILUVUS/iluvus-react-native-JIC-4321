@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { BASE_URL} from '@env';
 import { Alert } from "react-native";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
   View,
@@ -44,8 +44,19 @@ const LoginScreen = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then(res => {
+    }).then(async res => {
+      // Alert.alert("Successful", res.data);
+
       console.log(res.data);
+      try {
+        await AsyncStorage.setItem('userId', res.data);
+      } catch (e) {
+        // saving error
+      }
+
+      const value = await AsyncStorage.getItem('userId');
+      console.log(value);
+
       navigation.navigate("Home");
     }
       ).catch(err => Alert.alert("Unsuccessful", "Wrong Username or Password"))
