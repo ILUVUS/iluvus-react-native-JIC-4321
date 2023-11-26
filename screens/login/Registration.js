@@ -15,11 +15,11 @@ import {
   inputStyle,
   buttonStyle,
   textStyle,
-} from "../styles/style";
+} from "../../styles/style";
 
-import strings from "../constants/strings";
-import colors from "../constants/colors";
-import sizes from "../constants/sizes";
+import strings from "../../constants/strings";
+import colors from "../../constants/colors";
+import sizes from "../../constants/sizes";
 
 import { SelectList } from "react-native-dropdown-select-list";
 import axios from "axios";
@@ -85,7 +85,6 @@ const RegistrationScreen = ({ navigation }) => {
     {key: 'Non-Binary', value: "Non-Binary"},
     {key: 'Other', value: "Other"},
   ];
-
 
   return (
     <KeyboardAvoidingView

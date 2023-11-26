@@ -9,8 +9,23 @@ export const appStyle = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "start",
+    padding: 10,
+  },
+  homeContainer: {
+    flex: 1,
+    backgroundColor: colors.white,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollableContainer: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "start",
+    // alignItems: "start",
+    padding: 10,
+    backgroundColor: colors.white,
   },
 });
 
@@ -61,6 +76,7 @@ export const loginStyle = StyleSheet.create({
     width: screenWidth - 100,
     maxWidth: 300,
     marginBottom: 15,
+    paddingHorizontal: 10,
   },
   image: {
     width: 200,
@@ -111,14 +127,10 @@ export const registrationStyle = StyleSheet.create({
     marginTop: 15,
     left: 20,
   },
-  input: {
-    marginLeft: 20,
-    marginRight: 20,
-  },
   button: {
     display: "flex",
     backgroundColor: colors.yellow,
-    borderRadius: 30,
+    borderRadius: sizes.buttonBorderRadius,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
@@ -134,17 +146,19 @@ export const registrationStyle = StyleSheet.create({
     color: colors.darkViolet,
     fontSize: sizes.normalSize,
   },
+  input: {
+    marginHorizontal: 20,
+    paddingHorizontal: 20,
+  }
 });
 
 export const inputStyle = StyleSheet.create({
   input: {
     paddingTop: 12,
     paddingBottom: 12,
-    paddingLeft: 10,
-    paddingRight: 10,
     borderColor: "transparent",
     borderWidth: 0,
-    borderRadius: 10,
+    borderRadius: sizes.inputBorderRadius,
     fontSize: sizes.normalSize,
     backgroundColor: colors.lightViolet,
     color: colors.darkViolet,
@@ -187,5 +201,147 @@ export const homeStyle = StyleSheet.create({
     backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
+  },
+});
+
+export const searchBarStyle = StyleSheet.create({
+  containerSearchBar: {
+    width: "100%",
+    padding: 10,
+    borderBottomWidth: 0,
+    borderTopWidth: 0,
+    backgroundColor: "transparent",
+  },
+  inputSearchBar: {
+    width: "100%",
+    backgroundColor: colors.lightViolet, 
+    borderRadius: sizes.inputBorderRadius,
+  },
+  input: { 
+    backgroundColor: colors.lightViolet, 
+    color: colors.darkViolet,
+    fontSize: sizes.normalSize,
+  },
+  seachIcon: {
+    color: colors.lightDarkviolet,
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  clearIcon: {
+    color: colors.lightDarkviolet,
+  }
+});
+
+export const communityStyles = StyleSheet.create({
+  header: {
+    fontWeight: "bold",
+    color: colors.darkViolet,
+    fontSize: 30,
+    left: 10,
+    marginBottom: 10,
+  },
+  buttonIcon: {
+    padding: 20,
+    backgroundColor: colors.lightViolet,
+    borderWidth: 0,
+    borderRadius: sizes.communityIconRadius,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  buttonImage: {
+    paddingTop: 1,
+    paddingBottom: 5,
+    paddingLeft: 1,
+    paddingRight: 1,
+    borderWidth: 0,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  buttonContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginTop: 0,
+    marginBottom: 15,
+  },
+  communityImage: {
+    width: 95,
+    height: 95,
+    borderRadius: sizes.communityIconRadius,
+  },
+  buttonText: {
+    color: "black",
+    fontSize: 12,
+    marginTop: 10,
+  },
+});
+
+export const setUpCommunityStyles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.white,
+    // height: sizes.screenHeight,
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 18,
+    color: colors.darkViolet,
+    marginBottom: 10,
+    marginLeft: 10,
+  },
+  input: {
+    width: "100%",
+    height: 100,
+    borderColor: 'transparent',
+    borderWidth: 0,
+    borderRadius: sizes.inputBorderRadius,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 15,
+    paddingRight: 15,
+    backgroundColor: colors.lightViolet,
+    marginBottom: 15,
+  },
+  buttonContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "start",
+    marginTop: 15,
+  },
+  actionButton: {
+    padding: 20,
+    backgroundColor: colors.lightViolet,
+    borderWidth: 0,
+    borderRadius: sizes.communityIconRadius,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginRight: 10,
+  },
+  buttonText: {
+    color: colors.darkViolet,
+    fontWeight: 'normal',
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  dropDown: {
+    width: "100%",
+  },
+  dropDownActive: {
+    borderWidth: 1,
+    borderColor: colors.violet,
+    marginRight: 20,
+    marginLeft: 20,
+    marginTop: 10,
+  },
+  dropDownItem: {
+    backgroundColor: colors.lightViolet,
+    marginLeft: 15,
+    marginRight: 15,
+    marginBottom: 5,
+    borderRadius: 8,
+    paddingTop: 8,
+    paddingBottom: 8,
   },
 });

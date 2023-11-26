@@ -1,5 +1,10 @@
 // LoginScreen.js
 import React, { useState } from "react";
+import axios from "axios";
+import { BASE_URL} from '@env';
+import { Alert } from "react-native";
+
+
 import {
   View,
   KeyboardAvoidingView,
@@ -15,31 +20,39 @@ import {
   inputStyle,
   buttonStyle,
   textStyle,
-} from "../styles/style";
+} from "../../styles/style";
 
 import { useNavigation } from "@react-navigation/native";
-import loginImage from "../assets/images/loginImage.png";
+import loginImage from "../../assets/images/loginImage.png";
 
-import strings from "../constants/strings";
-import color from "../constants/colors";
+import strings from "../../constants/strings";
+import color from "../../constants/colors";
 
 const LoginScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
+
   const handleSignin = () => {
-    // Here, you can add your authentication logic
-    // For simplicity, we'll just navigate to a home screen if the fields are not empty
-    if (username !== "" && password !== "") {
+    axios({
+      method: "POST",
+      url: `${BASE_URL}/user/login`,
+      data: {
+        "username": String(username),
+        "password": String(password),
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then(res => {
+      console.log(res.data);
       navigation.navigate("Home");
-    } else {
-      // Show an error or alert for empty fields
-      alert(strings.loginAlert);
     }
+      ).catch(err => Alert.alert("Unsuccessful", "Wrong Username or Password"))
   };
 
   const handleRegistration = () => {
-    navigation.navigate("Registration");
+    navigation.navigate(strings.register);
   };
 
   return (

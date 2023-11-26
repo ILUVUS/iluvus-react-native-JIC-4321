@@ -1,11 +1,13 @@
-import { StyleSheet, Text, View } from "react-native";
-import LoginScreen from "./login/Login";
-import RegistrationScreen from "./login/Registration";
-import HomeScreen from "./screens/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { appStyle as styles } from "./styles/style";
+// Screens imports
+import LoginScreen from "./screens/login/Login";
+import RegistrationScreen from "./screens/login/Registration";
+import HomeScreen from "./screens/HomeScreen";
+import SetupCommunity from "./screens/community/SetupCommunity";
+
+// Constants imports
 import strings from "./constants/strings";
 
 const Stack = createStackNavigator();
@@ -24,10 +26,10 @@ export default function App() {
         />
 
         <Stack.Screen
-          name="Registration"
+          name={strings.register}
           component={RegistrationScreen}
           options={{
-            title: "Registration",
+            title: strings.register,
             headerShown: true,
           }}
         />
@@ -38,6 +40,15 @@ export default function App() {
           options={{
             title: strings.home,
             headerShown: false,
+          }}
+        />
+
+        <Stack.Screen
+          name={strings.setupCommunity}
+          component={SetupCommunity}
+          options={{
+            title: strings.newCommunity,
+            headerShown: true,
           }}
         />
       </Stack.Navigator>
