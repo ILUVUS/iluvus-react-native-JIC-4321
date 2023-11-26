@@ -1,12 +1,14 @@
 // RegistrationScreen.js
-import React, { useState } from "react";
 import {
   KeyboardAvoidingView,
   ScrollView,
   Text,
+  View,
   TextInput,
   TouchableOpacity,
   Platform,
+  StyleSheet,
+  Alert
 } from "react-native";
 
 import {
@@ -21,6 +23,9 @@ import colors from "../../constants/colors";
 import sizes from "../../constants/sizes";
 
 import { SelectList } from "react-native-dropdown-select-list";
+import axios from "axios";
+import { BASE_URL} from '@env';
+import React, { useState } from "react";
 
 const RegistrationScreen = ({ navigation }) => {
   const [fName, setFname] = useState("");
@@ -31,15 +36,43 @@ const RegistrationScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [race, setRace] = useState("");
   const [gender, setGender] = useState("");
-  const [location, setLocation] = React.useState("");
+  const [proEmail, setProfEmail] = React.useState("");
+
+
   const handleRegister = () => {
-    // Implement your registration logic here
-    // You can send the user details to your backend for processing
-
-    // For simplicity, we'll just navigate to a success screen
-    navigation.navigate(strings.h);
-  };
-
+    axios({
+      method: "POST",
+      url: `${BASE_URL}/user/create`,
+      data: {
+        "username": String(username),
+        "email": String(email),
+        "password": String(password),
+        "fname": String(fName),
+        "lname": String(lName),
+        "gender": String(gender),
+        "dob": String(DOB),
+        "race": String(race),
+        "proEmail": String(proEmail),
+        "interests": "",
+        "education": "",
+        "work": "",
+        "skills": "",
+        "hobbies": "",
+        "posts": "",
+        "friends": "",
+        "groups": ""
+      },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then(res => {
+      // always success
+      Alert.alert("Success", "You have successfully registered");
+      navigation.navigate("Login");
+    }
+      ).catch(err => console.log(err))
+  }
+  
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -133,6 +166,16 @@ const RegistrationScreen = ({ navigation }) => {
           keyboardType="email-address"
         />
         <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
+          Professional Email
+        </Text>
+        <TextInput
+          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
+          placeholderTextColor={colors.lightDarkviolet}
+          placeholder="Only Required for Professional user"
+          value={proEmail}
+          onChangeText={(text) => setProfEmail(text)}
+        />
+        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
           Username
         </Text>
         <TextInput
@@ -153,18 +196,6 @@ const RegistrationScreen = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
           secureTextEntry
         />
-        <Text style={[styles.title, textStyle.titleColor, textStyle.shadow]}>
-          Location
-        </Text>
-        <TextInput
-          style={[styles.input, inputStyle.input, inputStyle.inputShadow]}
-          placeholderTextColor={colors.lightDarkviolet}
-          placeholder={strings.locationExample}
-          value={location}
-          onChangeText={(text) => setLocation(text)}
-          secureTextEntry
-        />
-
         <TouchableOpacity
           style={[styles.button, buttonStyle.buttonShadow]}
           onPress={handleRegister}

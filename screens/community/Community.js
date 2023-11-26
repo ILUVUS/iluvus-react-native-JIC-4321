@@ -64,7 +64,11 @@ const Community = () => {
         <ScrollView contentContainerStyle={styles.scrollableContainer}>
           <View style={communityStyles.buttonContainer}>
             <TouchableOpacity
-              style={[[communityStyles.buttonIcon, inputStyle.inputShadow], inputStyle.inputShadow]}
+              style={[
+                communityStyles.buttonIcon, 
+                inputStyle.inputShadow, 
+                inputStyle.inputShadow
+                ]}
               onPress={newCommunity}
             >
               <Icon

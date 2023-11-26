@@ -67,7 +67,7 @@ export default {
   ],
   fnameExample: "John",
   lnameExample: "Smith",
-  dobExample: "mm-dd-yyyy (e.g. 01-01-2000)",
+  dobExample: "yyyy-mm-dd (e.g. 2000-01-01)",
   emailExample: "user@email.com",
   usernameExample: "Username (e.g. user123)",
   passwordExample: "Password (e.g. password123)",
