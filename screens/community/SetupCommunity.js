@@ -44,7 +44,7 @@ export default function SetupCommunity() {
       visibility.trim() !== ""
     ) {
       
-      axios({
+      await axios({
         method: "POST",
         url: `${BASE_URL}/community/create`,
         data: {
