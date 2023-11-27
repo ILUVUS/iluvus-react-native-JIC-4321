@@ -67,7 +67,7 @@ const RegistrationScreen = ({ navigation }) => {
       },
     }).then(res => {
       console.log(res.data);
-      navigation.navigate("Home");
+      navigation.navigate("Login");
     }
       ).catch(err => console.log(err))
   }

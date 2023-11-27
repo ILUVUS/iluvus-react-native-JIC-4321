@@ -34,6 +34,7 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const handleSignin = async () => {
+    console.log(username, password);
     axios({
       method: "POST",
       url: `${BASE_URL}/user/login`,

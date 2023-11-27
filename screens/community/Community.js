@@ -36,6 +36,7 @@ const Community = () => {
     const onRefresh = React.useCallback(() => {
       setRefreshing(true);
       // refresh the communityList
+      getVerified();
       fetchCommunityList();
       setTimeout(() => {
         setRefreshing(false);
@@ -43,6 +44,7 @@ const Community = () => {
     }, []);
 
     useEffect(() => {
+      getVerified();
       fetchCommunityList();
     }, []);  
     
@@ -65,7 +67,7 @@ const Community = () => {
 
     const getVerified = async () => {
       axios({
-        method: "GET",
+        method: "POST",
         url: `${BASE_URL}/user/verify`,
         data: {
           "username": await AsyncStorage.getItem('userId')
@@ -75,9 +77,11 @@ const Community = () => {
         },
       })
       .then(res => {
+        console.log("User is verified");
         setVerify(true);
       })
       .catch(err => {
+        console.log("User is not verified");
         setVerify(false);
         console.log(err);
       });
