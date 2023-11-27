@@ -31,6 +31,7 @@ const Community = () => {
     const [searchValue, setSearchValue] = useState("");
     const [communityList, setCommunityList] = useState([]);
     const [refreshing, setRefreshing] = React.useState(false);
+    const [verify, setVerify] = useState(false);
 
     const onRefresh = React.useCallback(() => {
       setRefreshing(true);
@@ -58,6 +59,26 @@ const Community = () => {
         setCommunityList(res.data);
       })
       .catch(err => {
+        console.log(err);
+      });
+    };
+
+    const getVerified = async () => {
+      axios({
+        method: "GET",
+        url: `${BASE_URL}/user/verify`,
+        data: {
+          "username": await AsyncStorage.getItem('userId')
+        },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(res => {
+        setVerify(true);
+      })
+      .catch(err => {
+        setVerify(false);
         console.log(err);
       });
     };
@@ -113,6 +134,10 @@ const Community = () => {
         }
         >
           <View style={communityStyles.buttonContainer}>
+
+
+          { verify && 
+          
             <TouchableOpacity
               style={[
                 communityStyles.buttonIcon, 
@@ -128,6 +153,10 @@ const Community = () => {
               />
               <Text style={communityStyles.buttonText}>{strings.newCommunity}</Text>
             </TouchableOpacity>
+
+          }
+
+
             <TouchableOpacity
               style={[communityStyles.buttonIcon, inputStyle.inputShadow]}
               onPress={myCommunity}
