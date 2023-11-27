@@ -10,6 +10,12 @@ import SetupCommunity from "./screens/community/SetupCommunity";
 // Constants imports
 import strings from "./constants/strings";
 
+import { LogBox } from "react-native"
+
+LogBox.ignoreAllLogs(true)
+
+// console.ignoredYellowBox = ['Warning: Failed propType: SceneView'];
+
 const Stack = createStackNavigator();
 
 export default function App() {

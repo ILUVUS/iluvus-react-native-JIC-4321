@@ -57,6 +57,9 @@ const LoginScreen = () => {
       const value = await AsyncStorage.getItem('userId');
       console.log(value);
 
+      setUsername("");
+      setPassword("");
+
       navigation.navigate("Home");
     }
       ).catch(err => Alert.alert("Unsuccessful", "Wrong Username or Password"))
