@@ -1,0 +1,27 @@
+/** @type {import('tailwindcss').Config} */
+
+module.exports = {
+    content: ['./App.{js,jsx,ts,tsx}', './screens/**/*.{js,jsx,ts,tsx}'],
+    theme: {
+        extend: {},
+    },
+    theme: {
+        extend: {
+            colors: {
+                violet: {
+                    50: '#ffffff',
+                    100: '#F4EAFF',
+                    200: '#d8cfe7',
+                    300: '#c5b7dc',
+                    400: '#b2a0d0',
+                    500: '#9f88c5',
+                    600: '#7959ad',
+                    700: '#6641a2',
+                    800: '#532996',
+                    900: '#40128b',
+                },
+            },
+        },
+    },
+    plugins: [],
+}
