@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { BASE_URL } from '@env'
 // import Images
-import sampleIcon from '../../assets/images/sampleicon.jpg'
+import sampleIcon from '../../../assets/images/sampleicon.jpg'
 
 // import styles
 import {
@@ -23,7 +23,7 @@ import {
     communityStyles,
     searchBarStyle,
     inputStyle,
-} from '../../styles/style'
+} from '../../../styles/style'
 
 // import constants
 import strings from '../../constants/strings'
@@ -132,7 +132,7 @@ const Community = () => {
     return (
         <View style={styles.homeContainer}>
             <SearchBar
-                placeholder={strings.communitySearchBar}
+                placeholder={STRINGS.communitySearchBar}
                 onChangeText={(text) => searchFunction(text)}
                 value={searchValue}
                 containerStyle={[
@@ -141,7 +141,7 @@ const Community = () => {
                 ]}
                 inputContainerStyle={searchBarStyle.inputSearchBar}
                 inputStyle={searchBarStyle.input}
-                placeholderTextColor={colors.lightDarkviolet}
+                placeholderTextColor={COLORS.lightDarkviolet}
                 searchIcon={searchBarStyle.seachIcon}
                 clearIcon={searchBarStyle.clearIcon}
             />
@@ -166,11 +166,11 @@ const Community = () => {
                         >
                             <Icon
                                 name="plus"
-                                size={sizes.communityIconSize}
-                                color={colors.darkViolet}
+                                size={SIZES.communityIconSize}
+                                color={COLORS.darkViolet}
                             />
                             <Text style={communityStyles.buttonText}>
-                                {strings.newCommunity}
+                                {STRINGS.newCommunity}
                             </Text>
                         </TouchableOpacity>
                     )}
@@ -184,11 +184,11 @@ const Community = () => {
                     >
                         <Icon
                             name="users"
-                            size={sizes.communityIconSize}
-                            color={colors.darkViolet}
+                            size={SIZES.communityIconSize}
+                            color={COLORS.darkViolet}
                         />
                         <Text style={communityStyles.buttonText}>
-                            {strings.myCommunity}
+                            {STRINGS.myCommunity}
                         </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -200,11 +200,11 @@ const Community = () => {
                     >
                         <Icon
                             name="child"
-                            size={sizes.communityIconSize}
-                            color={colors.darkViolet}
+                            size={SIZES.communityIconSize}
+                            color={COLORS.darkViolet}
                         />
                         <Text style={communityStyles.buttonText}>
-                            {strings.myFriends}
+                            {STRINGS.myFriends}
                         </Text>
                     </TouchableOpacity>
                 </View>

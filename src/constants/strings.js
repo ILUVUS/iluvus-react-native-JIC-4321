@@ -2,8 +2,9 @@ export default {
     appName: 'ILUVUS',
 
     // general
-    login: 'Login',
-    register: 'Register',
+    loginscreen: 'Login',
+    registerscreen: 'Register',
+    homescreen: 'HomeScreen',
     logout: 'Logout',
     cancel: 'Cancel',
     ok: 'OK',
@@ -20,11 +21,11 @@ export default {
     picture: 'Picture',
 
     // navigation
-    home: 'Home',
-    community: 'Community',
-    profile: 'Profile',
-    message: 'Message',
-    settings: 'Settings',
+    hometab: 'Home',
+    communitytab: 'Community',
+    profiletab: 'Profile',
+    messagetab: 'Message',
+    settingstab: 'Settings',
 
     // navigation Community
     setupCommunity: 'SetupCommunity',

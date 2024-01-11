@@ -11,21 +11,28 @@ import {
     ScrollView,
     Alert,
 } from 'react-native'
+import { SetupCommunityInput } from '../../components/input'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { BASE_URL } from '@env'
 
 import { useNavigation } from '@react-navigation/native'
-import { setUpCommunityStyles as styles } from '../../styles/style'
+import {
+    setUpCommunityStyles as styles,
+    inputStyle,
+    appStyle,
+} from '../../../styles/style'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { Picker } from '@react-native-picker/picker'
 import { SelectList } from 'react-native-dropdown-select-list'
-import { appStyle } from '../../styles/style'
+
 import strings from '../../constants/strings'
-import { inputStyle } from '../../styles/style'
+
 import sizes from '../../constants/sizes'
 import colors from '../../constants/colors'
+
+import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingView'
 
 export default function SetupCommunity() {
     const [communityName, setCommunityName] = useState('')
@@ -70,58 +77,57 @@ export default function SetupCommunity() {
     const addPicture = () => {}
 
     return (
-        <ScrollView
-            contentContainerStyle={[
-                appStyle.scrollableContainer,
-                styles.container,
-            ]}
-            automaticallyAdjustKeyboardInsets={true}
-        >
-            <Text style={[styles.title, inputStyle.inputShadow]}>
+        <CustomKeyboardAvoidingView>
+            <Text
+                className="my-2 text-base text-orchid-900"
+                style={[inputStyle.inputShadow]}
+            >
                 {strings.setupCommunityName}
             </Text>
-            <TextInput
-                style={[styles.input, inputStyle.inputShadow]}
+            <SetupCommunityInput
                 placeholder={strings.setupCommunityNamePlaceholder}
                 value={communityName}
                 onChangeText={(text) => setCommunityName(text)}
                 multiline={true}
                 numberOfLines={4}
             />
-            <Text style={[styles.title, inputStyle.inputShadow]}>
+            <Text
+                className="my-2 text-base text-orchid-900"
+                style={[inputStyle.inputShadow]}
+            >
                 {strings.setupCommunityDescription}
             </Text>
-            <TextInput
-                style={[styles.input, inputStyle.inputShadow]}
+            <SetupCommunityInput
                 placeholder={strings.setupCommunityDescriptionPlaceholder}
                 value={communityDescription}
                 onChangeText={(text) => setCommunityDescription(text)}
                 multiline={true}
                 numberOfLines={4}
             />
-            <Text style={[styles.title, inputStyle.inputShadow]}>
+            <Text
+                className="my-2 text-base text-orchid-900"
+                style={[inputStyle.inputShadow]}
+            >
                 {strings.setupCommunityRules}
             </Text>
-            <TextInput
-                style={[styles.input, inputStyle.inputShadow]}
+            <SetupCommunityInput
                 placeholder={strings.setupCommunityRulesPlaceholder}
                 value={communityRule}
                 onChangeText={(text) => setCommunityRule(text)}
                 multiline={true}
                 numberOfLines={4}
             />
-            <Text style={[styles.title, inputStyle.inputShadow]}>
+            <Text
+                className="my-2 text-base text-orchid-900"
+                style={[inputStyle.inputShadow]}
+            >
                 {strings.setupCommunityVisibility}
             </Text>
             <SelectList
                 data={strings.Visibility}
                 setSelected={setVisibility}
                 value={visibility}
-                boxStyles={[
-                    styles.dropDown,
-                    inputStyle.input,
-                    inputStyle.inputShadow,
-                ]}
+                boxStyles={[inputStyle.input, inputStyle.inputShadow]}
                 dropdownStyles={styles.dropDownActive}
                 dropdownItemStyles={styles.dropDownItem}
                 maxHeight={sizes.dropDownMaxHeight}
@@ -129,9 +135,9 @@ export default function SetupCommunity() {
                 placeholder={strings.setupCommunityVisibilityPlaceholder}
             />
 
-            <View style={styles.buttonContainer}>
+            <View className="flex w-full flex-row justify-start gap-4 pt-5">
                 <TouchableOpacity
-                    style={[styles.actionButton, inputStyle.inputShadow]}
+                    className="items-center justify-between rounded-3xl border-none bg-orchid-100 p-5 shadow-md"
                     onPress={addPicture}
                 >
                     <Ionicons
@@ -139,11 +145,13 @@ export default function SetupCommunity() {
                         size={sizes.communityIconSize}
                         color={colors.darkViolet}
                     />
-                    <Text style={styles.buttonText}>Picture</Text>
+                    <Text className="mt-2 text-center text-sm text-orchid-900">
+                        Picture
+                    </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    style={[styles.actionButton, inputStyle.inputShadow]}
+                    className="items-center justify-between rounded-3xl border-none bg-orchid-100 p-5 shadow-md"
                     onPress={publishCommunity}
                 >
                     <Ionicons
@@ -151,9 +159,11 @@ export default function SetupCommunity() {
                         size={sizes.communityIconSize}
                         color={colors.darkViolet}
                     />
-                    <Text style={styles.buttonText}>Publish</Text>
+                    <Text className="mt-2 text-center text-sm text-orchid-900">
+                        Publish
+                    </Text>
                 </TouchableOpacity>
             </View>
-        </ScrollView>
+        </CustomKeyboardAvoidingView>
     )
 }

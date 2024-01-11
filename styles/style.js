@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
-import colors from '../constants/colors'
-import sizes from '../constants/sizes'
+import colors from '../src/constants/colors'
+import sizes from '../src/constants/sizes'
 
 const screenWidth = sizes.screenWidth
 const screenHeight = sizes.screenHeight
@@ -102,14 +102,10 @@ export const registrationStyle = StyleSheet.create({
         width: '100%',
     },
     dropDown: {
-        marginLeft: 20,
-        marginRight: 20,
     },
     dropDownActive: {
         borderWidth: 1,
         borderColor: colors.violet,
-        marginRight: 20,
-        marginLeft: 20,
         marginTop: 10,
     },
     dropDownItem: {
@@ -188,9 +184,9 @@ export const textStyle = StyleSheet.create({
     },
     shadow: {
         //shadow
-        shadowColor: colors.darkViolet,
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.1,
+        shadowColor: '#cbd5e1',
+        shadowOffset: { width: 5, height: 5 },
+        shadowOpacity: 1,
         shadowRadius: 3,
     },
 })
@@ -331,9 +327,6 @@ export const setUpCommunityStyles = StyleSheet.create({
     dropDownActive: {
         borderWidth: 1,
         borderColor: colors.violet,
-        marginRight: 20,
-        marginLeft: 20,
-        marginTop: 10,
     },
     dropDownItem: {
         backgroundColor: colors.lightViolet,

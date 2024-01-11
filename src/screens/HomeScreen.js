@@ -6,12 +6,12 @@ import {
     appStyle as styles,
     communityStyles,
     searchBarStyle,
-} from '../styles/style'
+} from '../../styles/style'
 import { useState } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { SearchBar, Image } from 'react-native-elements'
-import loginImage from '../assets/images/loginImage.png'
-import sampleIcon from '../assets/images/sampleicon.jpg'
+import loginImage from '../../assets/images/loginImage.png'
+import sampleIcon from '../../assets/images/sampleicon.jpg'
 
 import strings from '../constants/strings'
 import colors from '../constants/colors'
@@ -68,25 +68,25 @@ export default function HomeScreen() {
                     let iconName
 
                     switch (route.name) {
-                        case strings.home:
+                        case strings.hometab:
                             iconName = focused ? 'ios-home' : 'ios-home-outline'
                             break
-                        case strings.community:
+                        case strings.communitytab:
                             iconName = focused
                                 ? 'ios-earth'
                                 : 'ios-earth-outline'
                             break
-                        case strings.profile:
+                        case strings.profiletab:
                             iconName = focused
                                 ? 'ios-person-circle'
                                 : 'ios-person-circle-outline'
                             break
-                        case strings.message:
+                        case strings.messagetab:
                             iconName = focused
                                 ? 'ios-chatbubble'
                                 : 'ios-chatbubble-outline'
                             break
-                        case strings.settings:
+                        case strings.settingstab:
                             iconName = focused ? 'ios-list' : 'ios-list-outline'
                             break
                         default:
@@ -103,14 +103,23 @@ export default function HomeScreen() {
                 tabBarInactiveTintColor: colors.gray,
             })}
         >
-            <Tab.Screen name={strings.home} component={HomeScreenNav} />
+            <Tab.Screen name={strings.hometab} component={HomeScreenNav} />
             <Tab.Screen
-                name={strings.community}
+                name={strings.communitytab}
                 component={CommunityScreenNav}
             />
-            <Tab.Screen name={strings.profile} component={ProfileScreenNav} />
-            <Tab.Screen name={strings.message} component={MessageScreenNav} />
-            <Tab.Screen name={strings.settings} component={SettingsScreenNav} />
+            <Tab.Screen
+                name={strings.profiletab}
+                component={ProfileScreenNav}
+            />
+            <Tab.Screen
+                name={strings.messagetab}
+                component={MessageScreenNav}
+            />
+            <Tab.Screen
+                name={strings.settingstab}
+                component={SettingsScreenNav}
+            />
         </Tab.Navigator>
     )
 }
