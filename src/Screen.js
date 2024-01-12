@@ -13,12 +13,10 @@ LogBox.ignoreAllLogs(true)
 
 const Stack = createStackNavigator()
 
-const initialRouteName = STRINGS.loginS
-
 export default function Screen() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={initialRouteName}>
+            <Stack.Navigator initialRouteName={STRINGS.InitialRoute}>
                 <Stack.Screen
                     name={STRINGS.loginscreen}
                     component={LoginScreen}
