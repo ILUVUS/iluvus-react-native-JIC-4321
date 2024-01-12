@@ -3,12 +3,12 @@ import { TextInput, View } from 'react-native'
 
 const LoginInput = styled(
     TextInput,
-    'mb-5 h-fit w-11/12 rounded-2xl border-0 border-transparent bg-orchid-100 px-5 py-3 text-base text-orchid-900 shadow-md shadow-slate-200'
+    'mb-5 h-fit w-full rounded-2xl border-0 border-transparent bg-orchid-100 px-5 py-3 text-base text-orchid-900 shadow shadow-slate-200'
 )
 
 const RegisterInput = styled(
     TextInput,
-    'rounded-lg bg-orchid-100 p-3 text-base shadow-md shadow-slate-200'
+    'rounded-lg bg-orchid-100 p-3 text-base shadow shadow-slate-200'
 )
 
 const SetupCommunityInput = styled(

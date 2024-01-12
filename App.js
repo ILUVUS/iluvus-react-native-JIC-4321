@@ -1,7 +1,5 @@
-import Screen from "./src/Screen"
+import Screen from './src/Screen'
 
 export default function App() {
-    return (
-        <Screen />
-    )
+    return <Screen />
 }

@@ -1,37 +1,20 @@
 import React, { useState } from 'react'
-import {
-    View,
-    Text,
-    TextInput,
-    Button,
-    StyleSheet,
-    Image,
-    Switch,
-    TouchableOpacity,
-    ScrollView,
-    Alert,
-} from 'react-native'
-import { SetupCommunityInput } from '../../components/input'
 
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { BASE_URL } from '@env'
-
-import { useNavigation } from '@react-navigation/native'
-import {
-    setUpCommunityStyles as styles,
-    inputStyle,
-    appStyle,
-} from '../../../styles/style'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { Picker } from '@react-native-picker/picker'
+import { Alert, Text, View } from 'react-native'
 import { SelectList } from 'react-native-dropdown-select-list'
 
-import strings from '../../constants/strings'
+import { useNavigation } from '@react-navigation/native'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import sizes from '../../constants/sizes'
-import colors from '../../constants/colors'
-
+import SIZES from '../../constants/sizes'
+import COLORS from '../../constants/colors'
+import STRINGS from '../../constants/strings'
+import { SetupCommunityInput } from '../../components/input'
+import { NewCommunityButton } from '../../components/button'
+import { dropDownStyle, inputStyle } from '../../../styles/style'
 import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingView'
 
 export default function SetupCommunity() {
@@ -64,7 +47,6 @@ export default function SetupCommunity() {
                 },
             })
                 .then((res) => {
-                    console.log(res.data)
                     Alert.alert('Successful', 'Community Created')
                     navigation.navigate('Home')
                 })
@@ -78,91 +60,73 @@ export default function SetupCommunity() {
 
     return (
         <CustomKeyboardAvoidingView>
-            <Text
-                className="my-2 text-base text-orchid-900"
-                style={[inputStyle.inputShadow]}
-            >
-                {strings.setupCommunityName}
+            <Text className="my-2 text-base text-orchid-900 shadow-md shadow-slate-400">
+                {STRINGS.setupCommunityName}
             </Text>
             <SetupCommunityInput
-                placeholder={strings.setupCommunityNamePlaceholder}
+                placeholder={STRINGS.setupCommunityNamePlaceholder}
                 value={communityName}
                 onChangeText={(text) => setCommunityName(text)}
                 multiline={true}
                 numberOfLines={4}
             />
-            <Text
-                className="my-2 text-base text-orchid-900"
-                style={[inputStyle.inputShadow]}
-            >
-                {strings.setupCommunityDescription}
+            <Text className="my-2 text-base text-orchid-900 shadow-md shadow-slate-400">
+                {STRINGS.setupCommunityDescription}
             </Text>
             <SetupCommunityInput
-                placeholder={strings.setupCommunityDescriptionPlaceholder}
+                placeholder={STRINGS.setupCommunityDescriptionPlaceholder}
                 value={communityDescription}
                 onChangeText={(text) => setCommunityDescription(text)}
                 multiline={true}
                 numberOfLines={4}
             />
-            <Text
-                className="my-2 text-base text-orchid-900"
-                style={[inputStyle.inputShadow]}
-            >
-                {strings.setupCommunityRules}
+            <Text className="my-2 text-base text-orchid-900 shadow-md shadow-slate-400">
+                {STRINGS.setupCommunityRules}
             </Text>
             <SetupCommunityInput
-                placeholder={strings.setupCommunityRulesPlaceholder}
+                placeholder={STRINGS.setupCommunityRulesPlaceholder}
                 value={communityRule}
                 onChangeText={(text) => setCommunityRule(text)}
                 multiline={true}
                 numberOfLines={4}
             />
-            <Text
-                className="my-2 text-base text-orchid-900"
-                style={[inputStyle.inputShadow]}
-            >
-                {strings.setupCommunityVisibility}
+            <Text className="my-2 text-base text-orchid-900 shadow-md shadow-slate-400">
+                {STRINGS.setupCommunityVisibility}
             </Text>
             <SelectList
-                data={strings.Visibility}
+                data={STRINGS.Visibility}
                 setSelected={setVisibility}
                 value={visibility}
                 boxStyles={[inputStyle.input, inputStyle.inputShadow]}
-                dropdownStyles={styles.dropDownActive}
-                dropdownItemStyles={styles.dropDownItem}
-                maxHeight={sizes.dropDownMaxHeight}
+                dropdownStyles={dropDownStyle.dropDownActive}
+                dropdownItemStyles={dropDownStyle.dropDownItem}
+                maxHeight={SIZES.dropDownMaxHeight}
                 search={false}
-                placeholder={strings.setupCommunityVisibilityPlaceholder}
+                placeholder={STRINGS.setupCommunityVisibilityPlaceholder}
             />
 
             <View className="flex w-full flex-row justify-start gap-4 pt-5">
-                <TouchableOpacity
-                    className="items-center justify-between rounded-3xl border-none bg-orchid-100 p-5 shadow-md"
-                    onPress={addPicture}
-                >
+                <NewCommunityButton onPress={addPicture}>
                     <Ionicons
                         name="ios-add-circle-outline"
-                        size={sizes.communityIconSize}
-                        color={colors.darkViolet}
+                        size={SIZES.communityIconSize}
+                        color={COLORS['orchid'][900]}
                     />
                     <Text className="mt-2 text-center text-sm text-orchid-900">
-                        Picture
+                        {STRINGS.picturebtn}
                     </Text>
-                </TouchableOpacity>
+                </NewCommunityButton>
 
-                <TouchableOpacity
-                    className="items-center justify-between rounded-3xl border-none bg-orchid-100 p-5 shadow-md"
-                    onPress={publishCommunity}
-                >
+                <NewCommunityButton onPress={publishCommunity}>
                     <Ionicons
                         name="ios-navigate"
-                        size={sizes.communityIconSize}
-                        color={colors.darkViolet}
+                        size={SIZES.communityIconSize}
+                        color={COLORS['orchid'][900]}
                     />
                     <Text className="mt-2 text-center text-sm text-orchid-900">
-                        Publish
+                        {STRINGS.publishbtn}
                     </Text>
-                </TouchableOpacity>
+                </NewCommunityButton>
             </View>
         </CustomKeyboardAvoidingView>
     )

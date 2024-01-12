@@ -1,13 +1,19 @@
 export default {
-    darkViolet: '#40128B',
-    lightViolet: '#F4EAFF',
-    lightDarkviolet: '#9f88c5',
-    violet: '#cc9eff',
-    yellow: '#FFE79B',
-
     white: '#FFFFFF',
     black: '#000000',
-    gray: '#a3a3a3',
+
+    gray: {
+        50: '#ffffff',
+        100: '#f4f4f5',
+        200: '#e4e4e7',
+        300: '#d4d4d8',
+        400: '#a1a1aa',
+        500: '#71717a',
+        600: '#52525b',
+        700: '#3f3f46',
+        800: '#27272a',
+        900: '#18181b',
+    },
 
     orchid: {
         50: '#ffffff',

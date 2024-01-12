@@ -1,30 +1,15 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { Text, View } from 'react-native'
+
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { Text, View, TouchableOpacity, Alert, ScrollView } from 'react-native'
-import { createStackNavigator } from '@react-navigation/stack'
-import {
-    appStyle as styles,
-    communityStyles,
-    searchBarStyle,
-} from '../../styles/style'
-import { useState } from 'react'
-import Icon from 'react-native-vector-icons/FontAwesome5'
-import { SearchBar, Image } from 'react-native-elements'
-import loginImage from '../../assets/images/loginImage.png'
-import sampleIcon from '../../assets/images/sampleicon.jpg'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
-import strings from '../constants/strings'
-import colors from '../constants/colors'
-import sizes from '../constants/sizes'
-
+import COLORS from '../constants/colors'
+import STRINGS from '../constants/strings'
 import Community from './community/Community'
 
-// const [searchText, setSearchText] = useState("");
-
-// Tab navigation bar for the app
 function HomeScreenNav() {
     return (
-        <View style={styles.container}>
+        <View className="flex h-screen justify-center bg-white p-2 align-middle">
             <Text>Home!</Text>
         </View>
     )
@@ -36,7 +21,7 @@ function CommunityScreenNav() {
 
 function ProfileScreenNav() {
     return (
-        <View style={styles.container}>
+        <View className="flex h-screen justify-center bg-white p-2 align-middle">
             <Text>ProfileScreen!</Text>
         </View>
     )
@@ -44,7 +29,7 @@ function ProfileScreenNav() {
 
 function MessageScreenNav() {
     return (
-        <View style={styles.container}>
+        <View className="flex h-screen justify-center bg-white p-2 align-middle">
             <Text>MessageScreen!</Text>
         </View>
     )
@@ -52,7 +37,7 @@ function MessageScreenNav() {
 
 function SettingsScreenNav() {
     return (
-        <View style={styles.container}>
+        <View className="flex h-screen justify-center bg-white p-2 align-middle">
             <Text>Settings!</Text>
         </View>
     )
@@ -68,25 +53,25 @@ export default function HomeScreen() {
                     let iconName
 
                     switch (route.name) {
-                        case strings.hometab:
+                        case STRINGS.hometab:
                             iconName = focused ? 'ios-home' : 'ios-home-outline'
                             break
-                        case strings.communitytab:
+                        case STRINGS.communitytab:
                             iconName = focused
                                 ? 'ios-earth'
                                 : 'ios-earth-outline'
                             break
-                        case strings.profiletab:
+                        case STRINGS.profiletab:
                             iconName = focused
                                 ? 'ios-person-circle'
                                 : 'ios-person-circle-outline'
                             break
-                        case strings.messagetab:
+                        case STRINGS.messagetab:
                             iconName = focused
                                 ? 'ios-chatbubble'
                                 : 'ios-chatbubble-outline'
                             break
-                        case strings.settingstab:
+                        case STRINGS.settingstab:
                             iconName = focused ? 'ios-list' : 'ios-list-outline'
                             break
                         default:
@@ -99,25 +84,25 @@ export default function HomeScreen() {
                         <Ionicons name={iconName} size={size} color={color} />
                     )
                 },
-                tabBarActiveTintColor: colors.darkViolet,
-                tabBarInactiveTintColor: colors.gray,
+                tabBarActiveTintColor: COLORS['orchid'][900],
+                tabBarInactiveTintColor: COLORS['gray'][400],
             })}
         >
-            <Tab.Screen name={strings.hometab} component={HomeScreenNav} />
+            <Tab.Screen name={STRINGS.hometab} component={HomeScreenNav} />
             <Tab.Screen
-                name={strings.communitytab}
+                name={STRINGS.communitytab}
                 component={CommunityScreenNav}
             />
             <Tab.Screen
-                name={strings.profiletab}
+                name={STRINGS.profiletab}
                 component={ProfileScreenNav}
             />
             <Tab.Screen
-                name={strings.messagetab}
+                name={STRINGS.messagetab}
                 component={MessageScreenNav}
             />
             <Tab.Screen
-                name={strings.settingstab}
+                name={STRINGS.settingstab}
                 component={SettingsScreenNav}
             />
         </Tab.Navigator>

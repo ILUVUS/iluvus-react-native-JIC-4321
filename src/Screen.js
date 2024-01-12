@@ -1,23 +1,19 @@
+import { LogBox } from 'react-native'
+
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
-// Screens imports
+import STRINGS from './constants/strings'
+import HomeScreen from './screens/HomeScreen'
 import LoginScreen from './screens/login/Login'
 import RegistrationScreen from './screens/login/Registration'
-import HomeScreen from './screens/HomeScreen'
 import SetupCommunity from './screens/community/SetupCommunity'
-
-
-// Constants imports
-import STRINGS from './constants/strings'
-
-import { LogBox } from 'react-native'
 
 LogBox.ignoreAllLogs(true)
 
 const Stack = createStackNavigator()
 
-const initialRouteName = STRINGS.setupCommunity
+const initialRouteName = STRINGS.loginS
 
 export default function Screen() {
     return (

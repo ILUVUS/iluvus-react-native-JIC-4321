@@ -4,7 +4,7 @@ export default {
     // general
     loginscreen: 'Login',
     registerscreen: 'Register',
-    homescreen: 'HomeScreen',
+    homescreen: 'Main',
     logout: 'Logout',
     cancel: 'Cancel',
     ok: 'OK',
@@ -35,6 +35,8 @@ export default {
     myFriends: 'My Friends',
 
     // setup community
+    picturebtn: 'Picture',
+    publishbtn: 'Publish',
     setupCommunityName: 'New Community Name',
     setupCommunityNamePlaceholder: 'Please input new community name...',
 

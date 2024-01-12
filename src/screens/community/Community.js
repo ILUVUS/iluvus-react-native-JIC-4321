@@ -1,34 +1,24 @@
 import React, { Component } from 'react'
-import {
-    Text,
-    View,
-    TouchableOpacity,
-    Alert,
-    ScrollView,
-    RefreshControl,
-} from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome5'
-import { SearchBar, Image } from 'react-native-elements'
-import { useNavigation } from '@react-navigation/native'
-import { useState, useEffect } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useEffect, useState } from 'react'
+
 import axios from 'axios'
 import { BASE_URL } from '@env'
-// import Images
+import { Image, SearchBar } from 'react-native-elements'
+import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native'
+
+import { useNavigation } from '@react-navigation/native'
+import Icon from 'react-native-vector-icons/FontAwesome5'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+import SIZES from '../../constants/sizes'
+import COLORS from '../../constants/colors'
+import STRINGS from '../../constants/strings'
 import sampleIcon from '../../../assets/images/sampleicon.jpg'
-
-// import styles
+import { inputStyle, searchBarStyle } from '../../../styles/style'
 import {
-    appStyle as styles,
-    communityStyles,
-    searchBarStyle,
-    inputStyle,
-} from '../../../styles/style'
-
-// import constants
-import strings from '../../constants/strings'
-import colors from '../../constants/colors'
-import sizes from '../../constants/sizes'
+    CommunityViewImageButton,
+    CommunityViewMainButton,
+} from '../../components/button'
 
 const Community = () => {
     const navigation = useNavigation()
@@ -64,12 +54,9 @@ const Community = () => {
             },
         })
             .then((res) => {
-                console.log(res.data)
                 setCommunityList(res.data)
             })
-            .catch((err) => {
-                console.log(err)
-            })
+            .catch((err) => {})
     }
 
     const getVerified = async () => {
@@ -84,30 +71,12 @@ const Community = () => {
             },
         })
             .then((res) => {
-                console.log('User is verified')
                 setVerify(true)
             })
             .catch((err) => {
-                console.log('User is not verified')
                 setVerify(false)
-                console.log(err)
             })
     }
-
-    const groupedCommunityList = communityList.reduce(
-        (resultArray, item, index) => {
-            const chunkIndex = Math.floor(index / 3)
-
-            if (!resultArray[chunkIndex]) {
-                resultArray[chunkIndex] = [] // start a new chunk
-            }
-
-            resultArray[chunkIndex].push(item)
-
-            return resultArray
-        },
-        []
-    )
 
     const newCommunity = () => {
         navigation.navigate('SetupCommunity')
@@ -130,7 +99,7 @@ const Community = () => {
         setSearchValue(text)
     }
     return (
-        <View style={styles.homeContainer}>
+        <View className="flex justify-center bg-white align-middle">
             <SearchBar
                 placeholder={STRINGS.communitySearchBar}
                 onChangeText={(text) => searchFunction(text)}
@@ -141,12 +110,17 @@ const Community = () => {
                 ]}
                 inputContainerStyle={searchBarStyle.inputSearchBar}
                 inputStyle={searchBarStyle.input}
-                placeholderTextColor={COLORS.lightDarkviolet}
+                placeholderTextColor={COLORS['orchid'][400]}
                 searchIcon={searchBarStyle.seachIcon}
                 clearIcon={searchBarStyle.clearIcon}
             />
             <ScrollView
-                contentContainerStyle={styles.scrollableContainer}
+                className="h-screen w-screen"
+                contentContainerStyle={{
+                    paddingHorizontal: 5,
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -154,91 +128,65 @@ const Community = () => {
                     />
                 }
             >
-                <View style={communityStyles.buttonContainer}>
+                <View className="my-3 flex w-screen flex-row justify-evenly">
                     {verify && (
-                        <TouchableOpacity
-                            style={[
-                                communityStyles.buttonIcon,
-                                inputStyle.inputShadow,
-                                inputStyle.inputShadow,
-                            ]}
-                            onPress={newCommunity}
-                        >
+                        <CommunityViewMainButton onPress={newCommunity}>
                             <Icon
                                 name="plus"
                                 size={SIZES.communityIconSize}
-                                color={COLORS.darkViolet}
+                                color={COLORS['orchid'][900]}
                             />
-                            <Text style={communityStyles.buttonText}>
+                            <Text className="mt-1 text-base text-orchid-900">
                                 {STRINGS.newCommunity}
                             </Text>
-                        </TouchableOpacity>
+                        </CommunityViewMainButton>
                     )}
 
-                    <TouchableOpacity
-                        style={[
-                            communityStyles.buttonIcon,
-                            inputStyle.inputShadow,
-                        ]}
-                        onPress={myCommunity}
-                    >
+                    <CommunityViewMainButton onPress={myCommunity}>
                         <Icon
                             name="users"
                             size={SIZES.communityIconSize}
-                            color={COLORS.darkViolet}
+                            color={COLORS['orchid'][900]}
                         />
-                        <Text style={communityStyles.buttonText}>
+                        <Text className="mt-1 text-base text-orchid-900">
                             {STRINGS.myCommunity}
                         </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[
-                            communityStyles.buttonIcon,
-                            inputStyle.inputShadow,
-                        ]}
-                        onPress={myFriend}
-                    >
+                    </CommunityViewMainButton>
+
+                    <CommunityViewMainButton onPress={myFriend}>
                         <Icon
                             name="child"
                             size={SIZES.communityIconSize}
-                            color={COLORS.darkViolet}
+                            color={COLORS['orchid'][900]}
                         />
-                        <Text style={communityStyles.buttonText}>
+                        <Text className="mt-1 text-base text-orchid-900">
                             {STRINGS.myFriends}
                         </Text>
-                    </TouchableOpacity>
+                    </CommunityViewMainButton>
                 </View>
 
-                <View>
-                    <Text
-                        style={[communityStyles.header, inputStyle.inputShadow]}
-                    >
+                <View className="mb-2 ml-5 flex w-screen items-start">
+                    <Text className="text-3xl font-bold text-orchid-900 shadow-md shadow-slate-200">
                         Developing
                     </Text>
                 </View>
 
-                {groupedCommunityList.map((group, index) => (
-                    <View key={index} style={communityStyles.buttonContainer}>
-                        {group.map((item, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                style={[
-                                    communityStyles.buttonImage,
-                                    inputStyle.inputShadow,
-                                ]}
-                                onPress={communityClick}
-                            >
-                                <Image
-                                    source={sampleIcon}
-                                    style={communityStyles.communityImage}
-                                />
-                                <Text style={communityStyles.buttonText}>
-                                    {item}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                ))}
+                <View className="flex flex-row flex-wrap overflow-auto">
+                    {communityList.map((item, index) => (
+                        <CommunityViewImageButton
+                            key={index}
+                            onPress={communityClick}
+                        >
+                            <Image
+                                source={sampleIcon}
+                                className="h-24 w-24 rounded-3xl"
+                            />
+                            <Text className="mt-1 text-base text-orchid-900">
+                                {item}
+                            </Text>
+                        </CommunityViewImageButton>
+                    ))}
+                </View>
             </ScrollView>
         </View>
     )
