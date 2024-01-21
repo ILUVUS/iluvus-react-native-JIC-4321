@@ -97,6 +97,7 @@ const Community = () => {
     const searchFunction = (text) => {
         // bla bla things here
         setSearchValue(text)
+        
     }
     return (
         <View className="flex justify-center bg-white align-middle">
