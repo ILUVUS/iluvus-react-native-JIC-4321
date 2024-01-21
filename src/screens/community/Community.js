@@ -29,6 +29,7 @@ const Community = () => {
     const [communityList, setCommunityList] = useState([])
     const [refreshing, setRefreshing] = React.useState(false)
     const [verify, setVerify] = useState(false)
+    const [searchResultList, setSearchResultList] = useState([])
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
@@ -44,6 +45,13 @@ const Community = () => {
         getVerified()
         fetchCommunityList()
     }, [])
+
+    useEffect(() => {
+        setSearchResultList(["Doan", "Thuan", "Dan", "Kevin", "Vo", "Hi"])
+        if (searchResultList.includes(searchValue.trim())) {
+            setSearchResultList(searchResultList.filter((item) => item.includes(searchValue)))
+        }
+    }, [searchValue])
 
     const fetchCommunityList = async () => {
         axios({
@@ -115,7 +123,7 @@ const Community = () => {
                 searchIcon={searchBarStyle.seachIcon}
                 clearIcon={searchBarStyle.clearIcon}
             />
-            <ScrollView
+            {!searchValue && <ScrollView
                 className="h-screen w-screen"
                 contentContainerStyle={{
                     paddingHorizontal: 5,
@@ -188,7 +196,42 @@ const Community = () => {
                         </CommunityViewImageButton>
                     ))}
                 </View>
-            </ScrollView>
+            </ScrollView>}
+
+            {searchValue && <ScrollView
+                className="h-screen w-screen"
+                contentContainerStyle={{
+                    paddingHorizontal: 5,
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }>
+
+                <View className="flex flex-row flex-wrap overflow-auto">
+
+                    {searchResultList.map((item, index) => (
+                        <CommunityViewImageButton
+                            key={index}
+                            onPress={communityClick}
+                        >
+                            <Image
+                                source={sampleIcon}
+                                className="h-24 w-24 rounded-3xl"
+                            />
+                            <Text className="mt-1 text-base text-orchid-900">
+                                {item}
+                            </Text>
+                        </CommunityViewImageButton>
+                    ))}
+                </View>
+
+                </ScrollView>
+                }
         </View>
     )
 }
