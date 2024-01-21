@@ -47,10 +47,17 @@ const Community = () => {
     }, [])
 
     useEffect(() => {
-        setSearchResultList(["Doan", "Thuan", "Dan", "Kevin", "Vo", "Hi"])
-        if (searchResultList.includes(searchValue.trim())) {
-            setSearchResultList(searchResultList.filter((item) => item.includes(searchValue)))
-        }
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/community/search?filter=${searchValue}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then((res) => {
+            setSearchResultList(res.data)
+        })
+        .catch((err) => {})
     }, [searchValue])
 
     const fetchCommunityList = async () => {
