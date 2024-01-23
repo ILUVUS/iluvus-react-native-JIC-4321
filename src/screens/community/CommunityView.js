@@ -55,9 +55,18 @@ const LoginScreen = () => {
                         </View>
                     </View>
 
-                    <TouchableOpacity className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600">
-                        <Text className="text-lg text-orchid-900">JOIN US</Text>
-                    </TouchableOpacity>
+                    <View className="flex flex-row items-center justify-center gap-5">
+                        <TouchableOpacity className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600">
+                            <Text className="text-lg text-orchid-900">
+                                JOIN US
+                            </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600">
+                            <Text className="text-lg text-orchid-900">
+                                VIEW POSTS
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
