@@ -53,7 +53,9 @@ const RegistrationScreen = ({ navigation }) => {
             .then((res) => {
                 navigation.navigate('Login')
             })
-            .catch((err) => {})
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     return (

@@ -47,6 +47,7 @@ const Community = () => {
     }, [])
 
     useEffect(() => {
+        console.log(searchValue)
         axios({
             method: 'GET',
             url: `${BASE_URL}/community/search?filter=${searchValue}`,
@@ -55,9 +56,12 @@ const Community = () => {
             },
         })
         .then((res) => {
+            console.log(res.data)
             setSearchResultList(res.data)
         })
-        .catch((err) => {})
+        .catch((err) => {
+            console.log(err)
+        })
     }, [searchValue])
 
     const fetchCommunityList = async () => {
@@ -69,12 +73,14 @@ const Community = () => {
             },
         })
             .then((res) => {
+                console.log(res.data[1])
                 setCommunityList(res.data)
             })
             .catch((err) => {})
     }
 
     const getVerified = async () => {
+        console.log("get verify")
         axios({
             method: 'POST',
             url: `${BASE_URL}/user/verify`,
@@ -221,8 +227,8 @@ const Community = () => {
 
                 <View className="flex flex-row flex-wrap overflow-auto">
 
-                    {searchResultList.map((item, index) => (
-                        <CommunityViewImageButton
+                {Object.keys(searchResultList).map((key, index) => (
+                    <CommunityViewImageButton
                             key={index}
                             onPress={communityClick}
                         >
@@ -231,10 +237,14 @@ const Community = () => {
                                 className="h-24 w-24 rounded-3xl"
                             />
                             <Text className="mt-1 text-base text-orchid-900">
-                                {item}
+                                {searchResultList[key]}
                             </Text>
                         </CommunityViewImageButton>
-                    ))}
+                ))}
+
+                    {/* {searchResultList.map((item, index) => (
+                        
+                    ))} */}
                 </View>
 
                 </ScrollView>
