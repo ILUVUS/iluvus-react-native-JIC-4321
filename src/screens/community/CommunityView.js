@@ -19,14 +19,39 @@ import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingV
 
 import sampleIcon from '../../../assets/images/sampleicon.jpg'
 import communityBg from '../../../assets/images/communitybg.jpg'
+import STRINGS from '../../constants/strings'
 
 const LoginScreen = () => {
+    const defaultCommunityInfo = {
+        name: 'Community Name',
+        host: 'Host Name',
+        followers: 90,
+        posts: 90,
+        description: STRINGS.exanple_text,
+        rules: STRINGS.exanple_text,
+    }
 
     const [refreshing, setRefreshing] = React.useState(false)
+    const [isHost, setIsHost] = useState(true)
+    const [isPublicCommunity, setIsPublicCommunity] = useState(true)
+    const [isJoined, setIsJoined] = useState(false)
+    const [communityInfo, setCommunityInfo] = useState(defaultCommunityInfo)
+
     const onRefresh = React.useCallback(() => {
         console.log('refreshing')
     }, [])
 
+    const joinCommunity = () => {
+        Alert.alert('Joining Community')
+    }
+
+    const viewPosts = () => {
+        Alert.alert('Viewing Posts')
+    }
+
+    const editCommunity = () => {
+        Alert.alert('Editing Community')
+    }
 
     return (
         // <CustomKeyboardAvoidingView>
@@ -70,38 +95,50 @@ const LoginScreen = () => {
                             <Text className="text-2xl font-semibold text-white shadow shadow-orchid-600">
                                 Community Name
                             </Text>
-                            <TouchableOpacity>
-                                <Ionicons
-                                    name="create-outline"
-                                    size={26}
-                                    color={'#fff'}
-                                />
-                            </TouchableOpacity>
+                            {isHost && (
+                                <TouchableOpacity onPress={editCommunity}>
+                                    <Ionicons
+                                        name="create-outline"
+                                        size={26}
+                                        color={'#fff'}
+                                    />
+                                </TouchableOpacity>
+                            )}
                         </View>
                         <Text className="mb-1 text-base text-white shadow shadow-orchid-600">
-                            Host by ILUVUS
+                            Host by {communityInfo.host}
                         </Text>
                         <View className="flex flex-row items-center justify-center gap-5">
                             <Text className="text-base text-white shadow shadow-orchid-600">
-                                90 Followers
+                                {communityInfo.followers} Followers
                             </Text>
                             <Text className="text-base text-white shadow shadow-orchid-600">
-                                90 Posts
+                                {communityInfo.posts} Posts
                             </Text>
                         </View>
                     </View>
 
                     <View className="flex flex-row items-center justify-center gap-5">
-                        <TouchableOpacity className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600">
-                            <Text className="text-md text-orchid-900">
-                                JOIN US
-                            </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600">
-                            <Text className="text-md text-orchid-900">
-                                VIEW POSTS
-                            </Text>
-                        </TouchableOpacity>
+                        {isHost && (
+                            <TouchableOpacity
+                                onPress={joinCommunity}
+                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
+                            >
+                                <Text className="text-md text-orchid-900">
+                                    JOIN US
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                        {(isPublicCommunity || isJoined) && (
+                            <TouchableOpacity
+                                onPress={viewPosts}
+                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
+                            >
+                                <Text className="text-md text-orchid-900">
+                                    VIEW POSTS
+                                </Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
                 </ImageBackground>
 
@@ -110,21 +147,7 @@ const LoginScreen = () => {
                         Description
                     </Text>
                     <Text className="text-base text-orchid-800">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Sed at risus at erat pretium bibendum. Sed eget
-                        vestibulum eros. Aenean sed lobortis mi, vitae
-                        ullamcorper odio. Nullam quis ligula vel nisi vestibulum
-                        tincidunt. Nulla facilisi. Maecenas venenatis, libero ut
-                        aliquam aliquam, tellus nisl tincidunt nunc, eu rutrum
-                        ipsum nisl eget massa. Duis euismod, velit eget faucibus
-                        consectetur, nunc nisl ultrices nisl, sit amet lacinia
-                        libero nisi sed nisl. Nullam auctor, lorem ac ultricies
-                        molestie, urna nulla facilisis ligula, quis aliquet nisl
-                        tellus quis nisl. Nullam auctor, lorem ac ultricies
-                        molestie, urna nulla facilisis ligula, quis aliquet nisl
-                        tellus quis nisl. Nullam auctor, lorem ac ultricies
-                        molestie, urna nulla facilisis ligula, quis aliquet nisl
-                        tellus quis nisl.
+                        {communityInfo.description}
                     </Text>
                 </View>
 
@@ -133,15 +156,7 @@ const LoginScreen = () => {
                         Rules
                     </Text>
                     <Text className="text-base text-orchid-900">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Sed at risus at erat pretium bibendum. Sed eget
-                        vestibulum eros. Aenean sed lobortis mi, vitae
-                        ullamcorper odio. Nullam quis ligula vel nisi vestibulum
-                        tincidunt. Nulla facilisi. Maecenas venenatis, libero ut
-                        aliquam aliquam, tellus nisl tincidunt nunc, eu rutrum
-                        ipsum nisl eget massa. Duis euismod, velit eget faucibus
-                        consectetur, nunc nisl ultrices nisl, sit amet lacinia
-                        libero nisi sed nisl.
+                        {communityInfo.rules}
                     </Text>
                 </View>
             </ScrollView>
