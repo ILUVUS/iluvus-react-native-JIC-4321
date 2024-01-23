@@ -8,6 +8,7 @@ export default {
     registerscreen: 'Register',
     homescreen: 'Main',
     logout: 'Logout',
+
     cancel: 'Cancel',
     ok: 'OK',
     yes: 'Yes',
@@ -35,6 +36,9 @@ export default {
     newCommunity: 'New Group',
     myCommunity: 'My Groups',
     myFriends: 'My Friends',
+
+    // view community
+    communityView: 'CommunityView',
 
     // setup community
     picturebtn: 'Picture',

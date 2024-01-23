@@ -8,6 +8,7 @@ import HomeScreen from './screens/HomeScreen'
 import LoginScreen from './screens/login/Login'
 import RegistrationScreen from './screens/login/Registration'
 import SetupCommunity from './screens/community/SetupCommunity'
+import CommunityView from './screens/community/CommunityView'
 
 LogBox.ignoreAllLogs(true)
 
@@ -16,7 +17,7 @@ const Stack = createStackNavigator()
 export default function Screen() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={STRINGS.InitialRoute}>
+            <Stack.Navigator initialRouteName={STRINGS.communityView}>
                 <Stack.Screen
                     name={STRINGS.loginscreen}
                     component={LoginScreen}
@@ -40,6 +41,15 @@ export default function Screen() {
                     component={HomeScreen}
                     options={{
                         title: STRINGS.homescreen,
+                        headerShown: false,
+                    }}
+                />
+
+                <Stack.Screen
+                    name={STRINGS.communityView}
+                    component={CommunityView}
+                    options={{
+                        title: STRINGS.communityView,
                         headerShown: false,
                     }}
                 />
