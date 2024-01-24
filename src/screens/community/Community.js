@@ -29,6 +29,7 @@ const Community = () => {
     const [communityList, setCommunityList] = useState([])
     const [refreshing, setRefreshing] = React.useState(false)
     const [verify, setVerify] = useState(false)
+    const [searchResultList, setSearchResultList] = useState([])
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
@@ -45,6 +46,24 @@ const Community = () => {
         fetchCommunityList()
     }, [])
 
+    useEffect(() => {
+        console.log(searchValue)
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/community/search?filter=${searchValue}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then((res) => {
+            console.log(res.data)
+            setSearchResultList(res.data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    }, [searchValue])
+
     const fetchCommunityList = async () => {
         axios({
             method: 'GET',
@@ -54,12 +73,14 @@ const Community = () => {
             },
         })
             .then((res) => {
+                console.log(res.data[1])
                 setCommunityList(res.data)
             })
             .catch((err) => {})
     }
 
     const getVerified = async () => {
+        console.log("get verify")
         axios({
             method: 'POST',
             url: `${BASE_URL}/user/verify`,
@@ -97,6 +118,7 @@ const Community = () => {
     const searchFunction = (text) => {
         // bla bla things here
         setSearchValue(text)
+        
     }
     return (
         <View className="flex justify-center bg-white align-middle">
@@ -114,7 +136,7 @@ const Community = () => {
                 searchIcon={searchBarStyle.seachIcon}
                 clearIcon={searchBarStyle.clearIcon}
             />
-            <ScrollView
+            {!searchValue && <ScrollView
                 className="h-screen w-screen"
                 contentContainerStyle={{
                     paddingHorizontal: 5,
@@ -187,7 +209,46 @@ const Community = () => {
                         </CommunityViewImageButton>
                     ))}
                 </View>
-            </ScrollView>
+            </ScrollView>}
+
+            {searchValue && <ScrollView
+                className="h-screen w-screen"
+                contentContainerStyle={{
+                    paddingHorizontal: 5,
+                    display: 'flex',
+                    justifyContent: 'center',
+                }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }>
+
+                <View className="flex flex-row flex-wrap overflow-auto">
+
+                {Object.keys(searchResultList).map((key, index) => (
+                    <CommunityViewImageButton
+                            key={index}
+                            onPress={communityClick}
+                        >
+                            <Image
+                                source={sampleIcon}
+                                className="h-24 w-24 rounded-3xl"
+                            />
+                            <Text className="mt-1 text-base text-orchid-900">
+                                {searchResultList[key]}
+                            </Text>
+                        </CommunityViewImageButton>
+                ))}
+
+                    {/* {searchResultList.map((item, index) => (
+                        
+                    ))} */}
+                </View>
+
+                </ScrollView>
+                }
         </View>
     )
 }

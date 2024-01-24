@@ -37,7 +37,7 @@ const LoginScreen = () => {
                 try {
                     await AsyncStorage.setItem('userId', res.data)
                 } catch (e) {
-                    // saving error
+                    console.log(e)
                 }
 
                 const value = await AsyncStorage.getItem('userId')
