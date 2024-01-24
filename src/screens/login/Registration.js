@@ -78,6 +78,7 @@ const RegistrationScreen = ({ navigation }) => {
                 First Name
             </Text>
             <RegisterInput
+                autoCapitalize="words"
                 className="text-base text-orchid-900"
                 placeholderTextColor={COLORS['orchid'][400]}
                 placeholder={STRINGS.fnameExample}
@@ -88,6 +89,7 @@ const RegistrationScreen = ({ navigation }) => {
                 Last Name
             </Text>
             <RegisterInput
+                autoCapitalize="words"
                 className="text-base text-orchid-900"
                 placeholderTextColor={COLORS['orchid'][400]}
                 placeholder={STRINGS.lnameExample}
@@ -139,6 +141,7 @@ const RegistrationScreen = ({ navigation }) => {
                 Email
             </Text>
             <RegisterInput
+                autoCapitalize="none"
                 className="text-base text-orchid-900"
                 placeholderTextColor={COLORS['orchid'][400]}
                 placeholder={STRINGS.emailExample}
@@ -150,6 +153,7 @@ const RegistrationScreen = ({ navigation }) => {
                 Professional Email
             </Text>
             <RegisterInput
+                autoCapitalize="none"
                 className="text-base text-orchid-900"
                 placeholderTextColor={COLORS['orchid'][400]}
                 placeholder="Only Required for Professional user"
@@ -160,6 +164,7 @@ const RegistrationScreen = ({ navigation }) => {
                 Username
             </Text>
             <RegisterInput
+                autoCapitalize="none"
                 className="text-base text-orchid-900"
                 placeholderTextColor={COLORS['orchid'][400]}
                 placeholder={STRINGS.usernameExample}
@@ -170,6 +175,7 @@ const RegistrationScreen = ({ navigation }) => {
                 Password
             </Text>
             <RegisterInput
+                autoCapitalize="none"
                 className="text-base text-orchid-900"
                 placeholderTextColor={COLORS['orchid'][400]}
                 placeholder={STRINGS.passwordExample}

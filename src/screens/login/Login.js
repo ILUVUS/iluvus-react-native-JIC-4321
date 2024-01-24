@@ -72,6 +72,7 @@ const LoginScreen = () => {
                 </Text>
 
                 <LoginInput
+                    autoCapitalize="none"
                     className="mt-32"
                     placeholderTextColor={COLORS['orchid'][300]}
                     placeholder={STRINGS.usernameExample}
@@ -79,6 +80,7 @@ const LoginScreen = () => {
                     onChangeText={(text) => setUsername(text)}
                 />
                 <LoginInput
+                    autoCapitalize="none"
                     placeholderTextColor={COLORS['orchid'][300]}
                     placeholder={STRINGS.passwordExample}
                     secureTextEntry={true}
