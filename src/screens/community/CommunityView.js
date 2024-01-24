@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
@@ -21,7 +21,7 @@ import sampleIcon from '../../../assets/images/sampleicon.jpg'
 import communityBg from '../../../assets/images/communitybg.jpg'
 import STRINGS from '../../constants/strings'
 
-const LoginScreen = () => {
+const CommunityView = (communityId = "communityId") => {
     const defaultCommunityInfo = {
         name: 'Community Name',
         host: 'Host Name',
@@ -39,6 +39,11 @@ const LoginScreen = () => {
 
     const onRefresh = React.useCallback(() => {
         console.log('refreshing')
+    }, [])
+
+    useEffect(() => {
+        // This is the community ID it receives from the community list
+        console.log('THE COMMUNITY ID: ', communityId.route.params.communityId)
     }, [])
 
     const joinCommunity = () => {
@@ -68,7 +73,7 @@ const LoginScreen = () => {
                     display: 'flex',
                     justifyContent: 'flex-start',
                     flexGrow: 1,
-                    paddingVertical: 65,
+                    paddingVertical: 24,
                     paddingHorizontal: 24,
                 }}
                 className="h-screen w-screen overflow-auto bg-white"
@@ -166,4 +171,4 @@ const LoginScreen = () => {
     )
 }
 
-export default LoginScreen
+export default CommunityView

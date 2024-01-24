@@ -90,8 +90,9 @@ const Community = () => {
         navigation.navigate('SetupCommunity')
     }
 
-    const communityClick = () => {
-        Alert.alert('Search', 'Search for a group')
+    const communityClick = (communityId) => {
+        // go communityView where it takes in the communityId
+        navigation.navigate('CommunityView', { communityId: communityId })
     }
 
     const searchFunction = (text) => {
@@ -172,10 +173,25 @@ const Community = () => {
                 </View>
 
                 <View className="flex flex-row flex-wrap overflow-auto">
+                    {/* Sample Items */}
+                    <CommunityViewImageButton
+                        key={1}
+                        onPress={() => communityClick('id1')} // <<===== passing communityid here
+                    >
+                        <Image
+                            source={sampleIcon}
+                            className="h-24 w-24 rounded-3xl"
+                        />
+                        <Text className="mt-1 text-base text-orchid-900">
+                            Item 1
+                        </Text>
+                    </CommunityViewImageButton>
+                    {/* Sample Items */}
+
                     {communityList.map((item, index) => (
                         <CommunityViewImageButton
                             key={index}
-                            onPress={communityClick}
+                            onPress={communityClick(item.index)}
                         >
                             <Image
                                 source={sampleIcon}

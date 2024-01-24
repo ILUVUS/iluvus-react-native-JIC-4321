@@ -17,7 +17,7 @@ const Stack = createStackNavigator()
 export default function Screen() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={STRINGS.loginscreen}>
+            <Stack.Navigator initialRouteName={STRINGS.homescreen}>
                 <Stack.Screen
                     name={STRINGS.loginscreen}
                     component={LoginScreen}
@@ -50,7 +50,7 @@ export default function Screen() {
                     component={CommunityView}
                     options={{
                         title: STRINGS.communityView,
-                        headerShown: false,
+                        headerShown: true,
                     }}
                 />
 
@@ -62,6 +62,7 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
+
             </Stack.Navigator>
         </NavigationContainer>
     )
