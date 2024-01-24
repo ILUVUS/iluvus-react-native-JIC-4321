@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Text, TouchableOpacity, View } from 'react-native'
 import { SelectList } from 'react-native-dropdown-select-list'
 
 import SIZES from '../../constants/sizes'
@@ -16,18 +16,19 @@ import Modal from 'react-native-modal'
 import DateTimePicker from '@react-native-community/datetimepicker'
 
 const RegistrationScreen = ({ navigation }) => {
+    // datatime picker
+    const [dateDatePicker, setDateDatePicker] = useState(new Date())
+
+    // default dob in yyyy-mm-dd format
     const [fName, setFname] = useState('')
     const [lName, setLname] = useState('')
-    const [DOB, setDOB] = useState('')
+    const [DOB, setDOB] = useState(dateDatePicker.toISOString().split('T')[0])
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [race, setRace] = useState('')
     const [gender, setGender] = useState('')
     const [proEmail, setProfEmail] = React.useState('')
-
-    // datatime picker
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(true)
 
     const handleRegister = () => {
         axios({
@@ -57,9 +58,13 @@ const RegistrationScreen = ({ navigation }) => {
             },
         })
             .then((res) => {
-                navigation.navigate('Login')
+                console.log('Successful', res.data)
+                // navigation.navigate('Login')
             })
-            .catch((err) => {})
+            .catch((err) => {
+                const error = err.response.data
+                Alert.alert(error)
+            })
     }
 
     const setDate = (event, date) => {
@@ -68,6 +73,8 @@ const RegistrationScreen = ({ navigation }) => {
             nativeEvent: { timestamp, utcOffset },
         } = event
         //format to get string yyyy-mm-dd
+        const dateObj = new Date(timestamp)
+        setDateDatePicker(dateObj)
         const formattedDate = date.toISOString().split('T')[0]
         setDOB(formattedDate)
     }
@@ -102,7 +109,7 @@ const RegistrationScreen = ({ navigation }) => {
                 </Text>
                 <DateTimePicker
                     mode="date"
-                    value={new Date()}
+                    value={dateDatePicker}
                     onChange={setDate}
                     dateFormat="year day month"
                 />
