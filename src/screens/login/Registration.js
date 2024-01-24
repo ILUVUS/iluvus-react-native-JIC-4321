@@ -57,7 +57,7 @@ const RegistrationScreen = ({ navigation }) => {
     }
 
     return (
-        <CustomKeyboardAvoidingView>
+        <CustomKeyboardAvoidingView keyboardPadding="100">
             <Text className="pb-2 text-base text-orchid-900 shadow-md shadow-slate-400">
                 First Name
             </Text>

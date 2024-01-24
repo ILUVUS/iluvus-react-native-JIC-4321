@@ -79,6 +79,7 @@ const LoginScreen = () => {
                     resizeMode="cover"
                     imageStyle={{
                         borderRadius: 24,
+                        opacity: 0.8,
                     }}
                     blurRadius={5}
                     className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl  py-12 shadow-md shadow-orchid-300"

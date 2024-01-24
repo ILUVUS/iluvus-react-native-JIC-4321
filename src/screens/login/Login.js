@@ -57,7 +57,7 @@ const LoginScreen = () => {
     }
 
     return (
-        <CustomKeyboardAvoidingView>
+        <CustomKeyboardAvoidingView keyboardPadding="0">
             <View
                 className="flex h-screen items-center justify-center bg-white px-[10%] py-10"
                 onTouchStart={Keyboard.dismiss}
@@ -89,7 +89,7 @@ const LoginScreen = () => {
                     className="mb-32 mt-5 flex items-center justify-center rounded-3xl bg-gold-900 px-5 py-4 align-middle shadow-md shadow-slate-200"
                     onPress={handleSignin}
                 >
-                    <Text className="text-orchid-900 text-sm" >Sign in</Text>
+                    <Text className="text-sm text-orchid-900">Sign in</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={handleRegistration}>
