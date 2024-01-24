@@ -12,6 +12,9 @@ import { RegisterInput } from '../../components/input'
 import { dropDownStyle, inputStyle } from '../../../styles/style'
 import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingView'
 
+import Modal from 'react-native-modal'
+import DateTimePicker from '@react-native-community/datetimepicker'
+
 const RegistrationScreen = ({ navigation }) => {
     const [fName, setFname] = useState('')
     const [lName, setLname] = useState('')
@@ -22,6 +25,9 @@ const RegistrationScreen = ({ navigation }) => {
     const [race, setRace] = useState('')
     const [gender, setGender] = useState('')
     const [proEmail, setProfEmail] = React.useState('')
+
+    // datatime picker
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(true)
 
     const handleRegister = () => {
         axios({
@@ -56,6 +62,16 @@ const RegistrationScreen = ({ navigation }) => {
             .catch((err) => {})
     }
 
+    const setDate = (event, date) => {
+        const {
+            type,
+            nativeEvent: { timestamp, utcOffset },
+        } = event
+        //format to get string yyyy-mm-dd
+        const formattedDate = date.toISOString().split('T')[0]
+        setDOB(formattedDate)
+    }
+
     return (
         <CustomKeyboardAvoidingView keyboardPadding="100">
             <Text className="pb-2 text-base text-orchid-900 shadow-md shadow-slate-400">
@@ -78,16 +94,17 @@ const RegistrationScreen = ({ navigation }) => {
                 value={lName}
                 onChangeText={(text) => setLname(text)}
             />
-            <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
-                Date of Birth
-            </Text>
-            <RegisterInput
-                className="text-base text-orchid-900"
-                placeholderTextColor={COLORS['orchid'][400]}
-                placeholder={STRINGS.dobExample}
-                value={DOB}
-                onChangeText={(text) => setDOB(text)}
-            />
+            <View className="flex flex-row items-center justify-start pb-2 pt-5">
+                <Text className="text-base text-orchid-900 shadow-md shadow-slate-400">
+                    Date of Birth
+                </Text>
+                <DateTimePicker
+                    mode="date"
+                    value={new Date()}
+                    onChange={setDate}
+                    dateFormat="year day month"
+                />
+            </View>
 
             <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
                 Race
