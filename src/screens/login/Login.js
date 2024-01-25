@@ -46,6 +46,12 @@ const LoginScreen = () => {
                 setPassword('')
 
                 navigation.navigate(STRINGS.homescreen)
+
+                // avoid go back to login
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: STRINGS.homescreen }],
+                })
             })
             .catch((err) =>
                 Alert.alert('Unsuccessful', 'Wrong Username or Password')
