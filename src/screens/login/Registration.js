@@ -30,6 +30,8 @@ const RegistrationScreen = ({ navigation }) => {
     const [gender, setGender] = useState('')
     const [proEmail, setProfEmail] = React.useState('')
 
+    const [emailMode, setEmailMode] = useState(false)
+
     const handleRegister = () => {
         axios({
             method: 'POST',
@@ -65,7 +67,6 @@ const RegistrationScreen = ({ navigation }) => {
                     index: 0,
                     routes: [{ name: 'Login' }],
                 })
-                    
             })
             .catch((err) => {
                 console.log('Error', err)
@@ -84,6 +85,12 @@ const RegistrationScreen = ({ navigation }) => {
         setDateDatePicker(dateObj)
         const formattedDate = date.toISOString().split('T')[0]
         setDOB(formattedDate)
+    }
+
+    const toggleEmailMode = () => {
+        setEmail('')
+        setProfEmail('')
+        setEmailMode(!emailMode)
     }
 
     return (
@@ -151,29 +158,47 @@ const RegistrationScreen = ({ navigation }) => {
                 search={false}
                 placeholder={STRINGS.gender}
             />
-            <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
-                Email
-            </Text>
-            <RegisterInput
-                autoCapitalize="none"
-                className="text-base text-orchid-900"
-                placeholderTextColor={COLORS['orchid'][400]}
-                placeholder={STRINGS.emailExample}
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                keyboardType="email-address"
-            />
-            <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
-                Professional Email
-            </Text>
-            <RegisterInput
-                autoCapitalize="none"
-                className="text-base text-orchid-900"
-                placeholderTextColor={COLORS['orchid'][400]}
-                placeholder="Only Required for Professional user"
-                value={proEmail}
-                onChangeText={(text) => setProfEmail(text)}
-            />
+
+            <TouchableOpacity
+                onPress={toggleEmailMode}
+                className="mt-4 flex w-fit items-center rounded-3xl bg-gold-900 px-5 py-2 align-middle shadow-md shadow-slate-200"
+            >
+                <Text className="py-1 text-base text-orchid-900 shadow-md shadow-slate-400">
+                    {emailMode ? "I am Professional User" : "I am Regular User"}
+                </Text>
+            </TouchableOpacity>
+
+            {emailMode && (
+                <>
+                    <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
+                        Email
+                    </Text>
+                    <RegisterInput
+                        autoCapitalize="none"
+                        className="text-base text-orchid-900"
+                        placeholderTextColor={COLORS['orchid'][400]}
+                        placeholder={STRINGS.emailExample}
+                        value={email}
+                        onChangeText={(text) => setEmail(text)}
+                        keyboardType="email-address"
+                    />
+                </>
+            )}
+            {!emailMode && (
+                <>
+                    <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
+                        Professional Email
+                    </Text>
+                    <RegisterInput
+                        autoCapitalize="none"
+                        className="text-base text-orchid-900"
+                        placeholderTextColor={COLORS['orchid'][400]}
+                        placeholder="Only Required for Professional user"
+                        value={proEmail}
+                        onChangeText={(text) => setProfEmail(text)}
+                    />
+                </>
+            )}
             <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
                 Username
             </Text>
@@ -198,7 +223,7 @@ const RegistrationScreen = ({ navigation }) => {
                 secureTextEntry
             />
 
-            <View className="mb-10 mt-5 flex items-center">
+            <View className="mb-44 mt-5 flex items-center">
                 <TouchableOpacity
                     className="flex w-fit items-center rounded-3xl bg-gold-900 px-5 py-4 align-middle shadow-md shadow-slate-200"
                     onPress={handleRegister}
