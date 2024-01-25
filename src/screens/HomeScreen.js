@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native'
+import { Alert, Text, View } from 'react-native'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -6,11 +6,29 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import COLORS from '../constants/colors'
 import STRINGS from '../constants/strings'
 import Community from './community/Community'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+import { useEffect, useState } from 'react'
 
 function HomeScreenNav() {
+    const [userId, setUserId] = useState('')
+
+    useEffect(() => {
+        const getUserId = async () => {
+            try {
+                const value = await AsyncStorage.getItem('userId')
+                if (value !== null) {
+                    setUserId(value)
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        getUserId()
+    }, [])
     return (
         <View className="flex h-screen justify-center bg-white p-2 align-middle">
-            <Text>Home!</Text>
+            <Text>Welcome {userId}</Text>
         </View>
     )
 }
@@ -46,6 +64,7 @@ function SettingsScreenNav() {
 const Tab = createBottomTabNavigator()
 
 export default function HomeScreen() {
+
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
