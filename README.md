@@ -1,7 +1,7 @@
 # ILUVUS - REACT NATIVE APPLICATION
 
 <p align="center">
-<img src="./img/icon.png" width="400" height="auto" />
+<img src="./img/icon.png" width="300" height="auto" />
 </p>
 
 ### Description
