@@ -59,9 +59,16 @@ const RegistrationScreen = ({ navigation }) => {
         })
             .then((res) => {
                 console.log('Successful', res.data)
-                // navigation.navigate('Login')
+                navigation.navigate('Login')
+                // avoid going back to registration screen
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }],
+                })
+                    
             })
             .catch((err) => {
+                console.log('Error', err)
                 const error = err.response.data
                 Alert.alert(error)
             })
