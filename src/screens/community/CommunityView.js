@@ -33,22 +33,20 @@ const CommunityView = (communityId = 'communityId') => {
     }
 
     const [refreshing, setRefreshing] = React.useState(false)
-    const [isHost, setIsHost] = useState(true)
+    const [isHost, setIsHost] = useState(false)
     const [isPublicCommunity, setIsPublicCommunity] = useState(true)
     const [isJoined, setIsJoined] = useState(false)
     const [communityInfo, setCommunityInfo] = useState(defaultCommunityInfo)
     const [globalCommunityId, setGlobalCommunityId] = useState(
         communityId.route.params.communityId
     )
+    const [members, setMembers] = useState([])
 
     const onRefresh = React.useCallback(() => {
         console.log('refreshing')
     }, [])
 
-    useEffect(() => {
-        // This is the community ID it receives from the community list
-        console.log('THE COMMUNITY ID: ', globalCommunityId)
-
+    const getCommunityInfo = async () => {
         axios({
             method: 'GET',
             url: `${BASE_URL}/community/getInfo?id=${globalCommunityId}`,
@@ -66,11 +64,39 @@ const CommunityView = (communityId = 'communityId') => {
                     description: res.data.description,
                     rules: res.data.rules,
                 })
+
+                // split and strip the string
+                membersListAsArray = res.data.members.split(',')
+                const membersListTrimmed = membersListAsArray.map((member) =>
+                    member.trim()
+                )
+                console.log(membersListTrimmed)
+                setMembers(membersListTrimmed)
             })
             .catch((err) => {
                 console.log(err)
             })
+
+        return () => {}
+    }
+
+    useEffect(() => {
+        // This is the community ID it receives from the community list
+        console.log('THE COMMUNITY ID: ', globalCommunityId)
+
+        getCommunityInfo()
     }, [])
+
+    const checkIfJoined = async () => {
+        if (members.includes(await AsyncStorage.getItem('userId'))) {
+            console.log('Is a member')
+            setIsJoined(true)
+        }
+    }
+
+    useEffect(() => {
+        checkIfJoined()
+    }, [members])
 
     const joinCommunity = async () => {
         axios({
@@ -167,7 +193,7 @@ const CommunityView = (communityId = 'communityId') => {
                     </View>
 
                     <View className="flex flex-row items-center justify-center gap-5">
-                        {isHost && (
+                        {!isJoined && (
                             <TouchableOpacity
                                 onPress={() => joinCommunity()}
                                 className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
