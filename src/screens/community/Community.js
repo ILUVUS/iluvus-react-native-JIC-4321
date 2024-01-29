@@ -80,7 +80,7 @@ const Community = () => {
     }
 
     const getVerified = async () => {
-        console.log("get verify")
+        console.log(await AsyncStorage.getItem('userId'))
         axios({
             method: 'POST',
             url: `${BASE_URL}/user/verify`,
@@ -92,9 +92,12 @@ const Community = () => {
             },
         })
             .then((res) => {
+                console.log(res.data)
                 setVerify(true)
             })
             .catch((err) => {
+                console.log(err)
+
                 setVerify(false)
             })
     }
@@ -111,8 +114,9 @@ const Community = () => {
         navigation.navigate('SetupCommunity')
     }
 
-    const communityClick = () => {
-        Alert.alert('Search', 'Search for a group')
+    const communityClick = (id) => {
+        // Alert.alert('Search', 'Search for a group')
+        navigation.navigate('CommunityDetail', { id: id })
     }
 
     const searchFunction = (text) => {
@@ -229,8 +233,10 @@ const Community = () => {
 
                 {Object.keys(searchResultList).map((key, index) => (
                     <CommunityViewImageButton
-                            key={index}
-                            onPress={communityClick}
+                            key={key}
+                            onPress={() => {
+                                communityClick(key)
+                            }}
                         >
                             <Image
                                 source={sampleIcon}

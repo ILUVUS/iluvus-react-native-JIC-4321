@@ -35,6 +35,7 @@ const LoginScreen = () => {
                 // Alert.alert("Successful", res.data);
 
                 try {
+                    console.log('Saving userId', res)
                     await AsyncStorage.setItem('userId', res.data)
                 } catch (e) {
                     console.log(e)

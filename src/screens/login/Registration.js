@@ -51,6 +51,7 @@ const RegistrationScreen = ({ navigation }) => {
             },
         })
             .then((res) => {
+                // console.log('Successful', res.data)
                 navigation.navigate('Login')
             })
             .catch((err) => {
