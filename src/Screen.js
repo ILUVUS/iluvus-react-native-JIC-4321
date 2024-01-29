@@ -8,6 +8,7 @@ import HomeScreen from './screens/HomeScreen'
 import LoginScreen from './screens/login/Login'
 import RegistrationScreen from './screens/login/Registration'
 import SetupCommunity from './screens/community/SetupCommunity'
+import CommunityView from './screens/community/CommunityView'
 
 LogBox.ignoreAllLogs(true)
 
@@ -45,6 +46,15 @@ export default function Screen() {
                 />
 
                 <Stack.Screen
+                    name={STRINGS.communityView}
+                    component={CommunityView}
+                    options={{
+                        title: STRINGS.communityView,
+                        headerShown: true,
+                    }}
+                />
+
+                <Stack.Screen
                     name={STRINGS.setupCommunity}
                     component={SetupCommunity}
                     options={{
@@ -52,6 +62,7 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
+
             </Stack.Navigator>
         </NavigationContainer>
     )

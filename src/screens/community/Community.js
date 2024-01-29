@@ -73,14 +73,14 @@ const Community = () => {
             },
         })
             .then((res) => {
-                console.log(res.data[1])
+                console.log('All community: ', res.data)
                 setCommunityList(res.data)
             })
             .catch((err) => {})
     }
 
     const getVerified = async () => {
-        console.log("get verify")
+        console.log(await AsyncStorage.getItem('userId'))
         axios({
             method: 'POST',
             url: `${BASE_URL}/user/verify`,
@@ -92,9 +92,12 @@ const Community = () => {
             },
         })
             .then((res) => {
+                console.log(res.data)
                 setVerify(true)
             })
             .catch((err) => {
+                console.log(err)
+
                 setVerify(false)
             })
     }
@@ -111,8 +114,9 @@ const Community = () => {
         navigation.navigate('SetupCommunity')
     }
 
-    const communityClick = () => {
-        Alert.alert('Search', 'Search for a group')
+    const communityClick = (id) => {
+        // Alert.alert('Search', 'Search for a group')
+        navigation.navigate(STRINGS.communityView, { communityId: id })
     }
 
     const searchFunction = (text) => {
@@ -136,119 +140,150 @@ const Community = () => {
                 searchIcon={searchBarStyle.seachIcon}
                 clearIcon={searchBarStyle.clearIcon}
             />
-            {!searchValue && <ScrollView
-                className="h-screen w-screen"
-                contentContainerStyle={{
-                    paddingHorizontal: 5,
-                    display: 'flex',
-                    justifyContent: 'center',
-                }}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-            >
-                <View className="my-3 flex w-screen flex-row justify-evenly">
-                    {verify && (
-                        <CommunityViewMainButton onPress={newCommunity}>
+            {!searchValue && (
+                <ScrollView
+                    className="h-screen w-screen"
+                    contentContainerStyle={{
+                        paddingHorizontal: 5,
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                >
+                    <View className="my-3 flex w-screen flex-row justify-evenly">
+                        {verify && (
+                            <CommunityViewMainButton onPress={newCommunity}>
+                                <Icon
+                                    name="plus"
+                                    size={SIZES.communityIconSize}
+                                    color={COLORS['orchid'][900]}
+                                />
+                                <Text className="mt-1 text-base text-orchid-900">
+                                    {STRINGS.newCommunity}
+                                </Text>
+                            </CommunityViewMainButton>
+                        )}
+
+                        <CommunityViewMainButton onPress={myCommunity}>
                             <Icon
-                                name="plus"
+                                name="users"
                                 size={SIZES.communityIconSize}
                                 color={COLORS['orchid'][900]}
                             />
                             <Text className="mt-1 text-base text-orchid-900">
-                                {STRINGS.newCommunity}
+                                {STRINGS.myCommunity}
                             </Text>
                         </CommunityViewMainButton>
-                    )}
 
-                    <CommunityViewMainButton onPress={myCommunity}>
-                        <Icon
-                            name="users"
-                            size={SIZES.communityIconSize}
-                            color={COLORS['orchid'][900]}
-                        />
-                        <Text className="mt-1 text-base text-orchid-900">
-                            {STRINGS.myCommunity}
-                        </Text>
-                    </CommunityViewMainButton>
-
-                    <CommunityViewMainButton onPress={myFriend}>
-                        <Icon
-                            name="child"
-                            size={SIZES.communityIconSize}
-                            color={COLORS['orchid'][900]}
-                        />
-                        <Text className="mt-1 text-base text-orchid-900">
-                            {STRINGS.myFriends}
-                        </Text>
-                    </CommunityViewMainButton>
-                </View>
-
-                <View className="mb-2 ml-5 flex w-screen items-start">
-                    <Text className="text-3xl font-bold text-orchid-900 shadow-md shadow-slate-200">
-                        Developing
-                    </Text>
-                </View>
-
-                <View className="flex flex-row flex-wrap overflow-auto">
-                    {communityList.map((item, index) => (
-                        <CommunityViewImageButton
-                            key={index}
-                            onPress={communityClick}
-                        >
-                            <Image
-                                source={sampleIcon}
-                                className="h-24 w-24 rounded-3xl"
+                        <CommunityViewMainButton onPress={myFriend}>
+                            <Icon
+                                name="child"
+                                size={SIZES.communityIconSize}
+                                color={COLORS['orchid'][900]}
                             />
                             <Text className="mt-1 text-base text-orchid-900">
-                                {item}
+                                {STRINGS.myFriends}
                             </Text>
-                        </CommunityViewImageButton>
-                    ))}
-                </View>
-            </ScrollView>}
+                        </CommunityViewMainButton>
+                    </View>
 
-            {searchValue && <ScrollView
-                className="h-screen w-screen"
-                contentContainerStyle={{
-                    paddingHorizontal: 5,
-                    display: 'flex',
-                    justifyContent: 'center',
-                }}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }>
+                    <View className="mb-2 ml-5 flex w-screen items-start">
+                        <Text className="text-3xl font-bold text-orchid-900 shadow-md shadow-slate-200">
+                            Developing
+                        </Text>
+                    </View>
 
-                <View className="flex flex-row flex-wrap overflow-auto">
+                    <View className="flex flex-row flex-wrap overflow-auto">
+                        {/* Sample Items */}
+                        {/* <CommunityViewImageButton
+                        key={1}
+                        onPress={() => communityClick('id1')} // <<===== passing communityid here
+                    >
+                        <Image
+                            source={sampleIcon}
+                            className="h-24 w-24 rounded-3xl"
+                        />
+                        <Text className="mt-1 text-base text-orchid-900">
+                            Item 1
+                        </Text>
+                    </CommunityViewImageButton> */}
+                        {/* Sample Items */}
 
-                {Object.keys(searchResultList).map((key, index) => (
-                    <CommunityViewImageButton
-                            key={index}
-                            onPress={communityClick}
-                        >
-                            <Image
-                                source={sampleIcon}
-                                className="h-24 w-24 rounded-3xl"
-                            />
-                            <Text className="mt-1 text-base text-orchid-900">
-                                {searchResultList[key]}
-                            </Text>
-                        </CommunityViewImageButton>
-                ))}
+                        {/* {communityList.map((item, index) => (
+                            <CommunityViewImageButton
+                                key={index}
+                                onPress={communityClick(item.index)}
+                            >
+                                <Image
+                                    source={sampleIcon}
+                                    className="h-24 w-24 rounded-3xl"
+                                />
+                                <Text className="mt-1 text-base text-orchid-900">
+                                    {item}
+                                </Text>
+                            </CommunityViewImageButton>
+                        ))} */}
 
-                    {/* {searchResultList.map((item, index) => (
+                        {Object.keys(communityList).map((key, index) => (
+                            <CommunityViewImageButton
+                                key={key}
+                                onPress={() => communityClick(key)}
+                            >
+                                <Image
+                                    source={sampleIcon}
+                                    className="h-24 w-24 rounded-3xl"
+                                />
+                                <Text className="mt-1 text-base text-orchid-900">
+                                    {communityList[key]}
+                                </Text>
+                            </CommunityViewImageButton>
+                        ))}
+                    </View>
+                </ScrollView>
+            )}
+
+            {searchValue && (
+                <ScrollView
+                    className="h-screen w-screen"
+                    contentContainerStyle={{
+                        paddingHorizontal: 5,
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                >
+                    <View className="flex flex-row flex-wrap overflow-auto">
+                        {Object.keys(searchResultList).map((key, index) => (
+                            <CommunityViewImageButton
+                                key={key}
+                                onPress={() => communityClick(key)}
+                            >
+                                <Image
+                                    source={sampleIcon}
+                                    className="h-24 w-24 rounded-3xl"
+                                />
+                                <Text className="mt-1 text-base text-orchid-900">
+                                    {searchResultList[key]}
+                                </Text>
+                            </CommunityViewImageButton>
+                        ))}
+
+                        {/* {searchResultList.map((item, index) => (
                         
                     ))} */}
-                </View>
-
+                    </View>
                 </ScrollView>
-                }
+            )}
         </View>
     )
 }
