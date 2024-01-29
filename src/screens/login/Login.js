@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
@@ -19,6 +19,21 @@ const LoginScreen = () => {
     const [password, setPassword] = useState('')
     const navigation = useNavigation()
 
+    // remove userId from async storage if exists and we are on login screen
+    useEffect(() => {
+        const removeUserId = async () => {
+            try {
+                const value = await AsyncStorage.getItem('userId')
+                if (value !== null) {
+                    await AsyncStorage.removeItem('userId')
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        removeUserId()
+    }, [])
+
     const handleSignin = async () => {
         axios({
             method: 'POST',
@@ -32,21 +47,27 @@ const LoginScreen = () => {
             },
         })
             .then(async (res) => {
-                // Alert.alert("Successful", res.data);
 
                 try {
                     console.log('Saving userId', res)
                     await AsyncStorage.setItem('userId', res.data)
                 } catch (e) {
                     console.log(e)
+                    return
                 }
 
-                const value = await AsyncStorage.getItem('userId')
+                console.log('Successful', res.data)
 
                 setUsername('')
                 setPassword('')
 
                 navigation.navigate(STRINGS.homescreen)
+
+                // avoid go back to login
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: STRINGS.homescreen }],
+                })
             })
             .catch((err) =>
                 Alert.alert('Unsuccessful', 'Wrong Username or Password')
@@ -73,6 +94,7 @@ const LoginScreen = () => {
                 </Text>
 
                 <LoginInput
+                    autoCapitalize="none"
                     className="mt-32"
                     placeholderTextColor={COLORS['orchid'][300]}
                     placeholder={STRINGS.usernameExample}
@@ -80,6 +102,7 @@ const LoginScreen = () => {
                     onChangeText={(text) => setUsername(text)}
                 />
                 <LoginInput
+                    autoCapitalize="none"
                     placeholderTextColor={COLORS['orchid'][300]}
                     placeholder={STRINGS.passwordExample}
                     secureTextEntry={true}
