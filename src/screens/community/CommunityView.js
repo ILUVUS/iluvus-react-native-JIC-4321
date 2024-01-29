@@ -21,7 +21,7 @@ import sampleIcon from '../../../assets/images/sampleicon.jpg'
 import communityBg from '../../../assets/images/communitybg.jpg'
 import STRINGS from '../../constants/strings'
 
-const CommunityView = (communityId = "communityId") => {
+const CommunityView = (communityId = 'communityId') => {
     const defaultCommunityInfo = {
         name: 'Community Name',
         host: 'Host Name',
@@ -36,6 +36,9 @@ const CommunityView = (communityId = "communityId") => {
     const [isPublicCommunity, setIsPublicCommunity] = useState(true)
     const [isJoined, setIsJoined] = useState(false)
     const [communityInfo, setCommunityInfo] = useState(defaultCommunityInfo)
+    const [globalCommunityId, setGlobalCommunityId] = useState(
+        communityId.route.params.communityId
+    )
 
     const onRefresh = React.useCallback(() => {
         console.log('refreshing')
@@ -43,11 +46,49 @@ const CommunityView = (communityId = "communityId") => {
 
     useEffect(() => {
         // This is the community ID it receives from the community list
-        console.log('THE COMMUNITY ID: ', communityId.route.params.communityId)
+        console.log('THE COMMUNITY ID: ', globalCommunityId)
+
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/community/getInfo?id=${globalCommunityId}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                console.log(res.data)
+                setCommunityInfo({
+                    name: res.data.name,
+                    host: 'Host Name',
+                    followers: 90,
+                    posts: 90,
+                    description: res.data.description,
+                    rules: res.data.rules,
+                })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }, [])
 
-    const joinCommunity = () => {
-        Alert.alert('Joining Community')
+    const joinCommunity = async () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/community/join`,
+            data: {
+                userId: await AsyncStorage.getItem('userId'),
+                communityId: globalCommunityId,
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                console.log(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     const viewPosts = () => {
@@ -99,7 +140,7 @@ const CommunityView = (communityId = "communityId") => {
                     <View className="mb-5 flex items-center justify-center">
                         <View className="mb-1 flex flex-row gap-2">
                             <Text className="text-2xl font-semibold text-white shadow shadow-orchid-600">
-                                Community Name
+                                {communityInfo.name}
                             </Text>
                             {isHost && (
                                 <TouchableOpacity onPress={editCommunity}>
@@ -127,7 +168,7 @@ const CommunityView = (communityId = "communityId") => {
                     <View className="flex flex-row items-center justify-center gap-5">
                         {isHost && (
                             <TouchableOpacity
-                                onPress={joinCommunity}
+                                onPress={() => joinCommunity()}
                                 className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
                             >
                                 <Text className="text-md text-orchid-900">

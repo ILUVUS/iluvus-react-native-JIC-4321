@@ -1,7 +1,7 @@
 export default {
     appName: 'ILUVUS',
 
-    InitialRoute: this.loginscreen,
+    InitialRoute: this.registerscreen,
 
     // general
     loginscreen: 'Login',
