@@ -57,8 +57,6 @@ const LoginScreen = () => {
                 setUsername('')
                 setPassword('')
 
-                navigation.navigate(STRINGS.homescreen)
-
                 // avoid go back to login
                 navigation.reset({
                     index: 0,

@@ -3,6 +3,8 @@ export default {
 
     InitialRoute: this.registerscreen,
 
+    authscreen: 'Auth',
+
     // general
     loginscreen: 'Login',
     registerscreen: 'Register',

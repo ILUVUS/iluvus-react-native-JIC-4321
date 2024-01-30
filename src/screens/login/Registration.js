@@ -60,11 +60,10 @@ const RegistrationScreen = ({ navigation }) => {
             },
         })
             .then((res) => {
-                navigation.navigate('Login')
                 // avoid going back to registration screen
                 navigation.reset({
                     index: 0,
-                    routes: [{ name: 'Login' }],
+                    routes: [{ name: STRINGS.loginscreen }],
                 })
             })
             .catch((err) => {
