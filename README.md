@@ -53,14 +53,6 @@ npm start
 
 or scan the QR Code on the output with phone camera to run on Expo application.
 
-## Contributors:
-
-[Arjun Ramani](#)
-[Binaya Timsina](#)
-[Doan Tran](#)
-[Thuan Vo](#)
-[Tyler Lin](#)
-
 # Release Notes
 
 ## Version 0.1.0
@@ -69,12 +61,25 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 
 - Community View Screen for every community.
 - Search community in search tab.
+- Join button for community
 
 ### Bug Fix
+
+- Display Create Community properly
+
+### Known Issues
 
 ## License
 
 This project is licensed under the MIT License.
+
+## Contributors:
+
+- [Arjun Ramani](#)
+- [Binaya Timsina](#)
+- [Doan Tran](#)
+- [Thuan Vo](#)
+- [Tyler Lin](#)
 
 ## Acknowledgments
 
