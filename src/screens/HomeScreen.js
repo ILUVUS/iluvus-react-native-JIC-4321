@@ -64,7 +64,6 @@ function SettingsScreenNav() {
 const Tab = createBottomTabNavigator()
 
 export default function HomeScreen() {
-
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({

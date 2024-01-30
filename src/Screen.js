@@ -62,7 +62,6 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
-
             </Stack.Navigator>
         </NavigationContainer>
     )

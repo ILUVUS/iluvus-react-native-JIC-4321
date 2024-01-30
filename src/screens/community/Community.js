@@ -33,7 +33,6 @@ const Community = () => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
-        // refresh the communityList
         getVerified()
         fetchCommunityList()
         setTimeout(() => {
@@ -47,7 +46,6 @@ const Community = () => {
     }, [])
 
     useEffect(() => {
-        console.log(searchValue)
         axios({
             method: 'GET',
             url: `${BASE_URL}/community/search?filter=${searchValue}`,
@@ -55,13 +53,12 @@ const Community = () => {
                 'Content-Type': 'application/json',
             },
         })
-        .then((res) => {
-            console.log(res.data)
-            setSearchResultList(res.data)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
+            .then((res) => {
+                setSearchResultList(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }, [searchValue])
 
     const fetchCommunityList = async () => {
@@ -73,31 +70,27 @@ const Community = () => {
             },
         })
             .then((res) => {
-                console.log('All community: ', res.data)
                 setCommunityList(res.data)
             })
             .catch((err) => {})
     }
 
     const getVerified = async () => {
-        console.log(await AsyncStorage.getItem('userId'))
         axios({
             method: 'POST',
             url: `${BASE_URL}/user/verify`,
             data: {
-                username: await AsyncStorage.getItem('userId'),
+                userId: await AsyncStorage.getItem('userId'),
             },
             headers: {
                 'Content-Type': 'application/json',
             },
         })
             .then((res) => {
-                console.log(res.data)
                 setVerify(true)
             })
             .catch((err) => {
                 console.log(err)
-
                 setVerify(false)
             })
     }
@@ -115,14 +108,11 @@ const Community = () => {
     }
 
     const communityClick = (id) => {
-        // Alert.alert('Search', 'Search for a group')
         navigation.navigate(STRINGS.communityView, { communityId: id })
     }
 
     const searchFunction = (text) => {
-        // bla bla things here
         setSearchValue(text)
-        
     }
     return (
         <View className="flex justify-center bg-white align-middle">
@@ -199,36 +189,6 @@ const Community = () => {
                     </View>
 
                     <View className="flex flex-row flex-wrap overflow-auto">
-                        {/* Sample Items */}
-                        {/* <CommunityViewImageButton
-                        key={1}
-                        onPress={() => communityClick('id1')} // <<===== passing communityid here
-                    >
-                        <Image
-                            source={sampleIcon}
-                            className="h-24 w-24 rounded-3xl"
-                        />
-                        <Text className="mt-1 text-base text-orchid-900">
-                            Item 1
-                        </Text>
-                    </CommunityViewImageButton> */}
-                        {/* Sample Items */}
-
-                        {/* {communityList.map((item, index) => (
-                            <CommunityViewImageButton
-                                key={index}
-                                onPress={communityClick(item.index)}
-                            >
-                                <Image
-                                    source={sampleIcon}
-                                    className="h-24 w-24 rounded-3xl"
-                                />
-                                <Text className="mt-1 text-base text-orchid-900">
-                                    {item}
-                                </Text>
-                            </CommunityViewImageButton>
-                        ))} */}
-
                         {Object.keys(communityList).map((key, index) => (
                             <CommunityViewImageButton
                                 key={key}
@@ -277,10 +237,6 @@ const Community = () => {
                                 </Text>
                             </CommunityViewImageButton>
                         ))}
-
-                        {/* {searchResultList.map((item, index) => (
-                        
-                    ))} */}
                     </View>
                 </ScrollView>
             )}

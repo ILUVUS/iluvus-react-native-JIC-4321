@@ -32,7 +32,7 @@ export default function SetupCommunity() {
             communityRule.trim() !== '' &&
             visibility.trim() !== ''
         ) {
-            console.log(visibility);
+            console.log(visibility)
             await axios({
                 method: 'POST',
                 url: `${BASE_URL}/community/create`,

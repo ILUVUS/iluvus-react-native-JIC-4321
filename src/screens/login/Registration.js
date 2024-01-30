@@ -60,7 +60,6 @@ const RegistrationScreen = ({ navigation }) => {
             },
         })
             .then((res) => {
-                console.log('Successful', res.data)
                 navigation.navigate('Login')
                 // avoid going back to registration screen
                 navigation.reset({
@@ -164,7 +163,7 @@ const RegistrationScreen = ({ navigation }) => {
                 className="mt-4 flex w-fit items-center rounded-3xl bg-gold-900 px-5 py-2 align-middle shadow-md shadow-slate-200"
             >
                 <Text className="py-1 text-base text-orchid-900 shadow-md shadow-slate-400">
-                    {emailMode ? "I am Professional User" : "I am Regular User"}
+                    {emailMode ? 'I am Professional User' : 'I am Regular User'}
                 </Text>
             </TouchableOpacity>
 

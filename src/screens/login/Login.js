@@ -47,16 +47,12 @@ const LoginScreen = () => {
             },
         })
             .then(async (res) => {
-
                 try {
-                    console.log('Saving userId', res)
                     await AsyncStorage.setItem('userId', res.data)
                 } catch (e) {
                     console.log(e)
                     return
                 }
-
-                console.log('Successful', res.data)
 
                 setUsername('')
                 setPassword('')

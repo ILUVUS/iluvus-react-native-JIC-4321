@@ -22,28 +22,29 @@ import sampleIcon from '../../../assets/images/sampleicon.jpg'
 import communityBg from '../../../assets/images/communitybg.jpg'
 import STRINGS from '../../constants/strings'
 
-const CommunityView = (communityId = 'communityId') => {
-    const defaultCommunityInfo = {
-        name: 'Community Name',
-        host: 'Host Name',
-        followers: 90,
-        posts: 90,
-        description: STRINGS.exanple_text,
-        rules: STRINGS.exanple_text,
-    }
+import { signal } from '@preact/signals-react'
 
+const CommunityView = (communityId = 'communityId') => {
     const [refreshing, setRefreshing] = React.useState(false)
     const [isHost, setIsHost] = useState(false)
     const [isPublicCommunity, setIsPublicCommunity] = useState(true)
     const [isJoined, setIsJoined] = useState(false)
-    const [communityInfo, setCommunityInfo] = useState(defaultCommunityInfo)
+
+    const [communityInfo, setCommunityInfo] = useState({
+        name: 'Community Name',
+        host: 'Host Name',
+        followers: 0,
+        posts: 0,
+        description: STRINGS.exanple_text,
+        rules: STRINGS.exanple_text,
+    })
     const [globalCommunityId, setGlobalCommunityId] = useState(
         communityId.route.params.communityId
     )
     const [members, setMembers] = useState([])
 
     const onRefresh = React.useCallback(() => {
-        console.log('refreshing')
+        getCommunityInfo()
     }, [])
 
     const getCommunityInfo = async () => {
@@ -55,22 +56,19 @@ const CommunityView = (communityId = 'communityId') => {
             },
         })
             .then((res) => {
-                console.log(res.data)
-                setCommunityInfo({
+                // updade only name, description and rules fields
+                setCommunityInfo((prevState) => ({
+                    ...prevState,
                     name: res.data.name,
-                    host: 'Host Name',
-                    followers: 90,
-                    posts: 90,
                     description: res.data.description,
                     rules: res.data.rules,
-                })
+                }))
 
                 // split and strip the string
                 membersListAsArray = res.data.members.split(',')
                 const membersListTrimmed = membersListAsArray.map((member) =>
                     member.trim()
                 )
-                console.log(membersListTrimmed)
                 setMembers(membersListTrimmed)
             })
             .catch((err) => {
@@ -82,15 +80,15 @@ const CommunityView = (communityId = 'communityId') => {
 
     useEffect(() => {
         // This is the community ID it receives from the community list
-        console.log('THE COMMUNITY ID: ', globalCommunityId)
 
         getCommunityInfo()
     }, [])
 
     const checkIfJoined = async () => {
         if (members.includes(await AsyncStorage.getItem('userId'))) {
-            console.log('Is a member')
-            setIsJoined(true)
+            setIsJoined(true) // Update isJoined state using setIsJoined
+        } else {
+            setIsJoined(false) // Update isJoined state using setIsJoined
         }
     }
 
@@ -111,11 +109,17 @@ const CommunityView = (communityId = 'communityId') => {
             },
         })
             .then((res) => {
-                console.log(res.data)
+                addNewMember()
+
+                checkIfJoined()
             })
             .catch((err) => {
                 console.log(err)
             })
+    }
+
+    const addNewMember = async () => {
+        members.push(await AsyncStorage.getItem('userId'))
     }
 
     const viewPosts = () => {
@@ -127,7 +131,6 @@ const CommunityView = (communityId = 'communityId') => {
     }
 
     return (
-        // <CustomKeyboardAvoidingView>
         <View className="flex h-screen w-screen">
             <ScrollView
                 refreshControl={
@@ -235,7 +238,6 @@ const CommunityView = (communityId = 'communityId') => {
                 </View>
             </ScrollView>
         </View>
-        // </CustomKeyboardAvoidingView>
     )
 }
 
