@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import COLORS from '../constants/colors'
 import STRINGS from '../constants/strings'
 import Community from './community/Community'
+import Profile from './profile/Profile'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { useEffect, useState } from 'react'
@@ -38,11 +39,7 @@ function CommunityScreenNav() {
 }
 
 function ProfileScreenNav() {
-    return (
-        <View className="flex h-screen justify-center bg-white p-2 align-middle">
-            <Text>ProfileScreen!</Text>
-        </View>
-    )
+    return <Profile />
 }
 
 function MessageScreenNav() {
