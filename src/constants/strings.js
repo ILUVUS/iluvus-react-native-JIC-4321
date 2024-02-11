@@ -42,6 +42,9 @@ export default {
     // view community
     communityView: 'CommunityView',
 
+    // community post
+    Post: 'Post',
+
     // setup community
     picturebtn: 'Picture',
     publishbtn: 'Publish',

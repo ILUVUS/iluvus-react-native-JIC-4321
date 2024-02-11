@@ -10,6 +10,7 @@ import RegistrationScreen from './screens/login/Registration'
 import SetupCommunity from './screens/community/SetupCommunity'
 import CommunityView from './screens/community/CommunityView'
 import AuthScreen from './screens/login/Auth'
+import Post from './screens/community/Post'
 
 LogBox.ignoreAllLogs(true)
 
@@ -18,7 +19,7 @@ const Stack = createStackNavigator()
 export default function Screen() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={STRINGS.authscreen}>
+            <Stack.Navigator initialRouteName={STRINGS.Post}>
                 <Stack.Screen
                     name={STRINGS.authscreen}
                     component={AuthScreen}
@@ -72,6 +73,16 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
+
+                <Stack.Screen
+                    name={STRINGS.Post}
+                    component={Post}
+                    options={{
+                        title: STRINGS.Post,
+                        headerShown: true,
+                    }}
+                />
+
             </Stack.Navigator>
         </NavigationContainer>
     )
