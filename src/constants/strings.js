@@ -92,6 +92,10 @@ export default {
     createAnAccount: 'Create an account',
     forgotPassword: 'Forgot Password?',
 
+    // verification
+    Verification: 'Verification',
+    enterCode: 'Enter your 6-digit verification code:',
+
     //community
     communitySearchBar: 'Explore communities',
 
