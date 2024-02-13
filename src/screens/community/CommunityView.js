@@ -4,6 +4,7 @@ import axios from 'axios'
 import { BASE_URL } from '@env'
 import { Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useNavigation } from '@react-navigation/native'
 
 import {
     Keyboard,
@@ -29,6 +30,7 @@ const CommunityView = (communityId = 'communityId') => {
     const [isHost, setIsHost] = useState(false)
     const [isPublicCommunity, setIsPublicCommunity] = useState(true)
     const [isJoined, setIsJoined] = useState(false)
+    const navigation = useNavigation()
 
     const [communityInfo, setCommunityInfo] = useState({
         name: 'Community Name',
@@ -123,7 +125,8 @@ const CommunityView = (communityId = 'communityId') => {
     }
 
     const viewPosts = () => {
-        Alert.alert('Viewing Posts')
+        // Alert.alert('Viewing Posts')
+        Navigation.navigate('Post');
     }
 
     const editCommunity = () => {

@@ -44,6 +44,11 @@ export default {
 
     // community post
     Post: 'Post',
+    CreatePost: 'New Post',
+    postDescription: 'Description',
+    postContentPlaceholder: 'Please input the content of the post...',
+
+
 
     // setup community
     picturebtn: 'Picture',
