@@ -12,6 +12,7 @@ import CommunityView from './screens/community/CommunityView'
 import AuthScreen from './screens/login/Auth'
 import Post from './screens/community/Post'
 
+
 LogBox.ignoreAllLogs(true)
 
 const Stack = createStackNavigator()
@@ -81,7 +82,7 @@ export default function Screen() {
                         title: STRINGS.Post,
                         headerShown: true,
                     }}
-                />
+                /> 
 
             </Stack.Navigator>
         </NavigationContainer>
