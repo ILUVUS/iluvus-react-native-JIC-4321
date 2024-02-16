@@ -71,81 +71,83 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
     }, [])
 
     return (
-        <View className="flex h-screen w-screen bg-white flex-1">
-            <View className="mt-3 mx-3 flex flex-row items-end justify-end">
-                <TouchableOpacity
-                    onPress={handleOpenPopup}
-                    className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-orchid-200 px-5 py-2 shadow"
-                >
-                    <Text className="text-orchid-900">Post</Text>
-                    <Ionicons
-                        name="create-outline"
-                        size={20}
-                        color={COLORS.orchid[900]}
-                    />
-                </TouchableOpacity>
-            </View>
+        <>
+            <View className="flex h-screen w-screen flex-1 bg-white">
+                <View className="h-full w-full">
+                    <ScrollView
+                        // contentContainerStyle={{
+                        //     flexGrow: 1,
+                        //     alignItems: 'center'
+                        // }}
+                        contentContainerStyle={{
+                            paddingBottom: 120,
+                            flexGrow: 1,
+                        }}
+                        className="h-full w-full overflow-auto bg-white p-5"
+                    >
+                        {postData.map((post, index) => {
+                            return <PostItem key={index} post={post} />
+                        })}
+                    </ScrollView>
+                </View>
 
-            <View className='w-full h-full'>
-            <ScrollView
-                // contentContainerStyle={{
-                //     flexGrow: 1,
-                //     alignItems: 'center'
-                // }}
-                contentContainerStyle={{ paddingBottom: 100 ,
-                    flexGrow: 1,
-              }}
-                className="h-full w-full overflow-auto bg-white p-5"
-            >
-                {postData.map((post, index) => {
-                    return <PostItem key={index} post={post} />
-                })}
-            </ScrollView>
-            </View>
-
-            <View className="h-screen w-screen">
-                <Modal
-                    visible={isVisible}
-                    transparent={false}
-                    animationType="slide"
-                >
-                    <TouchableOpacity activeOpacity={1}>
-                        <View className="w-fit flex-col items-center justify-start pb-10 pt-10 shadow">
-                            <Text className="mb-5 text-2xl font-bold text-orchid-900">
-                                New post
-                            </Text>
-                            <PostInput
-                                className="mb-5 h-4/5"
-                                multiline={true}
-                                placeholder={STRINGS.postContentPlaceholder}
-                                value={postContent}
-                                onChangeText={(text) => setPostContent(text)}
-                            />
-                            <View className="flex-row justify-evenly space-x-10">
-                                <PostButton
-                                    onPress={handleClosePopup}
-                                    className="bg-gold-900"
-                                >
-                                    <Text className="text-orchid-900">
-                                        {' '}
-                                        Publish
-                                    </Text>
-                                </PostButton>
-                                <PostButton
-                                    onPress={handleClosePopup}
-                                    className="bg-gray-300"
-                                >
-                                    <Text className="justify-center text-orchid-900">
-                                        {' '}
-                                        Cancel
-                                    </Text>
-                                </PostButton>
+                <View className="h-screen w-screen">
+                    <Modal
+                        visible={isVisible}
+                        transparent={false}
+                        animationType="slide"
+                    >
+                        <TouchableOpacity activeOpacity={1}>
+                            <View className="w-fit flex-col items-center justify-start pb-10 pt-10 shadow">
+                                <Text className="mb-5 text-2xl font-bold text-orchid-900">
+                                    New post
+                                </Text>
+                                <PostInput
+                                    className="mb-5 h-4/5"
+                                    multiline={true}
+                                    placeholder={STRINGS.postContentPlaceholder}
+                                    value={postContent}
+                                    onChangeText={(text) =>
+                                        setPostContent(text)
+                                    }
+                                />
+                                <View className="flex-row justify-evenly space-x-10">
+                                    <PostButton
+                                        onPress={handleClosePopup}
+                                        className="bg-gold-900"
+                                    >
+                                        <Text className="text-orchid-900">
+                                            {' '}
+                                            Publish
+                                        </Text>
+                                    </PostButton>
+                                    <PostButton
+                                        onPress={handleClosePopup}
+                                        className="bg-gray-300"
+                                    >
+                                        <Text className="justify-center text-orchid-900">
+                                            {' '}
+                                            Cancel
+                                        </Text>
+                                    </PostButton>
+                                </View>
                             </View>
-                        </View>
-                    </TouchableOpacity>
-                </Modal>
+                        </TouchableOpacity>
+                    </Modal>
+                </View>
             </View>
-        </View>
+
+            <TouchableOpacity
+                onPress={handleOpenPopup}
+                className="absolute bottom-6 right-6 h-16 w-16 items-center justify-center rounded-full bg-orchid-500 px-5 py-2 shadow shadow-slate-500"
+            >
+                <Ionicons
+                    name="create-outline"
+                    size={30}
+                    color={COLORS.white}
+                />
+            </TouchableOpacity>
+        </>
     )
 }
 export default Post
