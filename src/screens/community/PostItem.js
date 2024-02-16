@@ -23,8 +23,10 @@ import axios from 'axios'
 const PostItem = ({ post }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false)
     const [upliftNumber, setUpliftNumber] = useState(0)
+    const [comments, setComments] = useState([])
 
     const handleComment = () => {
+        getAllComments()
         setIsCommentVisible(!isCommentVisible)
     }
 
@@ -45,6 +47,26 @@ const PostItem = ({ post }) => {
             })
             .catch((err) => {
                 console.log('Cannot like the post', err)
+            })
+    }
+
+    const getAllComments = () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/post/getAllComments`,
+            data: {
+                postId: post.id,
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                console.log('Comments', res.data)
+                setComments(res.data)
+            })
+            .catch((err) => {
+                console.log('Cannot get comments', err)
             })
     }
 
@@ -89,9 +111,7 @@ const PostItem = ({ post }) => {
                                 size={22}
                             />
                         </TouchableOpacity>
-                        <Text className="text-sm text-orchid-600">
-                            {0}
-                        </Text>
+                        <Text className="text-sm text-orchid-600">{0}</Text>
                     </View>
 
                     {/* SHARE BUTTON HERE */}
@@ -125,15 +145,16 @@ const PostItem = ({ post }) => {
                             <ScrollView
                                 contentContainerStyle={{
                                     flexGrow: 1,
-                                    justifyContent: 'space-between',
+                                    justifyContent: 'flex-start',
                                 }}
                                 className="px-3"
                             >
-                                {/* Loop 10 times */}
-                                {Array.from({ length: 20 }, (_, i) => (
+                                {comments.map((comment, index) => (
                                     <Comment
-                                        authorName="Author"
-                                        text="Comment"
+                                        key={index}
+                                        authorName={comment.author_id}
+                                        text={comment.text}
+                                        dateTime={comment.datetime}
                                     />
                                 ))}
                             </ScrollView>
