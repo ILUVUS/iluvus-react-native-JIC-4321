@@ -41,5 +41,6 @@ export default {
         800: '#ffebaf',
         800: '#ffe9a5',
         900: '#ffe79b',
+        950: '#ffc000',
     },
 }

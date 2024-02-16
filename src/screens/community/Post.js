@@ -1,5 +1,5 @@
-// Import package and project components
-import React, { useEffect, useState } from 'react'
+// Import package and project components    
+import React, { useEffect, useState, Component } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
@@ -21,14 +21,18 @@ import Modal from 'react-native-modal'
 import COLORS from '../../constants/colors'
 
 import PostItem from './PostItem'
+import Comment from './Comments'
 
 import {
-    Keyboard,
-    View,
-    Text,
-    TouchableOpacity,
-    ScrollView,
-    RefreshControl,
+  Keyboard,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+  ScrollView,
+  RefreshControl,
 } from 'react-native'
 import { PostButton } from '../../components/button'
 
@@ -66,6 +70,22 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
         setIsVisible(false)
     }
 
+
+    const handleLike = () => {
+        setLiked(!liked)
+        console.log('Like Button Pressed')
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/community/all`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setCommunityList(res.data)
+            })
+            .catch((err) => {})
+    }
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
     }, [])
