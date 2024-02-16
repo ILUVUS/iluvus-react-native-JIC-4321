@@ -11,6 +11,7 @@ import SetupCommunity from './screens/community/SetupCommunity'
 import CommunityView from './screens/community/CommunityView'
 import AuthScreen from './screens/login/Auth'
 import Post from './screens/community/Post'
+import Comments from './screens/community/Comments'
 
 LogBox.ignoreAllLogs(true)
 
@@ -26,6 +27,14 @@ export default function Screen() {
                     options={{
                         title: STRINGS.authScreen,
                         headerShown: false,
+                    }}
+                />
+                <Stack.Screen
+                    name = {STRINGS.comment}
+                    component={Comments}
+                    options = {{
+                        title: STRINGS.Comment,
+                        headerShown: true,
                     }}
                 />
 
