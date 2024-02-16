@@ -54,6 +54,7 @@ export default {
 
     // Comment 
     Comment: 'Comment',
+    commentPlaceholder: 'Please input your comment...',
 
     // setup community
     picturebtn: 'Picture',

@@ -1,4 +1,4 @@
-// Import package and project components    
+// Import package and project components
 import React, { useEffect, useState, Component } from 'react'
 
 import axios from 'axios'
@@ -7,6 +7,7 @@ import { Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
+import { faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
@@ -24,15 +25,15 @@ import PostItem from './PostItem'
 import Comment from './Comments'
 
 import {
-  Keyboard,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Image,
-  ImageBackground,
-  ScrollView,
-  RefreshControl,
+    Keyboard,
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Image,
+    ImageBackground,
+    ScrollView,
+    RefreshControl,
 } from 'react-native'
 import { PostButton } from '../../components/button'
 
@@ -43,6 +44,8 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
     const [fName, setFname] = useState('')
     const [lName, setLname] = useState('')
     const [postData, setPostData] = useState([{}])
+    const [isVisible, setIsVisible] = useState(false)
+    const [commentView, setCommentView] = useState(false)
 
     useEffect(() => {
         axios({
@@ -56,11 +59,9 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
                 setPostData(res.data)
             })
             .catch((err) => {
-                console.log(err)
+                console.log('Cannot get posts', err)
             })
     }, [])
-
-    const [isVisible, setIsVisible] = useState(false)
 
     const handleOpenPopup = () => {
         setIsVisible(true)
@@ -70,22 +71,6 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
         setIsVisible(false)
     }
 
-
-    const handleLike = () => {
-        setLiked(!liked)
-        console.log('Like Button Pressed')
-        axios({
-            method: 'GET',
-            url: `${BASE_URL}/community/all`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                setCommunityList(res.data)
-            })
-            .catch((err) => {})
-    }
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
     }, [])
@@ -95,10 +80,6 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
             <View className="flex h-screen w-screen flex-1 bg-white">
                 <View className="h-full w-full">
                     <ScrollView
-                        // contentContainerStyle={{
-                        //     flexGrow: 1,
-                        //     alignItems: 'center'
-                        // }}
                         contentContainerStyle={{
                             paddingBottom: 120,
                             flexGrow: 1,

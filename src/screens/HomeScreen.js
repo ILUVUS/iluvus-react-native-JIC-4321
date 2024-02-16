@@ -6,8 +6,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import COLORS from '../constants/colors'
 import STRINGS from '../constants/strings'
 import Community from './community/Community'
-import Profile from './Profile/Profile'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Profile from './profile/Profile'
 
 import { useEffect, useState } from 'react'
 
