@@ -7,7 +7,7 @@ import COLORS from '../constants/colors'
 import STRINGS from '../constants/strings'
 import Community from './community/Community'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import Profile from './profile/Profile'
+import Profile from './Profile/Profile'
 
 import { useEffect, useState } from 'react'
 
