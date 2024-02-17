@@ -6,14 +6,11 @@ import axios from 'axios';
 
 const Verification = () => {
     const [verificationCode, setVerificationCode] = useState('');
+    const [enteredCode, setEnteredCode] = useState('');
 
     useEffect(() => {  
         generateAndSendCode();
     }, []);
-
-    const generateRandomCode = () => {
-        return Math.floor(100000 + Math.random() * 900000).toString();
-    };
 
     const generateAndSendCode = () => {
         const code = generateRandomCode();
@@ -21,13 +18,25 @@ const Verification = () => {
         sendCodeToBackend(code);
     };
 
+    const generateRandomCode = () => {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    };
+
     const sendCodeToBackend = (code) => {
         // axios
     };
 
-    const handleVerification = (enteredCode) => {
+    const handleVerification = () => {
         // handle logic
-        if (enteredCode == verificationCode) {
+        if (enteredCode.trim() === '') {
+            Alert.alert('Please enter the verification code.');
+            return;
+        }
+        if (enteredCode.length !== 6) {
+            Alert.alert('Please enter the entire verification code.');
+            return;
+        }
+        if (enteredCode === verificationCode) {
             Alert.alert('Verification Successful');
         } else {
             Alert.alert('Verification Failed');
@@ -37,6 +46,7 @@ const Verification = () => {
 
     const handleResendCode = () => {
         generateAndSendCode();
+        setEnteredCode('');
         Alert.alert('New Verification Code Sent');
     };
 
@@ -54,7 +64,7 @@ const Verification = () => {
             {STRINGS.enterCode}
         </Text>     
         <OTPTextView
-            handleTextChange={code => setVerificationCode(code)}
+            handleTextChange={code => setEnteredCode(code)}
             containerStyle={{ marginBottom: 20 }}
             textInputStyle={{ borderWidth: 1, borderColor: 'gray', borderRadius: 5 }}
             inputCount={6}
