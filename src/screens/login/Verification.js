@@ -28,20 +28,21 @@ const Verification = () => {
     const handleVerification = (enteredCode) => {
         // handle logic
         if (enteredCode == verificationCode) {
-            Alert.alert('Verification successful');
+            Alert.alert('Verification Successful');
         } else {
-            Alert.alert('Verification failed');
+            Alert.alert('Verification Failed');
         }
         // console.log('Verification Code:', verificationCode);
     };
 
     const handleResendCode = () => {
         generateAndSendCode();
+        Alert.alert('New Verification Code Sent');
     };
 
     const handleCancel = () => {
         // transition back to previous screen
-        Alert.alert('Verification cancelled');
+        Alert.alert('Verification Cancelled');
     };
 
     return (
