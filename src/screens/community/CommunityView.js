@@ -30,6 +30,7 @@ const CommunityView = (communityId = 'communityId') => {
     const [isHost, setIsHost] = useState(false)
     const [isPublicCommunity, setIsPublicCommunity] = useState(true)
     const [isJoined, setIsJoined] = useState(false)
+
     const navigation = useNavigation()
 
     const [communityInfo, setCommunityInfo] = useState({
@@ -126,7 +127,7 @@ const CommunityView = (communityId = 'communityId') => {
 
     const viewPosts = () => {
         // Alert.alert('Viewing Posts')
-        Navigation.navigate('Post');
+        navigation.navigate('Post')
     }
 
     const editCommunity = () => {

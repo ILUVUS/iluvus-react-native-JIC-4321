@@ -1,5 +1,5 @@
-// Import package and project components    
-import React, { useEffect, useState } from 'react'
+// Import package and project components
+import React, { useEffect, useState, Component } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
@@ -7,6 +7,7 @@ import { Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
+import { faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
@@ -16,127 +17,159 @@ import { PostInput } from '../../components/input'
 import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingView'
 import STRINGS from '../../constants/strings'
 
-
-import Modal from "react-native-modal";
+import Modal from 'react-native-modal'
 
 import COLORS from '../../constants/colors'
 
+import PostItem from './PostItem'
+import Comment from './Comments'
+
 import {
-  Keyboard,
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  RefreshControl,
+    Keyboard,
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Image,
+    ImageBackground,
+    ScrollView,
+    RefreshControl,
 } from 'react-native'
 import { PostButton } from '../../components/button'
 
+const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
+    const [refreshing, setRefreshing] = React.useState(false)
+    const navigation = useNavigation()
+    const [postContent, setPostContent] = useState('')
+    const [fName, setFname] = useState('')
+    const [lName, setLname] = useState('')
+    const [postData, setPostData] = useState([{}])
+    const [isVisible, setIsVisible] = useState(false)
+    const [commentView, setCommentView] = useState(false)
+    const [userId, setUserId] = useState('')
 
-const Post = () => {
-  const [refreshing, setRefreshing] = React.useState(false);
-  const navigation = useNavigation()
-  const [postContent, setPostContent] = useState('');
-  const [fName, setFname] = useState('')
-  const [lName, setLname] = useState('')
+    const findUserId = async () => {
+        try {
+            const value = await AsyncStorage.getItem('userId')
+            if (value !== null) {
+                setUserId(value)
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
-  const handleLike = () => {
-    // handle like button press
-  }
- 
+    useEffect(() => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/post/getPostsByCommunityID?id=${community_id}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setPostData(res.data)
+            })
+            .catch((err) => {
+                console.log('Cannot get posts', err)
+            })
+        findUserId()
+    }, [])
 
-
-  const [isVisible, setIsVisible] = useState(false);
-
-  const handleOpenPopup = () => {
-    setIsVisible(true);
     
-  };
 
-  const handleClosePopup = () => {
-    setIsVisible(false);
-  };
+    const handleOpenPopup = () => {
+        setIsVisible(true)
+    }
 
+    const handleClosePopup = () => {
+        setIsVisible(false)
+    }
 
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true)
-  }, [])
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true)
+    }, [])
 
-  return (
-    <View className="flex h-screen w-screen">
-      <CustomKeyboardAvoidingView>
-        <View className="flex flex-row items-end justify-end mb-2 mt-0">
-          <TouchableOpacity onPress={handleOpenPopup} className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-orchid-200 px-5 py-2 shadow">
-            <Text className="text-orchid-900">Post</Text>
-            <Ionicons
-              name="create-outline"
-              size={20}
-              color={COLORS.orchid[900]}
-            />
-          </TouchableOpacity>
-        </View>
-        <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white shadow-md shadow-slate-300">
-          <View className='p-5'>
-            <Text className="mb-2 text-xl text-orchid-900 shadow">
-              {fName} {lName}
-            </Text>
-            <Text className="text-base text-orchid-700">
-              {postContent}
-            </Text>
-          </View>
-          <View className="bg-orchid-200 flex-row justify-evenly space-x-10 h-fit w-full rounded-b-3xl p-2 ">
-            <TouchableOpacity onPress={handleLike} >
-              <FontAwesomeIcon icon={faStar} color={COLORS.gold[900]} size={22} />
-            </TouchableOpacity>
+    return (
+        <>
+            <View className="flex h-screen w-screen flex-1 bg-white">
+                <View className="h-full w-full">
+                    <ScrollView
+                        contentContainerStyle={{
+                            paddingBottom: 120,
+                            flexGrow: 1,
+                        }}
+                        className="h-full w-full overflow-auto bg-white p-5"
+                    >
+                        {postData.map((post, index) => {
+                            return (
+                                <PostItem
+                                    key={index}
+                                    post={post}
+                                    userId={userId}
+                                />
+                            )
+                        })}
+                    </ScrollView>
+                </View>
 
-            {/* COMMENT BUTTON HERE */}
-            <TouchableOpacity onPress={() => console.log('Comment button pressed')}>
-              <FontAwesomeIcon icon={faComment} color={COLORS.orchid[700]} size={22} />
-            </TouchableOpacity>
-
-            {/* SHARE BUTTON HERE */}
-            <TouchableOpacity onPress={() => console.log('Share button pressed')}>
-            <FontAwesomeIcon icon={faBullhorn} color={COLORS.blue} size={22} />
-            </TouchableOpacity>
-            
-            {/* REPORT BUTTON HERE */}
-            <TouchableOpacity onPress={() => console.log('Report button pressed')}>
-              <FontAwesomeIcon icon={faEllipsis} color={COLORS.gray[500]} size={22} />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-
-      </CustomKeyboardAvoidingView>
-
-      <View className='w-screen h-screen'>
-        <Modal visible={isVisible} transparent={false} animationType="slide" >
-          <TouchableOpacity  activeOpacity={1} >
-            <View className="justify-start items-center shadow w-fit pb-10 pt-10 flex-col">
-              <Text className="mb-5 text-2xl font-bold text-orchid-900">New post</Text>
-              <PostInput
-                className="h-4/5 mb-5"
-                multiline={true}
-                placeholder={STRINGS.postContentPlaceholder}
-                value={postContent}
-                onChangeText={text => setPostContent(text)}
-              />
-              <View className= "justify-evenly flex-row space-x-10">
-              <PostButton onPress={handleClosePopup} className='bg-gold-900'>
-                <Text className = "text-orchid-900"> Publish</Text>
-              </PostButton>
-              <PostButton onPress={handleClosePopup} className='bg-gray-300'>
-                <Text className = "text-orchid-900 justify-center"> Cancel</Text>
-              </PostButton>
-              </View>
-              
-
+                <View className="h-screen w-screen">
+                    <Modal
+                        visible={isVisible}
+                        transparent={false}
+                        animationType="slide"
+                    >
+                        <TouchableOpacity activeOpacity={1}>
+                            <View className="w-fit flex-col items-center justify-start pb-10 pt-10 shadow">
+                                <Text className="mb-5 text-2xl font-bold text-orchid-900">
+                                    New post
+                                </Text>
+                                <PostInput
+                                    className="mb-5 h-4/5"
+                                    multiline={true}
+                                    placeholder={STRINGS.postContentPlaceholder}
+                                    value={postContent}
+                                    onChangeText={(text) =>
+                                        setPostContent(text)
+                                    }
+                                />
+                                <View className="flex-row justify-evenly space-x-10">
+                                    <PostButton
+                                        onPress={handleClosePopup}
+                                        className="bg-gold-900"
+                                    >
+                                        <Text className="text-orchid-900">
+                                            {' '}
+                                            Publish
+                                        </Text>
+                                    </PostButton>
+                                    <PostButton
+                                        onPress={handleClosePopup}
+                                        className="bg-gray-300"
+                                    >
+                                        <Text className="justify-center text-orchid-900">
+                                            {' '}
+                                            Cancel
+                                        </Text>
+                                    </PostButton>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </Modal>
+                </View>
             </View>
-          </TouchableOpacity>
-        </Modal>
-      </View>
 
-    </View>
-
-  );
+            <TouchableOpacity
+                onPress={handleOpenPopup}
+                className="absolute bottom-6 right-6 h-16 w-16 items-center justify-center rounded-full bg-orchid-500 px-5 py-2 shadow shadow-slate-500"
+            >
+                <Ionicons
+                    name="create-outline"
+                    size={30}
+                    color={COLORS.white}
+                />
+            </TouchableOpacity>
+        </>
+    )
 }
-export default Post;
+export default Post
