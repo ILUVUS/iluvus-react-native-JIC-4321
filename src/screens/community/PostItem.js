@@ -16,16 +16,21 @@ import COLORS from '../../constants/colors'
 import STRINGS from '../../constants/strings'
 import { useState } from 'react'
 import Comment from './Comments'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { BASE_URL } from '@env'
 import axios from 'axios'
+import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
 
-const PostItem = ({ post }) => {
+const PostItem = ({ post, userId }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false)
     const [upliftNumber, setUpliftNumber] = useState(0)
+    const [commentsNumber, setCommentsNumber] = useState(0)
     const [comments, setComments] = useState([])
+    const [commentText, setCommentText] = useState('')
 
     const handleComment = () => {
+        setCommentText('')
         getAllComments()
         setIsCommentVisible(!isCommentVisible)
     }
@@ -64,15 +69,53 @@ const PostItem = ({ post }) => {
             .then((res) => {
                 console.log('Comments', res.data)
                 setComments(res.data)
+                setCommentsNumber(res.data.length)
             })
             .catch((err) => {
                 console.log('Cannot get comments', err)
             })
     }
 
+    const getDatetime = () => {
+        // get current datetime in format 2024-01-29T05:00:00.000+00:00
+        const date = new Date()
+        console.log('Date', date.toISOString())
+        return date.toISOString()
+    }
+
+    const writeComment = async () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/post/comment`,
+            data: {
+                postId: post.id,
+                authorId: userId,
+                text: commentText,
+                dateTime: getDatetime(),
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setCommentText('')
+                console.log('Comment written', res.data)
+                setComments(res.data)
+                setCommentsNumber(res.data.length)
+            })
+            .catch((err) => {
+                console.log('Cannot write the comment', err)
+            })
+    }
+
     useEffect(() => {
         setUpliftNumber(post.uplift)
     }, [post.uplift])
+
+    useEffect(() => {
+        const commentsLen = post['comments']?.length
+        setCommentsNumber(commentsLen)
+    }, [post['comments']])
 
     return (
         <>
@@ -111,7 +154,9 @@ const PostItem = ({ post }) => {
                                 size={22}
                             />
                         </TouchableOpacity>
-                        <Text className="text-sm text-orchid-600">{0}</Text>
+                        <Text className="text-sm text-orchid-600">
+                            {commentsNumber}
+                        </Text>
                     </View>
 
                     {/* SHARE BUTTON HERE */}
@@ -148,6 +193,14 @@ const PostItem = ({ post }) => {
                                     justifyContent: 'flex-start',
                                 }}
                                 className="px-3"
+                                ref={(ref) => {
+                                    this.scrollView = ref
+                                }}
+                                onContentSizeChange={() =>
+                                    this.scrollView.scrollToEnd({
+                                        animated: true,
+                                    })
+                                }
                             >
                                 {comments.map((comment, index) => (
                                     <Comment
@@ -167,10 +220,16 @@ const PostItem = ({ post }) => {
                                     multiline={true}
                                     placeholder={STRINGS.commentPlaceholder}
                                     onChangeText={(text) =>
-                                        console.log('Comment: ', text)
+                                        setCommentText(text)
                                     }
+                                    value={commentText}
                                 />
-                                <TouchableOpacity className="flex h-10 w-12 items-center justify-center rounded-full bg-gold-800">
+                                <TouchableOpacity
+                                    className="flex h-10 w-12 items-center justify-center rounded-full bg-gold-800"
+                                    onPress={() => {
+                                        writeComment()
+                                    }}
+                                >
                                     <FontAwesomeIcon icon={faLeaf} />
                                 </TouchableOpacity>
                             </View>

@@ -46,6 +46,18 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
     const [postData, setPostData] = useState([{}])
     const [isVisible, setIsVisible] = useState(false)
     const [commentView, setCommentView] = useState(false)
+    const [userId, setUserId] = useState('')
+
+    const findUserId = async () => {
+        try {
+            const value = await AsyncStorage.getItem('userId')
+            if (value !== null) {
+                setUserId(value)
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     useEffect(() => {
         axios({
@@ -61,7 +73,10 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
             .catch((err) => {
                 console.log('Cannot get posts', err)
             })
+        findUserId()
     }, [])
+
+    
 
     const handleOpenPopup = () => {
         setIsVisible(true)
@@ -87,7 +102,13 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
                         className="h-full w-full overflow-auto bg-white p-5"
                     >
                         {postData.map((post, index) => {
-                            return <PostItem key={index} post={post} />
+                            return (
+                                <PostItem
+                                    key={index}
+                                    post={post}
+                                    userId={userId}
+                                />
+                            )
                         })}
                     </ScrollView>
                 </View>

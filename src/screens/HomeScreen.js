@@ -69,28 +69,28 @@ export default function HomeScreen() {
 
                     switch (route.name) {
                         case STRINGS.hometab:
-                            iconName = focused ? 'ios-home' : 'ios-home-outline'
+                            iconName = focused ? 'home' : 'home-outline'
                             break
                         case STRINGS.communitytab:
                             iconName = focused
-                                ? 'ios-earth'
-                                : 'ios-earth-outline'
+                                ? 'earth'
+                                : 'earth-outline'
                             break
                         case STRINGS.profiletab:
                             iconName = focused
-                                ? 'ios-person-circle'
-                                : 'ios-person-circle-outline'
+                                ? 'person-circle'
+                                : 'person-circle-outline'
                             break
                         case STRINGS.messagetab:
                             iconName = focused
-                                ? 'ios-chatbubble'
-                                : 'ios-chatbubble-outline'
+                                ? 'chatbubble'
+                                : 'chatbubble-outline'
                             break
                         case STRINGS.settingstab:
-                            iconName = focused ? 'ios-list' : 'ios-list-outline'
+                            iconName = focused ? 'list' : 'list-outline'
                             break
                         default:
-                            iconName = 'ios-list'
+                            iconName = 'list'
                             break
                     }
 
