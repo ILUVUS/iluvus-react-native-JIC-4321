@@ -25,14 +25,14 @@ const inputStyle = StyleSheet.create({
 
 const searchBarStyle = StyleSheet.create({
     containerSearchBar: {
-        width: '100vh',
+        width: '100%',
         padding: 10,
         borderBottomWidth: 0,
         borderTopWidth: 0,
         backgroundColor: 'transparent',
     },
     inputSearchBar: {
-        width: '100vh',
+        width: '100%',
         backgroundColor: COLORS['orchid'][100],
         borderRadius: sizes.inputBorderRadius,
     },
