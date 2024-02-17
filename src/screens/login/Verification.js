@@ -39,8 +39,16 @@ const Verification = () => {
         generateAndSendCode();
     };
 
+    const handleCancel = () => {
+        // transition back to previous screen
+        Alert.alert('Verification cancelled');
+    };
+
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontSize: 20, marginBottom: 20, fontWeight: 'bold'}}>
+            We have sent you a verification code.
+        </Text>
         <Text className="mt-1 text-base text-orchid-900">
             {STRINGS.enterCode}
         </Text>     
@@ -51,8 +59,9 @@ const Verification = () => {
             inputCount={6}
             keyboardType="numeric"
         />
-        <Button title="Verify" onPress={handleVerification} />
+        <Button title="Verify" onPress={handleVerification} color = "green"/>
         <Button title="Didn't get a verification code?" onPress={handleResendCode} />
+        <Button title="Cancel" onPress={handleCancel} color = "red"/>
         </View>
     );
 };
