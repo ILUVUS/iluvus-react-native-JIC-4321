@@ -60,6 +60,9 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 ### New Features
 
 - Create text-only posts and display them on the community posts.
+- Like and dislike a post in a community.
+- Comment on a post in a community.
+- Report a post in a community.
 - Display the number of uplift(like) on the community posts.
 - Display the comment view on the community posts.
 
