@@ -132,15 +132,14 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
                         className="h-full w-full overflow-auto bg-white p-5"
                     >
                         {postData.reverse().map((post, index) => {
-                          return (
-                            <PostItem
-                              key={index}
-                              post={post}
-                              userId={userId}
-                            />
-                          )
+                            return (
+                                <PostItem
+                                    key={index}
+                                    post={post}
+                                    userId={userId}
+                                />
+                            )
                         })}
-                        
                     </ScrollView>
                 </View>
 
@@ -153,7 +152,7 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
                         <TouchableOpacity activeOpacity={1}>
                             <View className="w-fit flex-col items-center justify-start pb-10 pt-10 shadow">
                                 <Text className="mb-5 text-2xl font-bold text-orchid-900">
-                                    New post
+                                    {STRINGS.CreatePost}
                                 </Text>
                                 <PostInput
                                     className="mb-5 h-4/5"
@@ -171,7 +170,7 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
                                     >
                                         <Text className="text-orchid-900">
                                             {' '}
-                                            Publish
+                                            {STRINGS.publish}
                                         </Text>
                                     </PostButton>
                                     <PostButton
@@ -180,7 +179,7 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
                                     >
                                         <Text className="justify-center text-orchid-900">
                                             {' '}
-                                            Cancel
+                                            {STRINGS.cancel}
                                         </Text>
                                     </PostButton>
                                 </View>

@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import STRINGS from './constants/strings'
+
 import HomeScreen from './screens/HomeScreen'
 import LoginScreen from './screens/login/Login'
 import RegistrationScreen from './screens/login/Registration'
@@ -12,6 +13,7 @@ import CommunityView from './screens/community/CommunityView'
 import AuthScreen from './screens/login/Auth'
 import Post from './screens/community/Post'
 import Comments from './screens/community/Comments'
+import Verification from './screens/login/Verification'
 
 LogBox.ignoreAllLogs(true)
 
@@ -20,12 +22,12 @@ const Stack = createStackNavigator()
 export default function Screen() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={STRINGS.Verification}>
+            <Stack.Navigator initialRouteName={STRINGS.loginscreen}>
                 <Stack.Screen
                     name={STRINGS.authscreen}
                     component={AuthScreen}
                     options={{
-                        title: STRINGS.authScreen,
+                        title: STRINGS.authscreen,
                         headerShown: false,
                     }}
                 />
@@ -84,10 +86,10 @@ export default function Screen() {
                 />
 
                 <Stack.Screen
-                    name={STRINGS.Verification}
+                    name={STRINGS.verificationscreen}
                     component={Verification}
                     options={{
-                        title: STRINGS.Verification,
+                        title: STRINGS.verificationscreen,
                         headerShown: true,
                     }}
                 />
