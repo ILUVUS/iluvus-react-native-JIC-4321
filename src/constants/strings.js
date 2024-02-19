@@ -4,15 +4,16 @@ export default {
     InitialRoute: this.registerscreen,
 
     authscreen: 'Auth',
-    
 
     // general
     loginscreen: 'Login',
     registerscreen: 'Register',
     homescreen: 'Main',
     logout: 'Logout',
+    verificationscreen: 'Verification',
 
     cancel: 'Cancel',
+    verify: 'Verify',
     ok: 'OK',
     yes: 'Yes',
     no: 'No',
@@ -50,9 +51,7 @@ export default {
     postDescription: 'Description',
     postContentPlaceholder: 'Please input the content of the post...',
 
-
-
-    // Comment 
+    // Comment
     Comment: 'Comment',
     commentPlaceholder: 'Please input your comment...',
 
@@ -105,6 +104,17 @@ export default {
     loginAlert: 'Please enter username and password',
     createAnAccount: 'Create an account',
     forgotPassword: 'Forgot Password?',
+
+    // verification
+    verification: 'VerificationView',
+    enterCode: 'Enter your 6-digit verification code:',
+    sentCode: 'We have sent you a verification code.',
+    notReceivedCode: "Didn't get a verification code?",
+    newCodeResent: 'New Verification Code Sent',
+    verificationCancel: 'Verification Cancelled',
+    verificationFailed: 'Verification Failed',
+    verificationSuccess: 'Verification Successful',
+    enterCode: 'Please enter the entire verification code.',
 
     //community
     communitySearchBar: 'Explore communities',

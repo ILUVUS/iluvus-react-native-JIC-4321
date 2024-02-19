@@ -15,7 +15,9 @@ import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingV
 import Modal from 'react-native-modal'
 import DateTimePicker from '@react-native-community/datetimepicker'
 
-const RegistrationScreen = ({ navigation }) => {
+import { useNavigation } from '@react-navigation/native'
+
+const RegistrationScreen = ({}) => {
     // datatime picker
     const [dateDatePicker, setDateDatePicker] = useState(new Date())
 
@@ -28,49 +30,61 @@ const RegistrationScreen = ({ navigation }) => {
     const [password, setPassword] = useState('')
     const [race, setRace] = useState('')
     const [gender, setGender] = useState('')
-    const [proEmail, setProfEmail] = React.useState('')
+    const [proEmail, setProfEmail] = useState('')
 
     const [emailMode, setEmailMode] = useState(false)
 
+    const navigation = useNavigation()
+
     const handleRegister = () => {
-        axios({
-            method: 'POST',
-            url: `${BASE_URL}/user/create`,
-            data: {
-                username: String(username),
-                email: String(email),
-                password: String(password),
-                fname: String(fName),
-                lname: String(lName),
-                gender: String(gender),
-                dob: String(DOB),
-                race: String(race),
-                proEmail: String(proEmail),
-                interests: '',
-                education: '',
-                work: '',
-                skills: '',
-                hobbies: '',
-                posts: '',
-                friends: '',
-                groups: '',
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                // avoid going back to registration screen
-                navigation.reset({
-                    index: 0,
-                    routes: [{ name: STRINGS.loginscreen }],
+        const packedData = {
+            username: String(username),
+            email: String(email),
+            password: String(password),
+            fname: String(fName),
+            lname: String(lName),
+            gender: String(gender),
+            dob: String(DOB),
+            race: String(race),
+            proEmail: String(proEmail),
+            interests: '',
+            education: '',
+            work: '',
+            skills: '',
+            hobbies: '',
+            posts: '',
+            friends: '',
+            groups: '',
+        }
+
+        if (emailMode) {
+            console.log("user")
+            axios({
+                method: 'POST',
+                url: `${BASE_URL}/user/create`,
+                data: packedData,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((res) => {
+                    // avoid going back to registration screen
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: STRINGS.loginscreen }],
+                    })
                 })
+                .catch((err) => {
+                    console.log('Error', err)
+                    const error = err.response.data
+                    Alert.alert(error)
+                })
+        } else {
+            console.log("prof")
+            navigation.navigate(STRINGS.verificationscreen, {
+                data: packedData,
             })
-            .catch((err) => {
-                console.log('Error', err)
-                const error = err.response.data
-                Alert.alert(error)
-            })
+        }
     }
 
     const setDate = (event, date) => {
@@ -194,6 +208,7 @@ const RegistrationScreen = ({ navigation }) => {
                         placeholder="Only Required for Professional user"
                         value={proEmail}
                         onChangeText={(text) => setProfEmail(text)}
+                        keyboardType="email-address"
                     />
                 </>
             )}
