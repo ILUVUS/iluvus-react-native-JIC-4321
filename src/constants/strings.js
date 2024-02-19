@@ -4,6 +4,7 @@ export default {
     InitialRoute: this.registerscreen,
 
     authscreen: 'Auth',
+    
 
     // general
     loginscreen: 'Login',
@@ -22,6 +23,7 @@ export default {
     add: 'Add',
     search: 'Search',
     post: 'Post',
+    comment: 'Comment',
     publish: 'Publish',
     picture: 'Picture',
 
@@ -41,6 +43,18 @@ export default {
 
     // view community
     communityView: 'CommunityView',
+
+    // community post
+    Post: 'Post',
+    CreatePost: 'New Post',
+    postDescription: 'Description',
+    postContentPlaceholder: 'Please input the content of the post...',
+
+
+
+    // Comment 
+    Comment: 'Comment',
+    commentPlaceholder: 'Please input your comment...',
 
     // setup community
     picturebtn: 'Picture',
