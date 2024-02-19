@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     ScrollView,
     TextInput,
+    Alert,
 } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
@@ -82,6 +83,27 @@ const PostItem = ({ post, userId }) => {
         const date = new Date()
         console.log('Date', date.toISOString())
         return date.toISOString()
+    }
+
+    const handleReport = () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/post/report`,
+            data: {
+                postId: post.id,
+                userId: userId,
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                Alert.alert("Post Reported")
+                console.log(res.data)
+            })
+            .catch((err) => {
+                console.log('Cannot like the post', err)
+            })
     }
 
     const writeComment = async () => {
@@ -173,7 +195,7 @@ const PostItem = ({ post, userId }) => {
 
                     {/* REPORT BUTTON HERE */}
                     <TouchableOpacity
-                        onPress={() => console.log('Report button pressed')}
+                        onPress={() => handleReport()}
                     >
                         <FontAwesomeIcon
                             icon={faEllipsis}
