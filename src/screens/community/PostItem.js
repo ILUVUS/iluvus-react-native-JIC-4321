@@ -41,6 +41,7 @@ const PostItem = ({ post, userId }) => {
             url: `${BASE_URL}/post/like`,
             data: {
                 postId: post.id,
+                userId: userId,
             },
             headers: {
                 'Content-Type': 'application/json',
