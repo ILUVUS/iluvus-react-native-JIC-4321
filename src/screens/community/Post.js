@@ -76,7 +76,12 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
         findUserId()
     }, [])
 
-    
+    const getDatetime = () => {
+        // get current datetime in format 2024-01-29T05:00:00.000+00:00
+        const date = new Date()
+        console.log('Date', date.toISOString())
+        return date.toISOString()
+    }
 
     const handleOpenPopup = () => {
         setIsVisible(true)
@@ -84,6 +89,31 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
 
     const handleClosePopup = () => {
         setIsVisible(false)
+    }
+
+    const handlePublish = () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/post/create`,
+            data: {
+                text: postContent,
+                communityId: community_id,
+                authorId: userId,
+                dateTime: getDatetime(),
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                console.log('Post published', res.data)
+                setPostData(res.data)
+                setPostContent('')
+                handleClosePopup()
+            })
+            .catch((err) => {
+                console.log('Cannot publish the post', err)
+            })
     }
 
     const onRefresh = React.useCallback(() => {
@@ -101,15 +131,16 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
                         }}
                         className="h-full w-full overflow-auto bg-white p-5"
                     >
-                        {postData.map((post, index) => {
-                            return (
-                                <PostItem
-                                    key={index}
-                                    post={post}
-                                    userId={userId}
-                                />
-                            )
+                        {postData.reverse().map((post, index) => {
+                          return (
+                            <PostItem
+                              key={index}
+                              post={post}
+                              userId={userId}
+                            />
+                          )
                         })}
+                        
                     </ScrollView>
                 </View>
 
@@ -135,7 +166,7 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
                                 />
                                 <View className="flex-row justify-evenly space-x-10">
                                     <PostButton
-                                        onPress={handleClosePopup}
+                                        onPress={() => handlePublish()}
                                         className="bg-gold-900"
                                     >
                                         <Text className="text-orchid-900">
@@ -144,7 +175,7 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
                                         </Text>
                                     </PostButton>
                                     <PostButton
-                                        onPress={handleClosePopup}
+                                        onPress={() => handleClosePopup()}
                                         className="bg-gray-300"
                                     >
                                         <Text className="justify-center text-orchid-900">
@@ -160,7 +191,7 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
             </View>
 
             <TouchableOpacity
-                onPress={handleOpenPopup}
+                onPress={() => handleOpenPopup()}
                 className="absolute bottom-6 right-6 h-16 w-16 items-center justify-center rounded-full bg-orchid-500 px-5 py-2 shadow shadow-slate-500"
             >
                 <Ionicons
