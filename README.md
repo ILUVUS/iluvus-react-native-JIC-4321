@@ -55,6 +55,24 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 
 # Release Notes
 
+## Version 0.2.0
+
+### New Features
+
+- Create text-only posts and display them on the community posts.
+- Like and dislike a post in a community.
+- Comment on a post in a community.
+- Report a post in a community.
+- Display the number of uplift(like) on the community posts.
+- Display the comment view on the community posts.
+
+### Bug Fix
+
+### Known Issues
+
+- Registration will navigate to verification screen even the user existed.
+- Verification page may send 2 emails.
+
 ## Version 0.1.0
 
 ### New Features
