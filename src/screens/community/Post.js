@@ -37,7 +37,7 @@ import {
 } from 'react-native'
 import { PostButton } from '../../components/button'
 
-const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
+const Post = (data) => {
     const [refreshing, setRefreshing] = React.useState(false)
     const navigation = useNavigation()
     const [postContent, setPostContent] = useState('')
@@ -62,7 +62,7 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
     useEffect(() => {
         axios({
             method: 'GET',
-            url: `${BASE_URL}/post/getPostsByCommunityID?id=${community_id}`,
+            url: `${BASE_URL}/post/getPostsByCommunityID?id=${data.route.params.community_id}`,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -97,7 +97,7 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
             url: `${BASE_URL}/post/create`,
             data: {
                 text: postContent,
-                communityId: community_id,
+                communityId: data.route.params.community_id,
                 authorId: userId,
                 dateTime: getDatetime(),
             },

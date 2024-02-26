@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "iluvustemp",
+  "private_key_id": "ddb2f9a2a91e87f27f302ccb6bfdb91c899a608f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCYo2yHYw4+y7sx\nsgxScoTpzcpNd9/5MoUxCCuuLRXX2rfmtxWbuedRu3aiTGHWwFoxgCfXwPoxZNXT\nVymWqalVsjML3GK+fvXKZ/k6yTOCXIsd7SLofR0+RejADqrTjZ8Bf5W+4jSlpf/y\nKHvxlJmjNhAf4+ZGVZQCc+InRAMrv+ZvKlKDf0g7jvrStWnuPwGF9vBYHWvIf6kB\nXFSJBz3f0Axe+hFgLqJQTANZPHA1TieRMFRWLrWB/ruZWLokSyIM3bJktnySYF13\nDdDVjBysBfPqsfE/jXr3NDcxBNVM+Gm6WbUnQlbY35OhwNuUXc5Fj2YkyuPds6F2\nVoDz+qTPAgMBAAECggEAAKSPjHJqWPFatHbffmllDecD9xeOJeqEjRRPusgN037k\nT2BuAt3hj4KOmVhhARqGRrcXc90oMJUQIXe4gR3tzKKXfHFNKSg3uMZ/UjQOt3nU\nTCf3gaslOGHq/QQSzBlIliUHaGpjdl8gmNB61SWfEATmRHwdOCacHPaH+UpcCQ8g\nKxEoUZMwuDDJGwB/2V854Rv09VrshBwuXsysNT0OIr4w/MYWXJrhB5l9l2rs5PsW\nzlg9HHj7qJyCCVkRXHwccrE8xL363YbXFHipUpGx/CHKHifKAsBXsYBXLOaKbBGQ\nTaKiKE1ChbsQ/6V/Psm/DaK1kZ1Wev9uIO2enkM9oQKBgQDG2DvZDnhDgaNzJelq\nFd64kNanlLBWkUurrvFP0YMECxgyYjJeYY3Geu+SNnw+R6RSp3CP0HQsBHF4fHAY\nRT4qvSlF0rD7L/+zRd9ndR4stcq6e5C2hF8vtj2dojIPrkBC8iWIvd8rATXDL+ct\nbiOTv7uhyrijke1T4qD3HVyg5QKBgQDEgyaySPYMuIYnaIaSg+aLbduVdZ9KDb6s\npO3LSsArLXVRrAPdBOXV0wYA/St/7a29UoTo9sz3UOAjtdr9L07iKQpB7DnPwUJr\nwh3oPD0xDLOSh1UEbsuQCUeYaCFQL22aih4a2TtzRX54mFjaaBchIAS8oZQEn1X0\nM3qYycM3owKBgCnHgTuoCKjWcktdad+6XKOW+yMW4L4vpSCbj2Rf9xFAa4Maks61\n3J4ZcoDcJdrIHsSnHcV53Q7qmBTiwIK4+cjtGeDr1ffRK/607a3FM+PdBo2MLOnM\nglt6BRQ74hzdVe87BZvnmR5mEK/EPuSSwbLnlDr4ZzcnECCR+5QwfSfpAoGBAJrP\n77ZYwG55GEcHk6zteLyzSWBPj7PZbDO6oxOayhW59EjpSQngB+kSHBK/YHuiFVOn\nJMobVJIqBspbRDBeCrklN82Dem/vgpI+FS2V92ci6H0xXIrndjr89Ihe0I/JLYGn\n+duQ88L2JpJ/AtDdXAtenBy29lNF64M84wJnQQIdAoGAEF9gjC1Iyw+TsskUm1yZ\nAu8snsPx54CB4Avq/Xk2rPcvfLTGXfUoBnWT0ZriDuCG8Evktp+ZP0+sxe4MTHmK\nK1gUETk2FqDKuEB7xS1tYmeU76iT2snnIpD0nPLTcYZFvNYAwF5DXoLYxos7sfRf\nDSsiDGzRmo/Qnv6PnF2Qqdc=\n-----END PRIVATE KEY-----\n",
+  "client_email": "reactnative-bucket-admin@iluvustemp.iam.gserviceaccount.com",
+  "client_id": "117698092333614991230",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/reactnative-bucket-admin%40iluvustemp.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
