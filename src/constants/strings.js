@@ -46,6 +46,7 @@ export default {
     communityView: 'CommunityView',
 
     // community post
+    postscreen: "PostView",
     Post: 'Post',
     CreatePost: 'New Post',
     postDescription: 'Description',

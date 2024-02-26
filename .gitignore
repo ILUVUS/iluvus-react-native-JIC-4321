@@ -2,6 +2,8 @@
 #
 .DS_Store
 
+iluvus_media_bucket.json
+
 # Xcode
 #
 build/

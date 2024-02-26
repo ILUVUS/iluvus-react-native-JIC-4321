@@ -6,6 +6,10 @@
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "userInterfaceStyle": "light",
+        "plugins": [
+            "expo-image-picker",
+            "react-native-image-resizer"
+        ],
         "splash": {
             "image": "./assets/splash.png",
             "resizeMode": "contain",
@@ -13,13 +17,20 @@
         },
         "assetBundlePatterns": ["**/*"],
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+            "infoPlist": {
+                "NSCameraUsageDescription": "We needs camera permissions to allow you to upload profile photos.",
+                "NSPhotoLibraryAddUsageDescription": "We needs photo library permissions to allow you to upload profile images.",
+                "NSPhotoLibraryUsageDescription": "We needs photo library permissions to allow you to upload profile images."
+            },
+            "bundleIdentifier": "com.anonymous.iluvus-react-native"
         },
         "android": {
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
-            }
+            },
+            "permissions": ["android.permission.RECORD_AUDIO"]
         },
         "web": {
             "favicon": "./assets/favicon.png"

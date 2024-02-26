@@ -24,6 +24,11 @@ import COLORS from '../../constants/colors'
 import PostItem from './PostItem'
 import Comment from './Comments'
 
+import * as ImagePicker from 'expo-image-picker'
+import ImageResizer from '@bam.tech/react-native-image-resizer'
+
+// import path from 'path'
+
 import {
     Keyboard,
     View,
@@ -37,16 +42,17 @@ import {
 } from 'react-native'
 import { PostButton } from '../../components/button'
 
-const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
+const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
     const [refreshing, setRefreshing] = React.useState(false)
     const navigation = useNavigation()
     const [postContent, setPostContent] = useState('')
     const [fName, setFname] = useState('')
     const [lName, setLname] = useState('')
     const [postData, setPostData] = useState([{}])
-    const [isVisible, setIsVisible] = useState(false)
+    const [isVisible, setIsVisible] = useState(true)
     const [commentView, setCommentView] = useState(false)
     const [userId, setUserId] = useState('')
+    const [imageURI, setImageURI] = useState('')
 
     const findUserId = async () => {
         try {
@@ -57,6 +63,37 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
         } catch (e) {
             console.log(e)
         }
+    }
+
+    const pickingImageHandler = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 1,
+        })
+
+        if (!result.canceled) {
+            setImageURI(result.uri)
+            console.log(JSON.stringify(result))
+        } else {
+            alert('You did not select any image.')
+        }
+    }
+
+    const resizeImage = async () => {
+        ImageResizer.createResizedImage(
+            (uri = imageURI),
+            (width = 300),
+            (height = 300),
+            (format = 'JPEG'),
+            (quality = 80)
+        )
+            .then((response) => {
+                console.log(response)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     useEffect(() => {
@@ -164,6 +201,24 @@ const Post = ({ community_id = '65b7ff149cb7885873ade788' }) => {
                                     }
                                 />
                                 <View className="flex-row justify-evenly space-x-10">
+                                    <PostButton
+                                        onPress={() => pickingImageHandler()}
+                                        className="bg-gold-900"
+                                    >
+                                        <Text className="text-orchid-900">
+                                            {' '}
+                                            Pick Images
+                                        </Text>
+                                    </PostButton>
+                                    <PostButton
+                                        onPress={() => resizeImage()}
+                                        className="bg-gold-900"
+                                    >
+                                        <Text className="text-orchid-900">
+                                            {' '}
+                                            Resize Images
+                                        </Text>
+                                    </PostButton>
                                     <PostButton
                                         onPress={() => handlePublish()}
                                         className="bg-gold-900"
