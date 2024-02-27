@@ -36,6 +36,8 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
 
     const [uploadProgress, setUploadProgress] = useState(0)
 
+    const [eachImageProgress, setEachImageProgress] = useState([])
+
     const findUserId = async () => {
         try {
             const value = await AsyncStorage.getItem('userId')
@@ -57,6 +59,9 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
         if (!result.canceled) {
             const resultImage = result.assets[0]
             setPickedImages([...pickedImages, resultImage])
+            setEachImageProgress(
+                eachImageProgress.concat(Array(pickedImages.length).fill(0))
+            )
         } else {
             alert('You did not select any image.')
         }
@@ -99,25 +104,28 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
         setIsVisible(false)
     }
 
-    const handlePublish = async () => {
-        // try {
-        //     const uploadedImages = await uploadImage(community_id, userId, pickedImages)
-        //     console.log('Uploaded images', uploadedImages)
-        // } catch (e) {
-        //     console.log(e)
-        //     return
-        // }
-        setUploadProgress(0.0001)
+    useEffect(() => {
+        console.log('Each image progress:', eachImageProgress)
+        if (eachImageProgress.length > 0) {
+            setUploadProgress(
+                eachImageProgress.reduce((a, b) => a + b, 0) /
+                    eachImageProgress.length /
+                    100
+            )
+        }
+    }, [eachImageProgress])
 
+    const handlePublish = async () => {
         for (let i = 0; i < pickedImages.length; i++) {
             try {
                 const uploadedImage = await uploadImage(
                     community_id,
                     userId,
-                    pickedImages[i]
+                    pickedImages[i],
+                    i,
+                    setEachImageProgress
                 )
                 console.log('Uploaded image', uploadedImage)
-                setUploadProgress((i + 1) / pickedImages.length)
             } catch (e) {
                 console.log(e)
                 return
@@ -248,9 +256,9 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                                             )
                                         })}
                                 </View>
-                                {uploadProgress > 0 && (
-                                    <View className="flex h-fit w-4/5 flex-col space-y-1 justify-center items-center">
-                                        <View className="flex w-full h-2 shadow shadow-slate-200">
+                                {uploadProgress > 0 && uploadProgress < 1 && (
+                                    <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
+                                        <View className="flex h-2 w-full shadow shadow-slate-200">
                                             <Progress.Bar
                                                 animated={true}
                                                 progress={uploadProgress}
@@ -259,12 +267,21 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                                                 borderRadius={4}
                                                 borderColor={COLORS.orchid[500]}
                                                 borderWidth={0}
-                                                unfilledColor={COLORS.orchid[100]}
+                                                unfilledColor={
+                                                    COLORS.orchid[100]
+                                                }
                                                 color={COLORS.orchid[500]}
                                             />
                                         </View>
                                         <Text>
                                             {Math.round(uploadProgress * 100)}%
+                                        </Text>
+                                    </View>
+                                )}
+                                {uploadProgress === 1 && (
+                                    <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
+                                        <Text className="text-orchid-900">
+                                            {STRINGS.uploadSuccess}
                                         </Text>
                                     </View>
                                 )}

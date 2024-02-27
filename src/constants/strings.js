@@ -46,7 +46,7 @@ export default {
     communityView: 'CommunityView',
 
     // community post
-    postscreen: "PostView",
+    postscreen: 'PostView',
     Post: 'Post',
     CreatePost: 'New Post',
     postDescription: 'Description',
@@ -132,4 +132,7 @@ export default {
     This is an example of text. \
     It's used to show how text will look on the screen.\
     ",
+
+    // upload
+    uploadSuccess: 'Upload Successful',
 }
