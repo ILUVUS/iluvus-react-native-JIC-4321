@@ -127,7 +127,10 @@ const CommunityView = (communityId = 'communityId') => {
 
     const viewPosts = () => {
         // Alert.alert('Viewing Posts')
-        navigation.navigate('Post')
+        navigation.navigate('Post', {
+            communityId: globalCommunityId,
+            isJoined: isJoined,
+        })
     }
 
     const editCommunity = () => {

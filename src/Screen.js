@@ -22,7 +22,7 @@ const Stack = createStackNavigator()
 export default function Screen() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={STRINGS.Post}>
+            <Stack.Navigator initialRouteName={STRINGS.authscreen}>
                 <Stack.Screen
                     name={STRINGS.authscreen}
                     component={AuthScreen}

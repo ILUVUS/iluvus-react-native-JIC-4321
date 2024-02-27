@@ -8,7 +8,7 @@ const CommunityViewMainButton = styled(
 
 const CommunityViewImageButton = styled(
     TouchableOpacity,
-    'w-1/3 p-2 border-none flex justify-center items-center flex-col shadow shadow-orchid-200'
+    'w-1/3 p-2 border-none flex justify-start items-center flex-col shadow shadow-orchid-200'
 )
 
 const NewCommunityButton = styled(

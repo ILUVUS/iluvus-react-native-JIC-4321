@@ -22,16 +22,26 @@ import * as Progress from 'react-native-progress'
 
 import * as ImagePicker from 'expo-image-picker'
 
-import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    Image,
+    ScrollView,
+    RefreshControl,
+} from 'react-native'
 import { PostButton } from '../../components/button'
 
-const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
+const Post = (data) => {
     const [postContent, setPostContent] = useState('')
 
     const [postData, setPostData] = useState([{}])
     const [isVisible, setIsVisible] = useState(true)
 
-    const [userId, setUserId] = useState('defaultUser')
+    const [userId, setUserId] = useState('')
+    const [community_id, setCommunityId] = useState(
+        data.route.params.communityId
+    )
     const [pickedImages, setPickedImages] = useState([])
 
     const [uploadProgress, setUploadProgress] = useState(0)
@@ -39,6 +49,18 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
     const [eachImageProgress, setEachImageProgress] = useState([])
 
     const [imageURLs, setImageURLs] = useState([])
+
+    const [refreshing, setRefreshing] = React.useState(false)
+
+    const [isJoined, setIsJoined] = useState(data.route.params.isJoined)
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true)
+        getPosts()
+        setTimeout(() => {
+            setRefreshing(false)
+        }, 1000)
+    }, [])
 
     const findUserId = async () => {
         try {
@@ -76,6 +98,14 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
     }, [pickedImages])
 
     useEffect(() => {
+        getPosts()
+        findUserId()
+
+        console.log(community_id)
+        console.log(userId)
+    }, [])
+
+    const getPosts = async () => {
         axios({
             method: 'GET',
             url: `${BASE_URL}/post/getPostsByCommunityID?id=${community_id}`,
@@ -89,8 +119,7 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
             .catch((err) => {
                 console.log('Cannot get posts', err)
             })
-        findUserId()
-    }, [])
+    }
 
     const getDatetime = () => {
         // get current datetime in format 2024-01-29T05:00:00.000+00:00
@@ -120,13 +149,13 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
 
     // SUCCESS MESSAGE HERE
     useEffect(() => {
-
         if (imageURLs.length === pickedImages.length) {
             console.log('Image URLs:', imageURLs)
 
             setPickedImages([])
-            setEachImageProgress([])    
+            setEachImageProgress([])
 
+            // turn array of objects into array of strings
 
             axios({
                 method: 'POST',
@@ -136,7 +165,7 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                     communityId: community_id,
                     authorId: userId,
                     dateTime: getDatetime(),
-                    medias: imageURLs,
+                    medias: JSON.stringify({ urls: imageURLs }),
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -144,6 +173,7 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
             })
                 .then((res) => {
                     console.log('Post published', res.data)
+
                     setPostData(res.data)
                     setPostContent('')
                     handleClosePopup()
@@ -157,7 +187,6 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
     }, [imageURLs])
 
     const handlePublish = async () => {
-
         setImageURLs([])
 
         for (let i = 0; i < pickedImages.length; i++) {
@@ -177,9 +206,9 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
         }
     }
 
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true)
-    }, [])
+    // const onRefresh = React.useCallback(() => {
+    //     setRefreshing(true)
+    // }, [])
 
     const removePickedImage = (index) => {
         pickedImages.splice(index, 1)
@@ -196,6 +225,12 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                             flexGrow: 1,
                         }}
                         className="h-full w-full overflow-auto bg-white p-5"
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                        }
                     >
                         {postData.reverse().map((post, index) => {
                             return (
@@ -340,16 +375,18 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                 </View>
             </View>
 
-            <TouchableOpacity
-                onPress={() => handleOpenPopup()}
-                className="absolute bottom-6 right-6 h-16 w-16 items-center justify-center rounded-full bg-orchid-500 px-5 py-2 shadow shadow-slate-500"
-            >
-                <Ionicons
-                    name="create-outline"
-                    size={30}
-                    color={COLORS.white}
-                />
-            </TouchableOpacity>
+            {isJoined && (
+                <TouchableOpacity
+                    onPress={() => handleOpenPopup()}
+                    className="absolute bottom-6 right-6 h-16 w-16 items-center justify-center rounded-full bg-orchid-500 px-5 py-2 shadow shadow-slate-500"
+                >
+                    <Ionicons
+                        name="create-outline"
+                        size={30}
+                        color={COLORS.white}
+                    />
+                </TouchableOpacity>
+            )}
         </>
     )
 }
