@@ -38,6 +38,8 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
 
     const [eachImageProgress, setEachImageProgress] = useState([])
 
+    const [imageURLs, setImageURLs] = useState([])
+
     const findUserId = async () => {
         try {
             const value = await AsyncStorage.getItem('userId')
@@ -70,6 +72,7 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
     useEffect(() => {
         console.log('Picked images:', pickedImages.length)
         setUploadProgress(0)
+        setEachImageProgress([])
     }, [pickedImages])
 
     useEffect(() => {
@@ -105,7 +108,7 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
     }
 
     useEffect(() => {
-        console.log('Each image progress:', eachImageProgress)
+        // console.log('Each image progress:', eachImageProgress)
         if (eachImageProgress.length > 0) {
             setUploadProgress(
                 eachImageProgress.reduce((a, b) => a + b, 0) /
@@ -115,7 +118,48 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
         }
     }, [eachImageProgress])
 
+    // SUCCESS MESSAGE HERE
+    useEffect(() => {
+
+        if (imageURLs.length === pickedImages.length) {
+            console.log('Image URLs:', imageURLs)
+
+            setPickedImages([])
+            setEachImageProgress([])    
+
+
+            axios({
+                method: 'POST',
+                url: `${BASE_URL}/post/create`,
+                data: {
+                    text: postContent,
+                    communityId: community_id,
+                    authorId: userId,
+                    dateTime: getDatetime(),
+                    medias: imageURLs,
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((res) => {
+                    console.log('Post published', res.data)
+                    setPostData(res.data)
+                    setPostContent('')
+                    handleClosePopup()
+
+                    setImageURLs([])
+                })
+                .catch((err) => {
+                    console.log('Cannot publish the post', err)
+                })
+        }
+    }, [imageURLs])
+
     const handlePublish = async () => {
+
+        setImageURLs([])
+
         for (let i = 0; i < pickedImages.length; i++) {
             try {
                 const uploadedImage = await uploadImage(
@@ -123,37 +167,14 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                     userId,
                     pickedImages[i],
                     i,
-                    setEachImageProgress
+                    setEachImageProgress,
+                    setImageURLs
                 )
-                console.log('Uploaded image', uploadedImage)
             } catch (e) {
                 console.log(e)
                 return
             }
         }
-
-        axios({
-            method: 'POST',
-            url: `${BASE_URL}/post/create`,
-            data: {
-                text: postContent,
-                communityId: community_id,
-                authorId: userId,
-                dateTime: getDatetime(),
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                console.log('Post published', res.data)
-                setPostData(res.data)
-                setPostContent('')
-                handleClosePopup()
-            })
-            .catch((err) => {
-                console.log('Cannot publish the post', err)
-            })
     }
 
     const onRefresh = React.useCallback(() => {
@@ -282,6 +303,14 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                                     <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
                                         <Text className="text-orchid-900">
                                             {STRINGS.uploadSuccess}
+                                        </Text>
+                                    </View>
+                                )}
+                                {uploadProgress === 0 && (
+                                    <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
+                                        <Text className="text-orchid-900">
+                                            {pickedImages.length}/4 images
+                                            selected
                                         </Text>
                                     </View>
                                 )}
