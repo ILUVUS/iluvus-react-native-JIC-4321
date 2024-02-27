@@ -8,7 +8,7 @@
         "userInterfaceStyle": "light",
         "plugins": [
             "expo-image-picker",
-            "react-native-image-resizer"
+            "react-native-compressor"
         ],
         "splash": {
             "image": "./assets/splash.png",

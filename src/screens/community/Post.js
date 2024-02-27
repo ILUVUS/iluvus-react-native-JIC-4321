@@ -16,6 +16,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { PostInput } from '../../components/input'
 import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingView'
 import STRINGS from '../../constants/strings'
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
+
+import sampleImage from '../../../assets/images/sampleicon.jpg'
 
 import Modal from 'react-native-modal'
 
@@ -25,7 +28,6 @@ import PostItem from './PostItem'
 import Comment from './Comments'
 
 import * as ImagePicker from 'expo-image-picker'
-import ImageResizer from '@bam.tech/react-native-image-resizer'
 
 // import path from 'path'
 
@@ -52,7 +54,56 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
     const [isVisible, setIsVisible] = useState(true)
     const [commentView, setCommentView] = useState(false)
     const [userId, setUserId] = useState('')
-    const [imageURI, setImageURI] = useState('')
+    const [pickedImages, setPickedImages] = useState([
+        {
+            assetId: 'ED7AC36B-A150-4C38-BB8C-B6D696F4F2ED/L0/001',
+            base64: null,
+            duration: null,
+            exif: null,
+            fileName: 'IMG_0005.jpg',
+            fileSize: 1500185,
+            height: 2002,
+            type: 'image',
+            uri: 'file:///Users/thuanvo/Library/Developer/CoreSimulator/Devices/DAA09DCA-7F2A-42B4-8519-DC86FD6DFCE6/data/Containers/Data/Application/46224787-3EBE-4FF4-8EA6-EB93F2AD8B82/Library/Caches/ExponentExperienceData/%2540anonymous%252Filuvus-react-native-c88319dc-bd37-4a64-b2a6-ab5163134627/ImagePicker/3E9942C2-421E-49C8-BA56-910646D09AA5.jpg',
+            width: 3000,
+        },
+        {
+            assetId: 'ED7AC36B-A150-4C38-BB8C-B6D696F4F2ED/L0/001',
+            base64: null,
+            duration: null,
+            exif: null,
+            fileName: 'IMG_0005.jpg',
+            fileSize: 1500185,
+            height: 2002,
+            type: 'image',
+            uri: 'file:///Users/thuanvo/Library/Developer/CoreSimulator/Devices/DAA09DCA-7F2A-42B4-8519-DC86FD6DFCE6/data/Containers/Data/Application/46224787-3EBE-4FF4-8EA6-EB93F2AD8B82/Library/Caches/ExponentExperienceData/%2540anonymous%252Filuvus-react-native-c88319dc-bd37-4a64-b2a6-ab5163134627/ImagePicker/3E9942C2-421E-49C8-BA56-910646D09AA5.jpg',
+            width: 3000,
+        },
+        {
+            assetId: 'ED7AC36B-A150-4C38-BB8C-B6D696F4F2ED/L0/001',
+            base64: null,
+            duration: null,
+            exif: null,
+            fileName: 'IMG_0005.jpg',
+            fileSize: 1500185,
+            height: 2002,
+            type: 'image',
+            uri: 'file:///Users/thuanvo/Library/Developer/CoreSimulator/Devices/DAA09DCA-7F2A-42B4-8519-DC86FD6DFCE6/data/Containers/Data/Application/46224787-3EBE-4FF4-8EA6-EB93F2AD8B82/Library/Caches/ExponentExperienceData/%2540anonymous%252Filuvus-react-native-c88319dc-bd37-4a64-b2a6-ab5163134627/ImagePicker/3E9942C2-421E-49C8-BA56-910646D09AA5.jpg',
+            width: 3000,
+        },
+        {
+            assetId: 'CC95F08C-88C3-4012-9D6D-64A413D254B3/L0/001',
+            base64: null,
+            duration: null,
+            exif: null,
+            fileName: 'IMG_0111.jpg',
+            fileSize: 4081439,
+            height: 3024,
+            type: 'image',
+            uri: 'file:///Users/thuanvo/Library/Developer/CoreSimulator/Devices/DAA09DCA-7F2A-42B4-8519-DC86FD6DFCE6/data/Containers/Data/Application/46224787-3EBE-4FF4-8EA6-EB93F2AD8B82/Library/Caches/ExponentExperienceData/%2540anonymous%252Filuvus-react-native-c88319dc-bd37-4a64-b2a6-ab5163134627/ImagePicker/1CAF29C6-D998-4FF8-86FA-4E22826DC824.jpg',
+            width: 4032,
+        },
+    ])
 
     const findUserId = async () => {
         try {
@@ -68,33 +119,20 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
     const pickingImageHandler = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 1,
+            allowsEditing: false,
+            quality: 0.8,
         })
 
         if (!result.canceled) {
-            setImageURI(result.uri)
-            console.log(JSON.stringify(result))
+            setPickedImages([...pickedImages, result.assets[0]])
         } else {
             alert('You did not select any image.')
         }
     }
 
-    const resizeImage = async () => {
-        ImageResizer.createResizedImage(
-            (uri = imageURI),
-            (width = 300),
-            (height = 300),
-            (format = 'JPEG'),
-            (quality = 80)
-        )
-            .then((response) => {
-                console.log(response)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
+    useEffect(() => {
+        console.log('Picked images:', pickedImages)
+    }, [pickedImages])
 
     useEffect(() => {
         axios({
@@ -157,6 +195,12 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
         setRefreshing(true)
     }, [])
 
+    const removePickedImage = (index) => {
+        let temp = [...pickedImages]
+        temp.splice(index, 1)
+        setPickedImages(temp)
+    }
+
     return (
         <>
             <View className="flex h-screen w-screen flex-1 bg-white">
@@ -187,12 +231,12 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                         animationType="slide"
                     >
                         <TouchableOpacity activeOpacity={1}>
-                            <View className="w-fit flex-col items-center justify-start pb-10 pt-10 shadow">
-                                <Text className="mb-5 text-2xl font-bold text-orchid-900">
+                            <View className="w-fit flex-col items-center justify-start space-y-4 pb-10 pt-10 shadow">
+                                <Text className="text-2xl font-bold text-orchid-900">
                                     {STRINGS.CreatePost}
                                 </Text>
                                 <PostInput
-                                    className="mb-5 h-4/5"
+                                    className="h-3/6"
                                     multiline={true}
                                     placeholder={STRINGS.postContentPlaceholder}
                                     value={postContent}
@@ -200,6 +244,31 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                                         setPostContent(text)
                                     }
                                 />
+                                <View className="h-fit w-full flex-row items-start justify-start space-x-2">
+                                    {pickedImages.map((imageInfo, index) => {
+                                        return (
+                                            <View className="relative h-20 w-20 bg-transparent shadow shadow-slate-400">
+                                                <Image
+                                                    source={{
+                                                        uri: imageInfo.uri,
+                                                    }}
+                                                    className="h-20 w-20 rounded-lg"
+                                                />
+                                                <TouchableOpacity
+                                                    className="absolute right-1 top-1"
+                                                    onPress={() =>
+                                                        removePickedImage(index)
+                                                    }
+                                                >
+                                                    <FontAwesomeIcon
+                                                        icon={faCircleXmark}
+                                                        color={COLORS.white}
+                                                    />
+                                                </TouchableOpacity>
+                                            </View>
+                                        )
+                                    })}
+                                </View>
                                 <View className="flex-row justify-evenly space-x-10">
                                     <PostButton
                                         onPress={() => pickingImageHandler()}
