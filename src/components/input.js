@@ -18,7 +18,7 @@ const SetupCommunityInput = styled(
 
 const PostInput = styled(
     TextInput,
-    'w-full border-none rounded-lg focus:shadow-lg text-sm focus:text-base focus:h-32 bg-orchid-100 p-3 shadow-md placeholder-orchid-300 text-orchid-900'
+    'w-full border-none rounded-lg focus:shadow-lg text-sm focus:text-base bg-orchid-100 p-3 shadow-md placeholder-orchid-300 text-orchid-900'
 )
 
 export { LoginInput, RegisterInput, SetupCommunityInput, PostInput }

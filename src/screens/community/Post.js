@@ -3,107 +3,38 @@ import React, { useEffect, useState, Component } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
-import { Alert } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faStar } from '@fortawesome/free-solid-svg-icons'
-import { faLeaf } from '@fortawesome/free-solid-svg-icons'
-import { faComment } from '@fortawesome/free-solid-svg-icons'
-import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useNavigation } from '@react-navigation/native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { PostInput } from '../../components/input'
-import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingView'
 import STRINGS from '../../constants/strings'
+import SIZES from '../../constants/sizes'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
-
-import sampleImage from '../../../assets/images/sampleicon.jpg'
+import { uploadImage } from '../../utils/fbHelper'
 
 import Modal from 'react-native-modal'
-
 import COLORS from '../../constants/colors'
-
 import PostItem from './PostItem'
-import Comment from './Comments'
+
+import * as Progress from 'react-native-progress'
 
 import * as ImagePicker from 'expo-image-picker'
 
-// import path from 'path'
-
-import {
-    Keyboard,
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    Image,
-    ImageBackground,
-    ScrollView,
-    RefreshControl,
-} from 'react-native'
+import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { PostButton } from '../../components/button'
 
 const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
-    const [refreshing, setRefreshing] = React.useState(false)
-    const navigation = useNavigation()
     const [postContent, setPostContent] = useState('')
-    const [fName, setFname] = useState('')
-    const [lName, setLname] = useState('')
+
     const [postData, setPostData] = useState([{}])
     const [isVisible, setIsVisible] = useState(true)
-    const [commentView, setCommentView] = useState(false)
-    const [userId, setUserId] = useState('')
-    const [pickedImages, setPickedImages] = useState([
-        {
-            assetId: 'ED7AC36B-A150-4C38-BB8C-B6D696F4F2ED/L0/001',
-            base64: null,
-            duration: null,
-            exif: null,
-            fileName: 'IMG_0005.jpg',
-            fileSize: 1500185,
-            height: 2002,
-            type: 'image',
-            uri: 'file:///Users/thuanvo/Library/Developer/CoreSimulator/Devices/DAA09DCA-7F2A-42B4-8519-DC86FD6DFCE6/data/Containers/Data/Application/46224787-3EBE-4FF4-8EA6-EB93F2AD8B82/Library/Caches/ExponentExperienceData/%2540anonymous%252Filuvus-react-native-c88319dc-bd37-4a64-b2a6-ab5163134627/ImagePicker/3E9942C2-421E-49C8-BA56-910646D09AA5.jpg',
-            width: 3000,
-        },
-        {
-            assetId: 'ED7AC36B-A150-4C38-BB8C-B6D696F4F2ED/L0/001',
-            base64: null,
-            duration: null,
-            exif: null,
-            fileName: 'IMG_0005.jpg',
-            fileSize: 1500185,
-            height: 2002,
-            type: 'image',
-            uri: 'file:///Users/thuanvo/Library/Developer/CoreSimulator/Devices/DAA09DCA-7F2A-42B4-8519-DC86FD6DFCE6/data/Containers/Data/Application/46224787-3EBE-4FF4-8EA6-EB93F2AD8B82/Library/Caches/ExponentExperienceData/%2540anonymous%252Filuvus-react-native-c88319dc-bd37-4a64-b2a6-ab5163134627/ImagePicker/3E9942C2-421E-49C8-BA56-910646D09AA5.jpg',
-            width: 3000,
-        },
-        {
-            assetId: 'ED7AC36B-A150-4C38-BB8C-B6D696F4F2ED/L0/001',
-            base64: null,
-            duration: null,
-            exif: null,
-            fileName: 'IMG_0005.jpg',
-            fileSize: 1500185,
-            height: 2002,
-            type: 'image',
-            uri: 'file:///Users/thuanvo/Library/Developer/CoreSimulator/Devices/DAA09DCA-7F2A-42B4-8519-DC86FD6DFCE6/data/Containers/Data/Application/46224787-3EBE-4FF4-8EA6-EB93F2AD8B82/Library/Caches/ExponentExperienceData/%2540anonymous%252Filuvus-react-native-c88319dc-bd37-4a64-b2a6-ab5163134627/ImagePicker/3E9942C2-421E-49C8-BA56-910646D09AA5.jpg',
-            width: 3000,
-        },
-        {
-            assetId: 'CC95F08C-88C3-4012-9D6D-64A413D254B3/L0/001',
-            base64: null,
-            duration: null,
-            exif: null,
-            fileName: 'IMG_0111.jpg',
-            fileSize: 4081439,
-            height: 3024,
-            type: 'image',
-            uri: 'file:///Users/thuanvo/Library/Developer/CoreSimulator/Devices/DAA09DCA-7F2A-42B4-8519-DC86FD6DFCE6/data/Containers/Data/Application/46224787-3EBE-4FF4-8EA6-EB93F2AD8B82/Library/Caches/ExponentExperienceData/%2540anonymous%252Filuvus-react-native-c88319dc-bd37-4a64-b2a6-ab5163134627/ImagePicker/1CAF29C6-D998-4FF8-86FA-4E22826DC824.jpg',
-            width: 4032,
-        },
-    ])
+
+    const [userId, setUserId] = useState('defaultUser')
+    const [pickedImages, setPickedImages] = useState([])
+
+    const [uploadProgress, setUploadProgress] = useState(0)
 
     const findUserId = async () => {
         try {
@@ -124,14 +55,16 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
         })
 
         if (!result.canceled) {
-            setPickedImages([...pickedImages, result.assets[0]])
+            const resultImage = result.assets[0]
+            setPickedImages([...pickedImages, resultImage])
         } else {
             alert('You did not select any image.')
         }
     }
 
     useEffect(() => {
-        console.log('Picked images:', pickedImages)
+        console.log('Picked images:', pickedImages.length)
+        setUploadProgress(0)
     }, [pickedImages])
 
     useEffect(() => {
@@ -166,7 +99,31 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
         setIsVisible(false)
     }
 
-    const handlePublish = () => {
+    const handlePublish = async () => {
+        // try {
+        //     const uploadedImages = await uploadImage(community_id, userId, pickedImages)
+        //     console.log('Uploaded images', uploadedImages)
+        // } catch (e) {
+        //     console.log(e)
+        //     return
+        // }
+        setUploadProgress(0.0001)
+
+        for (let i = 0; i < pickedImages.length; i++) {
+            try {
+                const uploadedImage = await uploadImage(
+                    community_id,
+                    userId,
+                    pickedImages[i]
+                )
+                console.log('Uploaded image', uploadedImage)
+                setUploadProgress((i + 1) / pickedImages.length)
+            } catch (e) {
+                console.log(e)
+                return
+            }
+        }
+
         axios({
             method: 'POST',
             url: `${BASE_URL}/post/create`,
@@ -196,9 +153,8 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
     }, [])
 
     const removePickedImage = (index) => {
-        let temp = [...pickedImages]
-        temp.splice(index, 1)
-        setPickedImages(temp)
+        pickedImages.splice(index, 1)
+        setPickedImages([...pickedImages])
     }
 
     return (
@@ -231,12 +187,12 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                         animationType="slide"
                     >
                         <TouchableOpacity activeOpacity={1}>
-                            <View className="w-fit flex-col items-center justify-start space-y-4 pb-10 pt-10 shadow">
+                            <View className="w-fit flex-col items-center justify-start space-y-6 pb-10 pt-10 shadow">
                                 <Text className="text-2xl font-bold text-orchid-900">
                                     {STRINGS.CreatePost}
                                 </Text>
                                 <PostInput
-                                    className="h-3/6"
+                                    className="h-52"
                                     multiline={true}
                                     placeholder={STRINGS.postContentPlaceholder}
                                     value={postContent}
@@ -244,55 +200,80 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                                         setPostContent(text)
                                     }
                                 />
-                                <View className="h-fit w-full flex-row items-start justify-start space-x-2">
-                                    {pickedImages.map((imageInfo, index) => {
-                                        return (
-                                            <View className="relative h-20 w-20 bg-transparent shadow shadow-slate-400">
-                                                <Image
-                                                    source={{
-                                                        uri: imageInfo.uri,
-                                                    }}
-                                                    className="h-20 w-20 rounded-lg"
-                                                />
-                                                <TouchableOpacity
-                                                    className="absolute right-1 top-1"
-                                                    onPress={() =>
-                                                        removePickedImage(index)
+                                <View className="h-fit w-full flex-row items-center justify-center space-x-2">
+                                    {pickedImages.length >= 0 &&
+                                        pickedImages.length < 4 && (
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    pickingImageHandler()
+                                                }
+                                                className="flex h-20 w-20 items-center justify-center space-y-1 rounded-lg bg-orchid-100 shadow shadow-slate-300"
+                                            >
+                                                <FontAwesomeIcon
+                                                    icon={faPlus}
+                                                    color={COLORS.orchid[900]}
+                                                    size={
+                                                        SIZES.postImageIconSize
                                                     }
-                                                >
-                                                    <FontAwesomeIcon
-                                                        icon={faCircleXmark}
-                                                        color={COLORS.white}
+                                                />
+                                                <Text className="text-xs text-orchid-900">
+                                                    Images...
+                                                </Text>
+                                            </TouchableOpacity>
+                                        )}
+                                    {pickedImages.length > 0 &&
+                                        pickedImages.map((imageInfo, index) => {
+                                            return (
+                                                <View className="relative h-20 w-20 bg-transparent shadow shadow-slate-300">
+                                                    <Image
+                                                        source={{
+                                                            uri: imageInfo.uri,
+                                                        }}
+                                                        className="h-20 w-20 rounded-lg"
                                                     />
-                                                </TouchableOpacity>
-                                            </View>
-                                        )
-                                    })}
+                                                    <TouchableOpacity
+                                                        className="absolute right-1 top-1"
+                                                        onPress={() =>
+                                                            removePickedImage(
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            icon={faCircleXmark}
+                                                            color={COLORS.white}
+                                                        />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            )
+                                        })}
                                 </View>
+                                {uploadProgress > 0 && (
+                                    <View className="flex h-fit w-4/5 flex-col space-y-1 justify-center items-center">
+                                        <View className="flex w-full h-2 shadow shadow-slate-200">
+                                            <Progress.Bar
+                                                animated={true}
+                                                progress={uploadProgress}
+                                                width={null}
+                                                height={6}
+                                                borderRadius={4}
+                                                borderColor={COLORS.orchid[500]}
+                                                borderWidth={0}
+                                                unfilledColor={COLORS.orchid[100]}
+                                                color={COLORS.orchid[500]}
+                                            />
+                                        </View>
+                                        <Text>
+                                            {Math.round(uploadProgress * 100)}%
+                                        </Text>
+                                    </View>
+                                )}
                                 <View className="flex-row justify-evenly space-x-10">
-                                    <PostButton
-                                        onPress={() => pickingImageHandler()}
-                                        className="bg-gold-900"
-                                    >
-                                        <Text className="text-orchid-900">
-                                            {' '}
-                                            Pick Images
-                                        </Text>
-                                    </PostButton>
-                                    <PostButton
-                                        onPress={() => resizeImage()}
-                                        className="bg-gold-900"
-                                    >
-                                        <Text className="text-orchid-900">
-                                            {' '}
-                                            Resize Images
-                                        </Text>
-                                    </PostButton>
                                     <PostButton
                                         onPress={() => handlePublish()}
                                         className="bg-gold-900"
                                     >
-                                        <Text className="text-orchid-900">
+                                        <Text className="text-base text-orchid-900">
                                             {' '}
                                             {STRINGS.publish}
                                         </Text>
@@ -301,7 +282,7 @@ const Post = ({ community_id = '65d40edbab9c837874869dc4' }) => {
                                         onPress={() => handleClosePopup()}
                                         className="bg-gray-300"
                                     >
-                                        <Text className="justify-center text-orchid-900">
+                                        <Text className="justify-center text-base  text-orchid-900">
                                             {' '}
                                             {STRINGS.cancel}
                                         </Text>
