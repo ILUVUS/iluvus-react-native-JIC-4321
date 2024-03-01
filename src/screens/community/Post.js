@@ -88,7 +88,7 @@ const Post = (nav) => {
                 eachImageProgress.concat(Array(pickedImages.length).fill(0))
             )
         } else {
-            alert('You did not select any image.')
+            // alert('You did not select any image.')
         }
     }
 
@@ -267,12 +267,12 @@ const Post = (nav) => {
                                 />
                                 <View className="h-fit w-full flex-row items-center justify-center space-x-2">
                                     {pickedImages.length >= 0 &&
-                                        pickedImages.length < 4 && (
+                                        pickedImages.length < 5 && (
                                             <TouchableOpacity
                                                 onPress={() =>
                                                     pickingImageHandler()
                                                 }
-                                                className="flex h-20 w-20 items-center justify-center space-y-1 rounded-lg bg-orchid-100 shadow shadow-slate-300"
+                                                className="flex h-16 w-16 items-center justify-center space-y-1 rounded-lg bg-orchid-100 shadow shadow-slate-300"
                                             >
                                                 <FontAwesomeIcon
                                                     icon={faPlus}
@@ -289,12 +289,12 @@ const Post = (nav) => {
                                     {pickedImages.length > 0 &&
                                         pickedImages.map((imageInfo, index) => {
                                             return (
-                                                <View className="relative h-20 w-20 bg-transparent shadow shadow-slate-300">
+                                                <View className="relative h-16 w-16 bg-transparent shadow shadow-slate-300">
                                                     <Image
                                                         source={{
                                                             uri: imageInfo.uri,
                                                         }}
-                                                        className="h-20 w-20 rounded-lg"
+                                                        className="h-16 w-16 rounded-lg"
                                                     />
                                                     <TouchableOpacity
                                                         className="absolute right-1 top-1"
@@ -345,7 +345,7 @@ const Post = (nav) => {
                                 {uploadProgress === 0 && (
                                     <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
                                         <Text className="text-orchid-900">
-                                            {pickedImages.length}/4 images
+                                            {pickedImages.length}/5 images
                                             selected
                                         </Text>
                                     </View>

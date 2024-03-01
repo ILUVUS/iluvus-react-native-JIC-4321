@@ -13,5 +13,5 @@ export default {
     communityIconSize: 45,
     communityIconRadius: 20,
 
-    postImageIconSize: 30,
+    postImageIconSize: 26,
 }
