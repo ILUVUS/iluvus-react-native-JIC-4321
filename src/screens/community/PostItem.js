@@ -6,6 +6,7 @@ import {
     ScrollView,
     TextInput,
     Alert,
+    Image,
 } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
@@ -22,6 +23,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BASE_URL } from '@env'
 import axios from 'axios'
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
+import ImageView from 'react-native-image-viewing'
 
 const PostItem = ({ post, userId }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false)
@@ -98,7 +100,7 @@ const PostItem = ({ post, userId }) => {
             },
         })
             .then((res) => {
-                Alert.alert("Post Reported")
+                Alert.alert('Post Reported')
                 console.log(res.data)
             })
             .catch((err) => {
@@ -140,10 +142,26 @@ const PostItem = ({ post, userId }) => {
         setCommentsNumber(commentsLen)
     }, [post['comments']])
 
+    const [imageViewerVisible, setImageViewerVisible] = useState(false)
+    const [imageViewerIndex, setImageViewerIndex] = useState(0)
+    const [media_urls, setMediaUrls] = useState([])
+
+    const openImageViewer = (medias, index) => {
+        setMediaUrls(medias.map((url) => ({ uri: url })))
+        setImageViewerIndex(index)
+        setImageViewerVisible(true)
+    }
+
+    const closeImageViewer = () => {
+        media_urls = []
+        setImageViewerIndex(0)
+        setImageViewerVisible(false)
+    }
+
     return (
         <>
             <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white shadow-md shadow-slate-300">
-                <View className="p-5">
+                <View className="w-full p-5">
                     <Text className="text-xl font-bold text-orchid-900 shadow">
                         {post.author_id}
                     </Text>
@@ -153,6 +171,24 @@ const PostItem = ({ post, userId }) => {
                     <Text className="my-2 text-base text-orchid-700">
                         {post.text}
                     </Text>
+                    {post.medias && (
+                        <View className="mt-3 flex h-fit w-full flex-row justify-start space-x-2">
+                            {post.medias.map((url, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    onPress={() =>
+                                        openImageViewer(post.medias, index)
+                                    }
+                                >
+                                    <Image
+                                        key={index}
+                                        source={{ uri: url }}
+                                        className="h-16 w-16 rounded-2xl"
+                                    />
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
                 </View>
                 <View className="h-fit w-full flex-row justify-evenly space-x-10 rounded-b-3xl bg-orchid-200 p-2 ">
                     <View className="flex flex-row items-center justify-center space-x-2">
@@ -194,9 +230,7 @@ const PostItem = ({ post, userId }) => {
                     </TouchableOpacity>
 
                     {/* REPORT BUTTON HERE */}
-                    <TouchableOpacity
-                        onPress={() => handleReport()}
-                    >
+                    <TouchableOpacity onPress={() => handleReport()}>
                         <FontAwesomeIcon
                             icon={faEllipsis}
                             color={COLORS.gray[500]}
@@ -260,6 +294,14 @@ const PostItem = ({ post, userId }) => {
                     </View>
                 </View>
             )}
+
+            {/* image viewer */}
+            <ImageView
+                images={media_urls}
+                imageIndex={imageViewerIndex}
+                visible={imageViewerVisible}
+                onRequestClose={() => setImageViewerVisible(false)}
+            />
         </>
     )
 }

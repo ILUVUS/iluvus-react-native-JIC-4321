@@ -37,7 +37,7 @@ const Post = (nav) => {
     const [postContent, setPostContent] = useState('')
 
     const [postData, setPostData] = useState([{}])
-    const [isVisible, setIsVisible] = useState(true)
+    const [isVisible, setIsVisible] = useState(false)
 
     const [userId, setUserId] = useState('')
     const [community_id, setCommunityId] = useState(
@@ -134,6 +134,9 @@ const Post = (nav) => {
     }
 
     const handleClosePopup = () => {
+        setPostContent('')
+        setPickedImages([])
+        setImageURLs([])
         setIsVisible(false)
     }
 
@@ -150,7 +153,11 @@ const Post = (nav) => {
 
     // SUCCESS MESSAGE HERE
     useEffect(() => {
-        if (imageURLs.length === pickedImages.length) {
+        if (
+            imageURLs.length != 0 &&
+            pickedImages != 0 &&
+            imageURLs.length === pickedImages.length
+        ) {
             console.log('Image URLs:', imageURLs)
 
             setPickedImages([])
@@ -176,10 +183,7 @@ const Post = (nav) => {
                     console.log('Post published', res.data)
 
                     setPostData(res.data)
-                    setPostContent('')
                     handleClosePopup()
-
-                    setImageURLs([])
                 })
                 .catch((err) => {
                     console.log('Cannot publish the post', err)
