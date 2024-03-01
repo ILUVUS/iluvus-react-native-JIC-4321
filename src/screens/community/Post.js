@@ -21,6 +21,7 @@ import PostItem from './PostItem'
 import * as Progress from 'react-native-progress'
 
 import * as ImagePicker from 'expo-image-picker'
+import { useRoute } from '@react-navigation/native'
 
 import {
     View,
@@ -32,7 +33,7 @@ import {
 } from 'react-native'
 import { PostButton } from '../../components/button'
 
-const Post = (data) => {
+const Post = (nav) => {
     const [postContent, setPostContent] = useState('')
 
     const [postData, setPostData] = useState([{}])
@@ -40,7 +41,7 @@ const Post = (data) => {
 
     const [userId, setUserId] = useState('')
     const [community_id, setCommunityId] = useState(
-        data.route.params.communityId
+        useRoute().params.communityId
     )
     const [pickedImages, setPickedImages] = useState([])
 
@@ -52,7 +53,7 @@ const Post = (data) => {
 
     const [refreshing, setRefreshing] = React.useState(false)
 
-    const [isJoined, setIsJoined] = useState(data.route.params.isJoined)
+    const [isJoined, setIsJoined] = useState(useRoute().params.communityId)
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
