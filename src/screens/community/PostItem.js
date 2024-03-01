@@ -134,7 +134,9 @@ const PostItem = ({ post, userId }) => {
     }
 
     useEffect(() => {
-        setUpliftNumber(post.uplift)
+        if (post && post.likedBy) {
+            setUpliftNumber(post.likedBy.length)
+        }
     }, [post.uplift])
 
     useEffect(() => {
@@ -153,7 +155,7 @@ const PostItem = ({ post, userId }) => {
     }
 
     const closeImageViewer = () => {
-        media_urls = []
+        setMediaUrls([])
         setImageViewerIndex(0)
         setImageViewerVisible(false)
     }
@@ -300,7 +302,21 @@ const PostItem = ({ post, userId }) => {
                 images={media_urls}
                 imageIndex={imageViewerIndex}
                 visible={imageViewerVisible}
-                onRequestClose={() => setImageViewerVisible(false)}
+                onRequestClose={() => closeImageViewer()}
+                swipeToCloseEnabled={true}
+                doubleTapToZoomEnabled={true}
+                FooterComponent={({ imageIndex }) => (
+                    <View className="mx-5 mb-20 flex flex-col items-start justify-center space-y-1 shadow shadow-black">
+                        <Text className="font-bold text-white">
+                            {upliftNumber} likes, {commentsNumber} comments
+                        </Text>
+                        {/* display only a few lines of the post text */}
+                        <Text className="text-white">
+                            {post.text.slice(0, 100)}
+                            {post.text.length > 100 ? '...' : ''}
+                        </Text>
+                    </View>
+                )}
             />
         </>
     )
