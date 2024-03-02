@@ -87,6 +87,29 @@ const PostItem = ({ post, userId }) => {
         return date.toISOString()
     }
 
+    const displayDatetime = (postDatetime) => {
+        //I have time in this format, I need to calculate like "minutes ago, hours ago, day ago, and if it more than 1 day, display whole thing.
+        const parseDatetime = new Date(postDatetime)
+
+        const currentDate = new Date()
+
+        const diffTime = Math.abs(currentDate - parseDatetime)
+        const diffDays = diffTime / (1000 * 60 * 60 * 24)
+
+        if (diffDays < 1) {
+            const diffHours = diffTime / (1000 * 60 * 60)
+            if (diffHours < 1) {
+                const diffMinutes = diffTime / (1000 * 60)
+                return `${Math.round(diffMinutes)} minutes ago`
+            } else {
+                return `${Math.round(diffHours)} hours ago`
+            }
+        } else {
+            // display date and time
+            return parseDatetime.toLocaleString()
+        }
+    }
+
     const handleReport = () => {
         axios({
             method: 'POST',
@@ -168,7 +191,7 @@ const PostItem = ({ post, userId }) => {
                         {post.author_id}
                     </Text>
                     <Text className="text-xs text-orchid-600">
-                        {post.dateTime}
+                        {displayDatetime(post.dateTime)}
                     </Text>
                     <Text className="my-2 text-base text-orchid-700">
                         {post.text}
