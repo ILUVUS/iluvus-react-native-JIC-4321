@@ -115,7 +115,8 @@ const Post = (nav) => {
             },
         })
             .then((res) => {
-                setPostData(res.data)
+                // reverse the array to show the latest post first
+                setPostData(res.data.reverse())
             })
             .catch((err) => {
                 console.log('Cannot get posts', err)
@@ -237,7 +238,7 @@ const Post = (nav) => {
                             />
                         }
                     >
-                        {postData.reverse().map((post, index) => {
+                        {postData.map((post, index) => {
                             return (
                                 <PostItem
                                     key={index}

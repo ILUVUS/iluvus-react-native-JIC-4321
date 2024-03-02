@@ -183,8 +183,9 @@ const CommunityView = ({ nav }) => {
                     display: 'flex',
                     justifyContent: 'flex-start',
                     flexGrow: 1,
-                    paddingVertical: 24,
+                    paddingTop: 24,
                     paddingHorizontal: 24,
+                    paddingBottom: 150,
                 }}
                 className="h-screen w-screen overflow-auto bg-white"
                 onTouchStart={Keyboard.dismiss}

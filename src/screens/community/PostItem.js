@@ -157,10 +157,10 @@ const PostItem = ({ post, userId }) => {
     }
 
     useEffect(() => {
-        if (post && post.likedBy) {
+        if (post.likedBy) {
             setUpliftNumber(post.likedBy.length)
         }
-    }, [post.uplift])
+    }, [post])
 
     useEffect(() => {
         const commentsLen = post['comments']?.length
