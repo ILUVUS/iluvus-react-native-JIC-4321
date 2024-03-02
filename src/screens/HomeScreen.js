@@ -10,10 +10,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Profile from './Profile/Profile'
 
 import { useEffect, useState } from 'react'
-
+import axios from 'axios'
+import { BASE_URL } from '@env'
 
 function HomeScreenNav() {
     const [userId, setUserId] = useState('')
+    const [userInfo, setUserInfo] = useState({})
 
     useEffect(() => {
         const getUserId = async () => {
@@ -28,9 +30,26 @@ function HomeScreenNav() {
         }
         getUserId()
     }, [])
+
+    useEffect(() => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/user/get?userId=${userId}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setUserInfo(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }, [userId])
+
     return (
         <View className="flex h-screen justify-center bg-white p-2 align-middle">
-            <Text>Welcome {userId}</Text>
+            <Text>Welcome {userInfo.lname}, {userInfo.fname}</Text>
         </View>
     )
 }
@@ -73,9 +92,7 @@ export default function HomeScreen() {
                             iconName = focused ? 'home' : 'home-outline'
                             break
                         case STRINGS.communitytab:
-                            iconName = focused
-                                ? 'earth'
-                                : 'earth-outline'
+                            iconName = focused ? 'earth' : 'earth-outline'
                             break
                         case STRINGS.profiletab:
                             iconName = focused
