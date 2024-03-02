@@ -100,11 +100,11 @@ const Community = () => {
     }
 
     const myCommunity = () => {
-        navigation.navigate('SetupCommunity')
+        // navigation.navigate('SetupCommunity')
     }
 
     const myFriend = () => {
-        navigation.navigate('SetupCommunity')
+        // navigation.navigate('SetupCommunity')
     }
 
     const communityClick = (id) => {
@@ -147,7 +147,9 @@ const Community = () => {
                 >
                     <View className="my-3 flex w-screen flex-row justify-evenly">
                         {verify && (
-                            <CommunityViewMainButton onPress={newCommunity}>
+                            <CommunityViewMainButton
+                                onPress={() => newCommunity()}
+                            >
                                 <Icon
                                     name="plus"
                                     size={SIZES.communityIconSize}
@@ -159,7 +161,7 @@ const Community = () => {
                             </CommunityViewMainButton>
                         )}
 
-                        <CommunityViewMainButton onPress={myCommunity}>
+                        <CommunityViewMainButton onPress={() => myCommunity()}>
                             <Icon
                                 name="users"
                                 size={SIZES.communityIconSize}
@@ -170,7 +172,7 @@ const Community = () => {
                             </Text>
                         </CommunityViewMainButton>
 
-                        <CommunityViewMainButton onPress={myFriend}>
+                        <CommunityViewMainButton onPress={() => myFriend()}>
                             <Icon
                                 name="child"
                                 size={SIZES.communityIconSize}
@@ -198,8 +200,9 @@ const Community = () => {
                                     source={sampleIcon}
                                     className="h-24 w-24 rounded-3xl"
                                 />
-                                <Text className="mt-1 text-base text-orchid-900">
-                                    {communityList[key].substring(0, 10) + '...'}
+                                <Text className="mt-1 text-sm text-orchid-900">
+                                    {communityList[key].substring(0, 15) +
+                                        '...'}
                                 </Text>
                             </CommunityViewImageButton>
                         ))}

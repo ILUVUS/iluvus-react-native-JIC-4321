@@ -22,6 +22,9 @@ import * as Progress from 'react-native-progress'
 
 import * as ImagePicker from 'expo-image-picker'
 import { useRoute } from '@react-navigation/native'
+import ImageView from 'react-native-image-viewing'
+
+import { getDatetime } from '../../utils/Utils'
 
 import {
     View,
@@ -37,7 +40,7 @@ const Post = (nav) => {
     const [postContent, setPostContent] = useState('')
 
     const [postData, setPostData] = useState([{}])
-    const [isVisible, setIsVisible] = useState(false)
+    const [IsModalVisible, setIsModalVisible] = useState(false)
 
     const [userId, setUserId] = useState('')
     const [community_id, setCommunityId] = useState(
@@ -54,6 +57,8 @@ const Post = (nav) => {
     const [refreshing, setRefreshing] = React.useState(false)
 
     const [isJoined, setIsJoined] = useState(useRoute().params.communityId)
+
+    const [imageViewerVisible, setImageViewerVisible] = useState(false)
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
@@ -80,6 +85,8 @@ const Post = (nav) => {
             allowsEditing: false,
             quality: 0.8,
         })
+
+        console.log(result)
 
         if (!result.canceled) {
             const resultImage = result.assets[0]
@@ -123,22 +130,15 @@ const Post = (nav) => {
             })
     }
 
-    const getDatetime = () => {
-        // get current datetime in format 2024-01-29T05:00:00.000+00:00
-        const date = new Date()
-        console.log('Date', date.toISOString())
-        return date.toISOString()
-    }
-
     const handleOpenPopup = () => {
-        setIsVisible(true)
+        setIsModalVisible(true)
     }
 
     const handleClosePopup = () => {
         setPostContent('')
         setPickedImages([])
         setImageURLs([])
-        setIsVisible(false)
+        setIsModalVisible(false)
     }
 
     useEffect(() => {
@@ -251,8 +251,21 @@ const Post = (nav) => {
                 </View>
 
                 <View className="h-screen w-screen">
+                    {/* image viewer */}
+
+                    <ImageView
+                        images={pickedImages.map((image) => {
+                            return { uri: image.uri }
+                        })}
+                        imageIndex={0}
+                        visible={imageViewerVisible}
+                        onRequestClose={() => setImageViewerVisible(false)}
+                        swipeToCloseEnabled={true}
+                        doubleTapToZoomEnabled={true}
+                    />
+
                     <Modal
-                        visible={isVisible}
+                        visible={IsModalVisible && !imageViewerVisible}
                         transparent={false}
                         animationType="slide"
                     >
@@ -294,27 +307,39 @@ const Post = (nav) => {
                                     {pickedImages.length > 0 &&
                                         pickedImages.map((imageInfo, index) => {
                                             return (
-                                                <View className="relative h-16 w-16 bg-transparent shadow shadow-slate-300">
-                                                    <Image
-                                                        source={{
-                                                            uri: imageInfo.uri,
-                                                        }}
-                                                        className="h-16 w-16 rounded-lg"
-                                                    />
-                                                    <TouchableOpacity
-                                                        className="absolute right-1 top-1"
-                                                        onPress={() =>
-                                                            removePickedImage(
-                                                                index
-                                                            )
-                                                        }
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={faCircleXmark}
-                                                            color={COLORS.white}
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        setImageViewerVisible(
+                                                            true
+                                                        )
+                                                    }
+                                                >
+                                                    <View className="relative h-16 w-16 bg-transparent shadow shadow-slate-300">
+                                                        <Image
+                                                            source={{
+                                                                uri: imageInfo.uri,
+                                                            }}
+                                                            className="h-16 w-16 rounded-lg"
                                                         />
-                                                    </TouchableOpacity>
-                                                </View>
+                                                        <TouchableOpacity
+                                                            className="absolute right-1 top-1"
+                                                            onPress={() =>
+                                                                removePickedImage(
+                                                                    index
+                                                                )
+                                                            }
+                                                        >
+                                                            <FontAwesomeIcon
+                                                                icon={
+                                                                    faCircleXmark
+                                                                }
+                                                                color={
+                                                                    COLORS.white
+                                                                }
+                                                            />
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </TouchableOpacity>
                                             )
                                         })}
                                 </View>
