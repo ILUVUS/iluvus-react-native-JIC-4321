@@ -20,8 +20,11 @@ import {
     CommunityViewMainButton,
 } from '../../components/button'
 
+import { useIsFocused } from '@react-navigation/native'
+
 const Community = () => {
     const navigation = useNavigation()
+    const isFocused = useIsFocused()
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -31,6 +34,12 @@ const Community = () => {
     const [verify, setVerify] = useState(false)
     const [searchResultList, setSearchResultList] = useState([])
 
+
+    useEffect(() => {
+        getVerified()
+        fetchCommunityList()
+    }, [isFocused])
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
         getVerified()
@@ -38,11 +47,6 @@ const Community = () => {
         setTimeout(() => {
             setRefreshing(false)
         }, 1000)
-    }, [])
-
-    useEffect(() => {
-        getVerified()
-        fetchCommunityList()
     }, [])
 
     useEffect(() => {

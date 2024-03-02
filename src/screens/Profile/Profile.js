@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { BASE_URL } from '@env'
+import { useIsFocused } from '@react-navigation/native'
+
 
 const Profile = () => {
     const [userId, setUserId] = useState('')
@@ -12,6 +14,7 @@ const Profile = () => {
     const [userInfo, setUserInfo] = useState({})
 
     const navigation = useNavigation()
+    const isFocused = useIsFocused()
 
     const handleLogout = () => {
         removeUserId()
@@ -45,7 +48,7 @@ const Profile = () => {
             }
         }
         findUserInfoById()
-    }, [])
+    }, [isFocused])
 
     useEffect(() => {
         console.log(userId)
@@ -63,7 +66,7 @@ const Profile = () => {
             .catch((err) => {
                 console.log(err)
             })
-    }, [userId])
+    }, [userId, isFocused])
 
     return (
         <View className="flex h-screen w-screen items-center bg-white p-2">

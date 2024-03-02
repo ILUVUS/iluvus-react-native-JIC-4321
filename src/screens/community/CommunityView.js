@@ -64,11 +64,11 @@ const CommunityView = ({ nav }) => {
             },
         })
             .then((res) => {
-                console.log(res.data)
 
                 // split and strip the string
                 membersListAsArray = getListFromString(res.data.members)
                 setMembers(membersListAsArray)
+
 
                 // updade only name, description and rules fields
                 setCommunityInfo((prevState) => ({
@@ -110,6 +110,9 @@ const CommunityView = ({ nav }) => {
     }
 
     const getListFromString = (string) => {
+        if (string === '') {
+            return []
+        }
         return string.split(',').map((item) => item.trim())
     }
 

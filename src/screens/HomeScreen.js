@@ -49,7 +49,9 @@ function HomeScreenNav() {
 
     return (
         <View className="flex h-screen justify-center bg-white p-2 align-middle">
-            <Text>Welcome {userInfo.lname}, {userInfo.fname}</Text>
+            <Text>
+                Welcome {userInfo.lname}, {userInfo.fname}
+            </Text>
         </View>
     )
 }
