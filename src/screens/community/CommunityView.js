@@ -23,6 +23,8 @@ import sampleIcon from '../../../assets/images/sampleicon.jpg'
 import communityBg from '../../../assets/images/communitybg.jpg'
 import STRINGS from '../../constants/strings'
 
+import RequestItem from './RequestItem'
+
 import { signal } from '@preact/signals-react'
 
 const CommunityView = (communityId = 'communityId') => {
@@ -30,6 +32,8 @@ const CommunityView = (communityId = 'communityId') => {
     const [isHost, setIsHost] = useState(false)
     const [isPublicCommunity, setIsPublicCommunity] = useState(true)
     const [isJoined, setIsJoined] = useState(false)
+
+    const [requestId, setRequestId] = useState('Tran, Doan')
 
     const navigation = useNavigation()
 
@@ -48,6 +52,7 @@ const CommunityView = (communityId = 'communityId') => {
 
     const onRefresh = React.useCallback(() => {
         getCommunityInfo()
+        getVerified()
     }, [])
 
     const getCommunityInfo = async () => {
@@ -85,6 +90,7 @@ const CommunityView = (communityId = 'communityId') => {
         // This is the community ID it receives from the community list
 
         getCommunityInfo()
+        getVerified()
     }, [])
 
     const checkIfJoined = async () => {
@@ -121,6 +127,26 @@ const CommunityView = (communityId = 'communityId') => {
             })
     }
 
+    const getVerified = async () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/user/verify`,
+            data: {
+                userId: await AsyncStorage.getItem('userId'),
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setIsHost(true)
+            })
+            .catch((err) => {
+                console.log(err)
+                setIsHost(false)
+            })
+    }
+
     const addNewMember = async () => {
         members.push(await AsyncStorage.getItem('userId'))
     }
@@ -152,6 +178,7 @@ const CommunityView = (communityId = 'communityId') => {
                     flexGrow: 1,
                     paddingVertical: 24,
                     paddingHorizontal: 24,
+                    paddingBottom: 120,
                 }}
                 className="h-screen w-screen overflow-auto bg-white"
                 onTouchStart={Keyboard.dismiss}
@@ -241,6 +268,17 @@ const CommunityView = (communityId = 'communityId') => {
                     <Text className="text-base text-orchid-900">
                         {communityInfo.rules}
                     </Text>
+                </View>
+
+                <View>
+                    {isHost && (
+                        <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
+                            <Text className="mb-2 text-2xl font-bold text-orchid-900">
+                                Requests
+                            </Text>
+                            <RequestItem requestId={requestId} />
+                        </View>
+                    )}
                 </View>
             </ScrollView>
         </View>

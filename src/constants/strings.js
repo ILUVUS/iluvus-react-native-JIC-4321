@@ -47,6 +47,7 @@ export default {
 
     // view community
     communityView: 'CommunityView',
+    request: " requests to join your community.",
 
     // community post
     Post: 'Post',
