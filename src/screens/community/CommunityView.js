@@ -99,6 +99,33 @@ const CommunityView = (communityId = 'communityId') => {
         checkIfJoined()
     }, [members])
 
+    const requestToJoin = async () => {
+        //request to join community
+    }
+
+    useEffect(() => {
+        checkIfPublic()
+    }, [])
+
+    const checkIfPublic = async () => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/community/getVisibility?id=${globalCommunityId}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setIsPublicCommunity((prevState) => ({
+                    ...prevState,
+                    isPublicCommunity: res.data ==="true",
+                }))
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
     const joinCommunity = async () => {
         axios({
             method: 'POST',
@@ -202,13 +229,23 @@ const CommunityView = (communityId = 'communityId') => {
                     </View>
 
                     <View className="flex flex-row items-center justify-center gap-5">
-                        {!isJoined && (
+                    {(!isJoined && isPublicCommunity) && (
                             <TouchableOpacity
                                 onPress={() => joinCommunity()}
                                 className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
                             >
                                 <Text className="text-md text-orchid-900">
                                     JOIN US
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                        {(!isJoined && !isPublicCommunity) && (
+                            <TouchableOpacity
+                                onPress={() => requestToJoin()}
+                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
+                            >
+                                <Text className="text-md text-orchid-900">
+                                    REQUEST JOIN
                                 </Text>
                             </TouchableOpacity>
                         )}
