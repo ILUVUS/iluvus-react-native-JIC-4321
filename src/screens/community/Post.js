@@ -3,7 +3,7 @@ import React, { useEffect, useState, Component } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
-import { Alert } from 'react-native'
+import { Alert , FlatList} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
@@ -198,6 +198,7 @@ const Post = (data) => {
                         transparent={false}
                         animationType="slide"
                     >
+                        <View className="flex flex-1">
                         <TouchableOpacity activeOpacity={1}>
                             <View className="w-fit flex-col items-center justify-start pb-10 pt-10 shadow">
                                 <SearchBar
@@ -251,36 +252,39 @@ const Post = (data) => {
                                     </React.Fragment>
                                 )}
                                 {searchUsername && (
-                                    <ScrollView
-                                    className="h-screen w-screen"
-                                    contentContainerStyle={{
-                                        paddingHorizontal: 5,
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                    }}
-                                    refreshControl={
-                                        <RefreshControl
-                                            refreshing={refreshing}
-                                            onRefresh={onRefresh}
-                                        />
-                                    }
-                                    >
-                                    <View className="flex flex-row flex-wrap overflow-auto">
-                                        {Object.keys(searchResultList).map((key, index) => (
-                                            <React.Fragment>
-                                                <View key={key} style="flex flex-row items-center">
-                                                    <Text style="mt-2 mr-2">{searchResultList[key]}</Text>
-                                                    <TouchableOpacity onPress={() => handleTag(key)} style="bg-blue-500 px-3 py-1 rounded text-white">
-                                                        <Text>Add</Text>
+                                    <React.Fragment>
+                                        <ScrollView
+                                        className="h-screen w-screen"
+                                        contentContainerStyle={{
+                                            paddingHorizontal: 5,
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                        refreshControl={
+                                            <RefreshControl
+                                                refreshing={refreshing}
+                                                onRefresh={onRefresh}
+                                            />
+                                        }
+                                        >
+                                        <View className="flex flex-col flex-wrap overflow-auto">
+                                            {Object.keys(searchResultList).map((user, index) => (
+                                                <View key={index} className="flex flex-row justify-between py-3 px-4 border-b border-gray-200">
+                                                    <Text className="text-base text-orchid-900 flex-grow">
+                                                        {searchResultList[user]}
+                                                    </Text>
+                                                    <TouchableOpacity onPress={() => handleTag(searchResultList[user])} className="bg-green-500 px-4 py-2 rounded text-white">
+                                                        <Text>{STRINGS.add}</Text>
                                                     </TouchableOpacity>
                                                 </View>
-                                            </React.Fragment>
-                                        ))}
-                                    </View>
-                                    </ScrollView>
+                                            ))}
+                                        </View>
+                                        </ScrollView>
+                                    </React.Fragment>
                                 )}
                             </View>
                         </TouchableOpacity>
+                        </View>
                     </Modal>
                 </View>
             </View>
