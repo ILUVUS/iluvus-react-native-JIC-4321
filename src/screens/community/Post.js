@@ -37,6 +37,7 @@ import {
 import { PostButton } from '../../components/button'
 
 const Post = (nav) => {
+  
     const [postContent, setPostContent] = useState('')
 
     const [postData, setPostData] = useState([{}])
@@ -116,7 +117,7 @@ const Post = (nav) => {
     const getPosts = async () => {
         axios({
             method: 'GET',
-            url: `${BASE_URL}/post/getPostsByCommunityID?id=${community_id}`,
+            url: `${BASE_URL}/post/getPostsByCommunityID?id=${data.route.params.community_id}`,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -179,6 +180,7 @@ const Post = (nav) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
+
             })
                 .then((res) => {
                     console.log('Post published', res.data)
