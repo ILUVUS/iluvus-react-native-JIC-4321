@@ -8,11 +8,12 @@ import {
     Alert,
 } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faStar } from '@fortawesome/free-solid-svg-icons'
+import { faF, faStar } from '@fortawesome/free-solid-svg-icons'
 import { faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
+import { faFlag } from '@fortawesome/free-solid-svg-icons'
 import COLORS from '../../constants/colors'
 import STRINGS from '../../constants/strings'
 import { useState } from 'react'
@@ -85,6 +86,22 @@ const PostItem = ({ post, userId }) => {
         return date.toISOString()
     }
 
+    const reportConfirm = () => {
+        Alert.alert(
+            'Report Post',
+            'Are you sure you want to report this post?',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                { text: 'Yes', onPress: () => handleReport() },
+            ],
+            { cancelable: false }
+        )
+    }
+
     const handleReport = () => {
         axios({
             method: 'POST',
@@ -98,7 +115,7 @@ const PostItem = ({ post, userId }) => {
             },
         })
             .then((res) => {
-                Alert.alert("Post Reported")
+                Alert.alert('Post Reported')
                 console.log(res.data)
             })
             .catch((err) => {
@@ -194,12 +211,10 @@ const PostItem = ({ post, userId }) => {
                     </TouchableOpacity>
 
                     {/* REPORT BUTTON HERE */}
-                    <TouchableOpacity
-                        onPress={() => handleReport()}
-                    >
+                    <TouchableOpacity onPress={() => reportConfirm()}>
                         <FontAwesomeIcon
-                            icon={faEllipsis}
-                            color={COLORS.gray[500]}
+                            icon={faFlag}
+                            color={COLORS.red}
                             size={22}
                         />
                     </TouchableOpacity>
