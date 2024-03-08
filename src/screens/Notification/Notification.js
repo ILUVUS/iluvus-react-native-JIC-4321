@@ -83,7 +83,7 @@ const Notification = () => {
                         className="overflow-ao h-full w-full space-y-3 bg-transparent p-5"
                     >
                         {notifications.map((data, index) => (
-                            <View className="flex h-fit w-full flex-row items-start justify-start rounded-3xl bg-orchid-100 p-5 shadow-sm shadow-slate-300">
+                            <View>
                                 <Notitem key={index} data={data} />
                             </View>
                         ))}
