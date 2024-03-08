@@ -50,7 +50,7 @@ const Post = (data) => {
     const [commentView, setCommentView] = useState(false)
     const [userId, setUserId] = useState('')
     const [searchUsername, setSearchUsername] = useState('')
-    const [searchResultList, setSearchResultList] = useState([])
+    const [searchUserList, setSearchUserList] = useState([])
 
     const findUserId = async () => {
         try {
@@ -120,31 +120,6 @@ const Post = (data) => {
             })
     }
 
-    const handleTag = () => {
-        axios({
-            method: 'POST',
-            url: `${BASE_URL}/post/create`,
-            data: {
-                text: postContent,
-                communityId: data.route.params.community_id,
-                authorId: userId,
-                dateTime: getDatetime(),
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                console.log('Post published', res.data)
-                setPostData(res.data)
-                setPostContent('')
-                handleClosePopup()
-            })
-            .catch((err) => {
-                console.log('Cannot publish the post', err)
-            })
-    }
-
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
     }, [])
@@ -152,21 +127,25 @@ const Post = (data) => {
     useEffect(() => {
         axios({
             method: 'GET',
-            url: `${BASE_URL}/community/search?filter=${searchUsername}`,
+            url: `${BASE_URL}/user/search?filter=${searchUsername}`,
             headers: {
                 'Content-Type': 'application/json',
             },
         })
             .then((res) => {
-                setSearchResultList(res.data)
+                setSearchUserList(res.data)
             })
             .catch((err) => {
                 console.log(err)
             })
     }, [searchUsername])
 
-    const searchFunction = (text) => {
+    const searchUser = (text) => {
         setSearchUsername(text)
+    }
+
+    const handleAddTag = () => {
+        //
     }
 
     return (
@@ -203,7 +182,7 @@ const Post = (data) => {
                             <View className="w-fit flex-col items-center justify-start pb-10 pt-10 shadow">
                                 <SearchBar
                                     placeholder={STRINGS.TagUsers}
-                                    onChangeText={(text) => searchFunction(text)}
+                                    onChangeText={(text) => searchUser(text)}
                                     value={searchUsername}
                                     containerStyle={[
                                     searchBarStyle.containerSearchBar,
@@ -268,12 +247,12 @@ const Post = (data) => {
                                         }
                                         >
                                         <View className="flex flex-col flex-wrap overflow-auto">
-                                            {Object.keys(searchResultList).map((user, index) => (
+                                            {searchUserList.map((user, index) => (
                                                 <View key={index} className="flex flex-row justify-between py-3 px-4 border-b border-gray-200">
                                                     <Text className="text-base text-orchid-900 flex-grow">
-                                                        {searchResultList[user]}
+                                                        {user.username}
                                                     </Text>
-                                                    <TouchableOpacity onPress={() => handleTag(searchResultList[user])} className="bg-green-500 px-4 py-2 rounded text-white">
+                                                    <TouchableOpacity onPress={() => handleAddTag(user.id)} className="bg-green-500 px-4 py-2 rounded text-white">
                                                         <Text>{STRINGS.add}</Text>
                                                     </TouchableOpacity>
                                                 </View>
