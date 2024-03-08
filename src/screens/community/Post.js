@@ -36,6 +36,8 @@ import {
     RefreshControl,
 } from 'react-native'
 import { PostButton } from '../../components/button'
+import { SearchBar } from 'react-native-elements'
+import { inputStyle, searchBarStyle } from '../../../styles/style'
 
 const Post = (data) => {
     const [refreshing, setRefreshing] = React.useState(false)
@@ -47,6 +49,8 @@ const Post = (data) => {
     const [isVisible, setIsVisible] = useState(false)
     const [commentView, setCommentView] = useState(false)
     const [userId, setUserId] = useState('')
+    const [searchUsername, setSearchUsername] = useState('')
+    const [searchResultList, setSearchResultList] = useState([])
 
     const findUserId = async () => {
         try {
@@ -116,9 +120,54 @@ const Post = (data) => {
             })
     }
 
+    const handleTag = () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/post/create`,
+            data: {
+                text: postContent,
+                communityId: data.route.params.community_id,
+                authorId: userId,
+                dateTime: getDatetime(),
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                console.log('Post published', res.data)
+                setPostData(res.data)
+                setPostContent('')
+                handleClosePopup()
+            })
+            .catch((err) => {
+                console.log('Cannot publish the post', err)
+            })
+    }
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
     }, [])
+
+    useEffect(() => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/community/search?filter=${searchUsername}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setSearchResultList(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }, [searchUsername])
+
+    const searchFunction = (text) => {
+        setSearchUsername(text)
+    }
 
     return (
         <>
@@ -151,38 +200,85 @@ const Post = (data) => {
                     >
                         <TouchableOpacity activeOpacity={1}>
                             <View className="w-fit flex-col items-center justify-start pb-10 pt-10 shadow">
-                                <Text className="mb-5 text-2xl font-bold text-orchid-900">
-                                    {STRINGS.CreatePost}
-                                </Text>
-                                <PostInput
-                                    className="mb-5 h-4/5"
-                                    multiline={true}
-                                    placeholder={STRINGS.postContentPlaceholder}
-                                    value={postContent}
-                                    onChangeText={(text) =>
-                                        setPostContent(text)
-                                    }
+                                <SearchBar
+                                    placeholder={STRINGS.TagUsers}
+                                    onChangeText={(text) => searchFunction(text)}
+                                    value={searchUsername}
+                                    containerStyle={[
+                                    searchBarStyle.containerSearchBar,
+                                    inputStyle.inputShadow,
+                                    ]}
+                                    inputContainerStyle={searchBarStyle.inputSearchBar}
+                                    inputStyle={searchBarStyle.input}
+                                    placeholderTextColor={COLORS['orchid'][400]}
+                                    searchIcon={searchBarStyle.seachIcon}
+                                    clearIcon={searchBarStyle.clearIcon}
                                 />
-                                <View className="flex-row justify-evenly space-x-10">
-                                    <PostButton
-                                        onPress={() => handlePublish()}
-                                        className="bg-gold-900"
+                                {!searchUsername && (
+                                    <React.Fragment>
+                                    <Text className="mb-5 text-2xl font-bold text-orchid-900">
+                                        {STRINGS.CreatePost}
+                                    </Text>
+                                        <PostInput
+                                            className="mb-5 h-4/5"
+                                            multiline={true}
+                                            placeholder={STRINGS.postContentPlaceholder}
+                                            value={postContent}
+                                            onChangeText={(text) =>
+                                            setPostContent(text)
+                                        }
+                                        />
+                                    <View className="flex-row justify-evenly space-x-10">
+                                        <PostButton
+                                            onPress={() => handlePublish()}
+                                            className="bg-gold-900"
+                                        >
+                                            <Text className="text-orchid-900">
+                                                {' '}
+                                                {STRINGS.publish}
+                                            </Text>
+                                        </PostButton>
+                                        <PostButton
+                                            onPress={() => handleClosePopup()}
+                                            className="bg-gray-300"
+                                        >
+                                            <Text className="justify-center text-orchid-900">
+                                                {' '}
+                                                {STRINGS.cancel}
+                                            </Text>
+                                        </PostButton>
+                                    </View>
+                                    </React.Fragment>
+                                )}
+                                {searchUsername && (
+                                    <ScrollView
+                                    className="h-screen w-screen"
+                                    contentContainerStyle={{
+                                        paddingHorizontal: 5,
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                    }}
+                                    refreshControl={
+                                        <RefreshControl
+                                            refreshing={refreshing}
+                                            onRefresh={onRefresh}
+                                        />
+                                    }
                                     >
-                                        <Text className="text-orchid-900">
-                                            {' '}
-                                            {STRINGS.publish}
-                                        </Text>
-                                    </PostButton>
-                                    <PostButton
-                                        onPress={() => handleClosePopup()}
-                                        className="bg-gray-300"
-                                    >
-                                        <Text className="justify-center text-orchid-900">
-                                            {' '}
-                                            {STRINGS.cancel}
-                                        </Text>
-                                    </PostButton>
-                                </View>
+                                    <View className="flex flex-row flex-wrap overflow-auto">
+                                        {Object.keys(searchResultList).map((key, index) => (
+                                            <React.Fragment>
+                                                <View key={key} style="flex flex-row items-center">
+                                                    <Text style="mt-2 mr-2">{searchResultList[key]}</Text>
+                                                    <TouchableOpacity onPress={() => handleTag(key)} style="bg-blue-500 px-3 py-1 rounded text-white">
+                                                        <Text>Add</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </React.Fragment>
+                                        ))}
+                                    </View>
+                                    </ScrollView>
+                                )}
                             </View>
                         </TouchableOpacity>
                     </Modal>
