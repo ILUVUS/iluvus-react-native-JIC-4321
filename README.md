@@ -67,7 +67,7 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 - Added a "Request Join" button for private communities.
 - Owners of private communities can now accept/decline join requests
 
-### Bug Fix
+### Bug Fixes
 
 - Corrected the display of the number of likes/uplifts.
 - Fixed the problem where posts were not displaying properly.
@@ -85,7 +85,7 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 - Display the number of uplift(like) on the community posts.
 - Display the comment view on the community posts.
 
-### Bug Fix
+### Bug Fixes
 
 ### Known Issues
 
@@ -100,7 +100,7 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 - Search community in search tab.
 - Join button for community
 
-### Bug Fix
+### Bug Fixes
 
 - Display Create Community properly
 
