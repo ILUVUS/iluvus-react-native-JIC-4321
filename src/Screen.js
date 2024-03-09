@@ -14,7 +14,6 @@ import AuthScreen from './screens/login/Auth'
 import Post from './screens/community/Post'
 import Comments from './screens/community/Comments'
 import Verification from './screens/login/Verification'
-import Notification from './screens/Notification/Notification'
 
 LogBox.ignoreAllLogs(true)
 
@@ -104,14 +103,6 @@ export default function Screen() {
                     }}
                 />
 
-                <Stack.Screen
-                    name={STRINGS.notificationtab}
-                    component={Notification}
-                    options={{
-                        title: STRINGS.notificationtab,
-                        headerShown: true,
-                    }}
-                />
             </Stack.Navigator>
         </NavigationContainer>
     )

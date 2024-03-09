@@ -8,7 +8,6 @@ import STRINGS from '../constants/strings'
 import Community from './community/Community'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Profile from './Profile/Profile'
-import Notification from './Notification/Notification'
 
 import { useEffect, useState } from 'react'
 import axios from 'axios'
@@ -65,8 +64,12 @@ function ProfileScreenNav() {
     return <Profile />
 }
 
-function NotificationScreenNav() {
-    return <Notification />
+function MessageScreenNav() {
+    return (
+        <View className="flex h-screen justify-center bg-white p-2 align-middle">
+            <Text>MessageScreen!</Text>
+        </View>
+    )
 }
 
 function SettingsScreenNav() {
@@ -98,10 +101,10 @@ export default function HomeScreen() {
                                 ? 'person-circle'
                                 : 'person-circle-outline'
                             break
-                        case STRINGS.notificationtab:
+                        case STRINGS.messagetab:
                             iconName = focused
-                                ? 'notifications'
-                                : 'notifications-outline'
+                                ? 'chatbubble'
+                                : 'chatbubble-outline'
                             break
                         case STRINGS.settingstab:
                             iconName = focused ? 'list' : 'list-outline'
@@ -130,8 +133,8 @@ export default function HomeScreen() {
                 component={ProfileScreenNav}
             />
             <Tab.Screen
-                name={STRINGS.notificationtab}
-                component={NotificationScreenNav}
+                name={STRINGS.messagetab}
+                component={MessageScreenNav}
             />
             <Tab.Screen
                 name={STRINGS.settingstab}

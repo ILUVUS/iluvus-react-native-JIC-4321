@@ -9,15 +9,15 @@ import {
     Image,
 } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faF, faStar } from '@fortawesome/free-solid-svg-icons'
+import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
-import COLORS from '../../../constants/colors'
-import STRINGS from '../../../constants/strings'
+import COLORS from '../../constants/colors'
+import STRINGS from '../../constants/strings'
 import { useState } from 'react'
-import Comment from '../Comments'
+import Comment from './Comments'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { BASE_URL } from '@env'
@@ -25,7 +25,7 @@ import axios from 'axios'
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
 import ImageView from 'react-native-image-viewing'
 
-import { displayDatetime, getDatetime } from '../../../utils/Utils'
+import { displayDatetime, getDatetime } from '../../utils/Utils'
 
 const PostItem = ({ post, userId }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false)
@@ -84,22 +84,6 @@ const PostItem = ({ post, userId }) => {
 
     
 
-    const reportConfirm = () => {
-        Alert.alert(
-            'Report Post',
-            'Are you sure you want to report this post?',
-            [
-                {
-                    text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
-                },
-                { text: 'Yes', onPress: () => handleReport() },
-            ],
-            { cancelable: false }
-        )
-    }
-
     const handleReport = () => {
         axios({
             method: 'POST',
@@ -147,8 +131,8 @@ const PostItem = ({ post, userId }) => {
     }
 
     useEffect(() => {
-        if (post['likedBy']) {
-            setUpliftNumber(post['likedBy'].length)
+        if (post.likedBy) {
+            setUpliftNumber(post.likedBy.length)
         }
     }, [post])
 
@@ -247,10 +231,10 @@ const PostItem = ({ post, userId }) => {
                     </TouchableOpacity>
 
                     {/* REPORT BUTTON HERE */}
-                    <TouchableOpacity onPress={() => reportConfirm()}>
+                    <TouchableOpacity onPress={() => handleReport()}>
                         <FontAwesomeIcon
-                            icon={faFlag}
-                            color={COLORS.red}
+                            icon={faEllipsis}
+                            color={COLORS.gray[500]}
                             size={22}
                         />
                     </TouchableOpacity>

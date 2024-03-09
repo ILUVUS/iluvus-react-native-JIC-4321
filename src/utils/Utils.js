@@ -1,7 +1,7 @@
 const getDatetime = () => {
     // get current datetime in format 2024-01-29T05:00:00.000+00:00
     const date = new Date()
-    // console.log('Date', date.toISOString())
+    console.log('Date', date.toISOString())
     return date.toISOString()
 }
 
@@ -18,9 +18,6 @@ const displayDatetime = (postDatetime) => {
         const diffHours = diffTime / (1000 * 60 * 60)
         if (diffHours < 1) {
             const diffMinutes = diffTime / (1000 * 60)
-            if (diffMinutes < 1) {
-                return `just now`
-            }
             return `${Math.round(diffMinutes)} minutes ago`
         } else {
             return `${Math.round(diffHours)} hours ago`

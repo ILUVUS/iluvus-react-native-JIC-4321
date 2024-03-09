@@ -32,11 +32,8 @@ export default {
     hometab: 'Home',
     communitytab: 'Community',
     profiletab: 'Profile',
-    notificationtab: 'Notification',
+    messagetab: 'Message',
     settingstab: 'Settings',
-
-    // notification
-    isTagged:' tagged you in a post.',
 
     // navigation Community
     setupCommunity: 'SetupCommunity',
@@ -47,13 +44,12 @@ export default {
 
     // view community
     communityView: 'CommunityView',
-    request: " requests to join your community.",
 
     // community post
     postscreen: 'PostView',
     Post: 'Post',
     CreatePost: 'New Post',
-    TagUsers: 'Tag Friends...',
+    TagUsers: 'Find Community Users...',
     postDescription: 'Description',
     postContentPlaceholder: 'Please input the content of the post...',
 

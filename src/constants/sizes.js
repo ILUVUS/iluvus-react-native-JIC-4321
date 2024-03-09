@@ -14,4 +14,5 @@ export default {
     communityIconRadius: 20,
 
     postImageIconSize: 26,
+    xMarkIconSizeTag: 20,
 }
