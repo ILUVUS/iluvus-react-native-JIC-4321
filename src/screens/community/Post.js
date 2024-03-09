@@ -3,6 +3,7 @@ import React, { useEffect, useState, Component } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
+import { Alert , FlatList} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -35,6 +36,8 @@ import {
     RefreshControl,
 } from 'react-native'
 import { PostButton } from '../../components/button'
+import { SearchBar } from 'react-native-elements'
+import { inputStyle, searchBarStyle } from '../../../styles/style'
 
 import { useRoute } from '@react-navigation/native'
 
@@ -45,6 +48,10 @@ const Post = (nav) => {
     const [IsModalVisible, setIsModalVisible] = useState(false)
 
     const [userId, setUserId] = useState('')
+
+    const [searchUsername, setSearchUsername] = useState('')
+    const [searchUserList, setSearchUserList] = useState([])
+
     const [community_id, setCommunityId] = useState(
         useRoute().params.communityId
     )
@@ -69,6 +76,7 @@ const Post = (nav) => {
             setRefreshing(false)
         }, 1000)
     }, [])
+
 
     const findUserId = async () => {
         try {
@@ -224,6 +232,30 @@ const Post = (nav) => {
         setPickedImages([...pickedImages])
     }
 
+    useEffect(() => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/user/search?filter=${searchUsername}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setSearchUserList(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }, [searchUsername])
+
+    const searchUser = (text) => {
+        setSearchUsername(text)
+    }
+
+    const handleAddTag = () => {
+        //
+    }
+
     return (
         <>
             <View className="flex h-screen w-screen flex-1 bg-white">
@@ -272,139 +304,93 @@ const Post = (nav) => {
                         transparent={false}
                         animationType="slide"
                     >
+                        <View className="flex flex-1">
                         <TouchableOpacity activeOpacity={1}>
-                            <View className="w-fit flex-col items-center justify-start space-y-6 pb-10 pt-10 shadow">
-                                <Text className="text-2xl font-bold text-orchid-900">
-                                    {STRINGS.CreatePost}
-                                </Text>
-                                <PostInput
-                                    className="h-52"
-                                    multiline={true}
-                                    placeholder={STRINGS.postContentPlaceholder}
-                                    value={postContent}
-                                    onChangeText={(text) =>
-                                        setPostContent(text)
-                                    }
+<View className="w-fit flex-col items-center justify-start pb-10 pt-10 shadow">
+                                <SearchBar
+                                    placeholder={STRINGS.TagUsers}
+                                    onChangeText={(text) => searchUser(text)}
+                                    value={searchUsername}
+                                    containerStyle={[
+                                    searchBarStyle.containerSearchBar,
+                                    inputStyle.inputShadow,
+                                    ]}
+                                    inputContainerStyle={searchBarStyle.inputSearchBar}
+                                    inputStyle={searchBarStyle.input}
+                                    placeholderTextColor={COLORS['orchid'][400]}
+                                    searchIcon={searchBarStyle.seachIcon}
+                                    clearIcon={searchBarStyle.clearIcon}
                                 />
-                                <View className="h-fit w-full flex-row items-center justify-center space-x-2">
-                                    {pickedImages.length >= 0 &&
-                                        pickedImages.length < 5 && (
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    pickingImageHandler()
-                                                }
-                                                className="flex h-16 w-16 items-center justify-center space-y-1 rounded-lg bg-orchid-100 shadow shadow-slate-300"
-                                            >
-                                                <FontAwesomeIcon
-                                                    icon={faPlus}
-                                                    color={COLORS.orchid[900]}
-                                                    size={
-                                                        SIZES.postImageIconSize
-                                                    }
-                                                />
-                                                <Text className="text-xs text-orchid-900">
-                                                    Images...
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
-                                    {pickedImages.length > 0 &&
-                                        pickedImages.map((imageInfo, index) => {
-                                            return (
-                                                <TouchableOpacity
-                                                    onPress={() =>
-                                                        setImageViewerVisible(
-                                                            true
-                                                        )
-                                                    }
-                                                >
-                                                    <View className="relative h-16 w-16 bg-transparent shadow shadow-slate-300">
-                                                        <Image
-                                                            source={{
-                                                                uri: imageInfo.uri,
-                                                            }}
-                                                            className="h-16 w-16 rounded-lg"
-                                                        />
-                                                        <TouchableOpacity
-                                                            className="absolute right-1 top-1"
-                                                            onPress={() =>
-                                                                removePickedImage(
-                                                                    index
-                                                                )
-                                                            }
-                                                        >
-                                                            <FontAwesomeIcon
-                                                                icon={
-                                                                    faCircleXmark
-                                                                }
-                                                                color={
-                                                                    COLORS.white
-                                                                }
-                                                            />
-                                                        </TouchableOpacity>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            )
-                                        })}
-                                </View>
-                                {uploadProgress > 0 && uploadProgress < 1 && (
-                                    <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
-                                        <View className="flex h-2 w-full shadow shadow-slate-200">
-                                            <Progress.Bar
-                                                animated={true}
-                                                progress={uploadProgress}
-                                                width={null}
-                                                height={6}
-                                                borderRadius={4}
-                                                borderColor={COLORS.orchid[500]}
-                                                borderWidth={0}
-                                                unfilledColor={
-                                                    COLORS.orchid[100]
-                                                }
-                                                color={COLORS.orchid[500]}
+                                {!searchUsername && (
+                                    <React.Fragment>
+                                    <Text className="mb-5 text-2xl font-bold text-orchid-900">
+                                        {STRINGS.CreatePost}
+                                    </Text>
+                                        <PostInput
+                                            className="mb-5 h-4/5"
+                                            multiline={true}
+                                            placeholder={STRINGS.postContentPlaceholder}
+                                            value={postContent}
+                                            onChangeText={(text) =>
+                                            setPostContent(text)
+                                        }
+                                        />
+                                    <View className="flex-row justify-evenly space-x-10">
+                                        <PostButton
+                                            onPress={() => handlePublish()}
+                                            className="bg-gold-900"
+                                        >
+                                            <Text className="text-orchid-900">
+                                                {' '}
+                                                {STRINGS.publish}
+                                            </Text>
+                                        </PostButton>
+                                        <PostButton
+                                            onPress={() => handleClosePopup()}
+                                            className="bg-gray-300"
+                                        >
+                                            <Text className="justify-center text-orchid-900">
+                                                {' '}
+                                                {STRINGS.cancel}
+                                            </Text>
+                                        </PostButton>
+                                    </View>
+                                    </React.Fragment>
+                                )}
+                                {searchUsername && (
+                                    <React.Fragment>
+                                        <ScrollView
+                                        className="h-screen w-screen"
+                                        contentContainerStyle={{
+                                            paddingHorizontal: 5,
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                        refreshControl={
+                                            <RefreshControl
+                                                refreshing={refreshing}
+                                                onRefresh={onRefresh}
                                             />
+                                        }
+                                        >
+                                        <View className="flex flex-col flex-wrap overflow-auto">
+                                            {searchUserList.map((user, index) => (
+                                                <View key={index} className="flex flex-row justify-between py-3 px-4 border-b border-gray-200">
+                                                    <Text className="text-base text-orchid-900 flex-grow">
+                                                        {user.username}
+                                                    </Text>
+                                                    <TouchableOpacity onPress={() => handleAddTag(user.id)} className="bg-green-500 px-4 py-2 rounded text-white">
+                                                        <Text>{STRINGS.add}</Text>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            ))}
                                         </View>
-                                        <Text>
-                                            {Math.round(uploadProgress * 100)}%
-                                        </Text>
-                                    </View>
+                                        </ScrollView>
+                                    </React.Fragment>
                                 )}
-                                {uploadProgress === 1 && (
-                                    <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
-                                        <Text className="text-orchid-900">
-                                            {STRINGS.uploadSuccess}
-                                        </Text>
-                                    </View>
-                                )}
-                                {uploadProgress === 0 && (
-                                    <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
-                                        <Text className="text-orchid-900">
-                                            {pickedImages.length}/5 images
-                                            selected
-                                        </Text>
-                                    </View>
-                                )}
-                                <View className="flex-row justify-evenly space-x-10">
-                                    <PostButton
-                                        onPress={() => handlePublish()}
-                                        className="bg-gold-900"
-                                    >
-                                        <Text className="text-base text-orchid-900">
-                                            {' '}
-                                            {STRINGS.publish}
-                                        </Text>
-                                    </PostButton>
-                                    <PostButton
-                                        onPress={() => handleClosePopup()}
-                                        className="bg-gray-300"
-                                    >
-                                        <Text className="justify-center text-base  text-orchid-900">
-                                            {' '}
-                                            {STRINGS.cancel}
-                                        </Text>
-                                    </PostButton>
-                                </View>
                             </View>
                         </TouchableOpacity>
+                        </View>
                     </Modal>
                 </View>
             </View>

@@ -53,6 +53,7 @@ export default {
     postscreen: 'PostView',
     Post: 'Post',
     CreatePost: 'New Post',
+    TagUsers: 'Tag Friends...',
     postDescription: 'Description',
     postContentPlaceholder: 'Please input the content of the post...',
 
