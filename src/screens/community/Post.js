@@ -21,7 +21,7 @@ import Modal from 'react-native-modal'
 
 import COLORS from '../../constants/colors'
 
-import PostItem from './PostItem'
+import PostItem from './components/PostItem'
 import Comment from './Comments'
 
 import {

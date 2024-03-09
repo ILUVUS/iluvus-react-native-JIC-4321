@@ -23,7 +23,7 @@ import sampleIcon from '../../../assets/images/sampleicon.jpg'
 import communityBg from '../../../assets/images/communitybg.jpg'
 import STRINGS from '../../constants/strings'
 
-import RequestItem from './RequestItem'
+import RequestItem from './components/RequestItem'
 
 import { signal } from '@preact/signals-react'
 
@@ -54,6 +54,29 @@ const CommunityView = (communityId = 'communityId') => {
         getCommunityInfo()
         getVerified()
     }, [])
+
+    const [requests, setRequests] = useState([
+        {
+            userId: '1',
+            name: 'Vo, Thuan',
+            dateTime: '2021-10-01T00:00:00',
+        },
+        {
+            userId: '2',
+            name: 'Tran, Doan',
+            dateTime: '2021-10-01T00:00:00',
+        },
+        {
+            userId: '1',
+            name: 'Vo, Thuan',
+            dateTime: '2021-10-01T00:00:00',
+        },
+        {
+            userId: '2',
+            name: 'Tran, Doan',
+            dateTime: '2021-10-01T00:00:00',
+        },
+    ])
 
     const getCommunityInfo = async () => {
         axios({
@@ -274,9 +297,27 @@ const CommunityView = (communityId = 'communityId') => {
                     {isHost && (
                         <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
                             <Text className="mb-2 text-2xl font-bold text-orchid-900">
-                                Requests
+                                Requests to Join
                             </Text>
-                            <RequestItem requestId={requestId} />
+                            <ScrollView
+                                horizontal={false}
+                                contentContainerStyle={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    flexGrow: 1,
+                                    backgroundColor: 'white',
+                                }}
+                                className="h-64 w-full overflow-auto bg-white space-y-2"
+                            >
+                                {requests.map((request, index) => (
+                                    <View key={index}>
+                                        <RequestItem
+                                            key={index}
+                                            requestData={request}
+                                        />
+                                    </View>
+                                ))}
+                            </ScrollView>
                         </View>
                     )}
                 </View>
