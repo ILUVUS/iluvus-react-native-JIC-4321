@@ -12,4 +12,7 @@ export default {
     // community
     communityIconSize: 45,
     communityIconRadius: 20,
+
+    postImageIconSize: 26,
+    xMarkIconSizeTag: 20,
 }
