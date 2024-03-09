@@ -16,7 +16,7 @@ import { uploadImage } from '../../utils/fbHelper'
 
 import Modal from 'react-native-modal'
 import COLORS from '../../constants/colors'
-import PostItem from './PostItem'
+import PostItem from './components/PostItem'
 
 import * as Progress from 'react-native-progress'
 

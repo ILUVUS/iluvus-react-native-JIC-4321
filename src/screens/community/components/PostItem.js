@@ -14,11 +14,10 @@ import { faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
 import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
-import { faFlag } from '@fortawesome/free-solid-svg-icons'
-import COLORS from '../../constants/colors'
-import STRINGS from '../../constants/strings'
+import COLORS from '../../../constants/colors'
+import STRINGS from '../../../constants/strings'
 import { useState } from 'react'
-import Comment from './Comments'
+import Comment from '../Comments'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { BASE_URL } from '@env'
@@ -26,7 +25,7 @@ import axios from 'axios'
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
 import ImageView from 'react-native-image-viewing'
 
-import { displayDatetime, getDatetime } from '../../utils/Utils'
+import { displayDatetime, getDatetime } from '../../../utils/Utils'
 
 const PostItem = ({ post, userId }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false)
