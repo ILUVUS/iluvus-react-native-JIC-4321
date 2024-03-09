@@ -88,6 +88,15 @@ const Post = (nav) => {
         
     }
 
+    const [taggedUsersId, setTaggedUsersId] = useState([])
+
+    useEffect(() => {
+        taggedUsers.map((user) => {
+            setTaggedUsersId([...taggedUsersId, user.id])
+        })
+
+    }, [taggedUsers])
+
     const findUserId = async () => {
         try {
             const value = await AsyncStorage.getItem('userId')
@@ -246,6 +255,7 @@ const Post = (nav) => {
             },
         })
             .then((res) => {
+                console.log('Search result:', res.data)
                 // remove the tagged users from the search result
                 const filteredUsers = res.data.filter(
                     (user) =>
@@ -413,11 +423,7 @@ const Post = (nav) => {
                                             <ScrollView
                                                 className="mt-2 h-28 w-fit overflow-auto"
                                                 contentContainerStyle={{
-                                                    // display: 'flex',
                                                     flexDirection: 'row',
-                                                    // flexWrap: 'wrap',
-                                                    // justifyContent: 'flex-start',
-                                                    // alignItems: 'start',
                                                     flexGrow: 1,
                                                 }}
                                             >
