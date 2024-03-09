@@ -22,7 +22,7 @@ const Stack = createStackNavigator()
 export default function Screen() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={STRINGS.loginscreen}>
+            <Stack.Navigator initialRouteName={STRINGS.authscreen}>
                 <Stack.Screen
                     name={STRINGS.authscreen}
                     component={AuthScreen}
@@ -102,6 +102,7 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
+
             </Stack.Navigator>
         </NavigationContainer>
     )

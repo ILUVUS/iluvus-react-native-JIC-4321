@@ -81,7 +81,11 @@ const Post = (nav) => {
 
     const removeTaggedUser = (index) => {
         const removedUser = taggedUsers.splice(index, 1)
-        setSearchUserList([...searchUserList, removedUser[0]])
+        setTaggedUsers([...taggedUsers])
+        if (removedUser[0].username.includes(searchUsername.toLowerCase())) {
+            setSearchUserList([...searchUserList, removedUser[0]])
+        }
+        
     }
 
     const findUserId = async () => {
@@ -242,9 +246,14 @@ const Post = (nav) => {
             },
         })
             .then((res) => {
-                // only 4 items from the res.data
-                // setSearchUserList(res.data.slice(0, 4))
-                setSearchUserList(res.data)
+                // remove the tagged users from the search result
+                const filteredUsers = res.data.filter(
+                    (user) =>
+                        !taggedUsers.some(
+                            (taggedUser) => taggedUser.id === user.id
+                        )
+                )
+                setSearchUserList(filteredUsers)
             })
             .catch((err) => {
                 console.log(err)
@@ -321,16 +330,16 @@ const Post = (nav) => {
                                         setPostContent(text)
                                     }
                                 />
+                                {taggedUsers.length > 0 && (
+                                    <View className="w-full">
+                                        <View className="flex w-full flex-col items-start justify-start">
+                                            <Text className="text-base font-bold text-orchid-900">
+                                                Tagged Users
+                                            </Text>
+                                        </View>
 
-                                <View className="w-full">
-                                    <View className="flex w-full flex-col items-start justify-start">
-                                        <Text className="text-base font-bold text-orchid-900">
-                                            Tagged Users
-                                        </Text>
-                                    </View>
-                                    {taggedUsers.length > 0 && (
                                         <ScrollView
-                                            className="h-28 w-fit overflow-auto"
+                                            className="min-h-16 max-h-26 w-fit overflow-auto"
                                             contentContainerStyle={{
                                                 display: 'flex',
                                                 flexDirection: 'row',
@@ -373,9 +382,8 @@ const Post = (nav) => {
                                                 </View>
                                             ))}
                                         </ScrollView>
-                                    )}
-                                </View>
-
+                                    </View>
+                                )}
                                 <View className="flex h-fit w-full">
                                     <View className="w-fit flex-col items-center justify-start">
                                         <SearchBar
