@@ -6,6 +6,7 @@ import {
     ScrollView,
     TextInput,
     Alert,
+    Image,
 } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faF, faStar } from '@fortawesome/free-solid-svg-icons'
@@ -23,6 +24,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BASE_URL } from '@env'
 import axios from 'axios'
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
+import ImageView from 'react-native-image-viewing'
+
+import { displayDatetime, getDatetime } from '../../utils/Utils'
 
 const PostItem = ({ post, userId }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false)
@@ -79,12 +83,7 @@ const PostItem = ({ post, userId }) => {
             })
     }
 
-    const getDatetime = () => {
-        // get current datetime in format 2024-01-29T05:00:00.000+00:00
-        const date = new Date()
-        console.log('Date', date.toISOString())
-        return date.toISOString()
-    }
+    
 
     const reportConfirm = () => {
         Alert.alert(
@@ -159,19 +158,55 @@ const PostItem = ({ post, userId }) => {
         setCommentsNumber(commentsLen)
     }, [post['comments']])
 
+    const [imageViewerVisible, setImageViewerVisible] = useState(false)
+    const [imageViewerIndex, setImageViewerIndex] = useState(0)
+    const [media_urls, setMediaUrls] = useState([])
+
+    const openImageViewer = (medias, index) => {
+        setMediaUrls(medias.map((url) => ({ uri: url })))
+        setImageViewerIndex(index)
+        setImageViewerVisible(true)
+    }
+
+    const closeImageViewer = () => {
+        setMediaUrls([])
+        setImageViewerIndex(0)
+        setImageViewerVisible(false)
+    }
+
     return (
         <>
             <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white shadow-md shadow-slate-300">
-                <View className="p-5">
-                    <Text className="text-xl font-bold text-orchid-900 shadow">
-                        {post.author_id}
-                    </Text>
-                    <Text className="text-xs text-orchid-600">
-                        {post.dateTime}
-                    </Text>
+                <View className="w-full p-5">
+                    <View className="flex h-fit w-full flex-row items-start justify-between">
+                        <Text className="text-xl font-bold text-orchid-900 shadow">
+                            {post.author_id}
+                        </Text>
+                        <Text className="text-xs text-orchid-600">
+                            {displayDatetime(post.dateTime)}
+                        </Text>
+                    </View>
                     <Text className="my-2 text-base text-orchid-700">
                         {post.text}
                     </Text>
+                    {post.medias && (
+                        <View className="mt-3 flex h-fit w-full flex-row justify-start space-x-2">
+                            {post.medias.map((url, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    onPress={() =>
+                                        openImageViewer(post.medias, index)
+                                    }
+                                >
+                                    <Image
+                                        key={index}
+                                        source={{ uri: url }}
+                                        className="h-16 w-16 rounded-2xl"
+                                    />
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
                 </View>
                 <View className="h-fit w-full flex-row justify-evenly space-x-10 rounded-b-3xl bg-orchid-200 p-2 ">
                     <View className="flex flex-row items-center justify-center space-x-2">
@@ -224,7 +259,7 @@ const PostItem = ({ post, userId }) => {
             </View>
 
             {isCommentVisible && (
-                <View className="mb-5 flex h-80 w-full flex-1 rounded-3xl bg-white py-3 shadow-md shadow-slate-300">
+                <View className="mb-5 flex h-fit max-h-80 w-full flex-1 rounded-3xl bg-white py-3 shadow-md shadow-slate-300">
                     <View className="flex h-full w-full flex-col">
                         <View className="flex flex-1">
                             <ScrollView
@@ -277,6 +312,28 @@ const PostItem = ({ post, userId }) => {
                     </View>
                 </View>
             )}
+
+            {/* image viewer */}
+            <ImageView
+                images={media_urls}
+                imageIndex={imageViewerIndex}
+                visible={imageViewerVisible}
+                onRequestClose={() => closeImageViewer()}
+                swipeToCloseEnabled={true}
+                doubleTapToZoomEnabled={true}
+                FooterComponent={({ imageIndex }) => (
+                    <View className="mx-5 mb-20 flex flex-col items-start justify-center space-y-1 shadow shadow-black">
+                        <Text className="font-bold text-white">
+                            {upliftNumber} likes, {commentsNumber} comments
+                        </Text>
+                        {/* display only a few lines of the post text */}
+                        <Text className="text-white">
+                            {post.text.slice(0, 100)}
+                            {post.text.length > 100 ? '...' : ''}
+                        </Text>
+                    </View>
+                )}
+            />
         </>
     )
 }

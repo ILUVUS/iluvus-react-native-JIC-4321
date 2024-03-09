@@ -58,8 +58,6 @@ const LoginScreen = () => {
                     // saving error
                 }
 
-                const value = await AsyncStorage.getItem('userId')
-
                 setUsername('')
                 setPassword('')
 
