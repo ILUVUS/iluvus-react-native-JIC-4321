@@ -32,8 +32,11 @@ export default {
     hometab: 'Home',
     communitytab: 'Community',
     profiletab: 'Profile',
-    messagetab: 'Message',
+    notificationtab: 'Notification',
     settingstab: 'Settings',
+
+    // notification
+    isTagged:' tagged you in a post.',
 
     // navigation Community
     setupCommunity: 'SetupCommunity',
