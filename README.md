@@ -55,6 +55,25 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 
 # Release Notes
 
+## Version 0.3.0
+
+### New Features
+
+- Users can now upload and share images and videos along with their posts.
+- Implemented images and videos processing capabilities (resizing/compression).
+- Ability to tag other users in a post has been added.
+- Users receive notifications if they are tagged in a post.
+- Communities can now be set as either public or private.
+- Added a "Request Join" button for private communities.
+- Owners of private communities can now accept/decline join requests
+
+### Bug Fix
+
+- Corrected the display of the number of likes/uplifts.
+- Fixed the problem where posts were not displaying properly.
+
+### Known Issues
+
 ## Version 0.2.0
 
 ### New Features
