@@ -23,11 +23,9 @@ import sampleIcon from '../../../assets/images/sampleicon.jpg'
 import communityBg from '../../../assets/images/communitybg.jpg'
 import STRINGS from '../../constants/strings'
 
-import RequestItem from './components/RequestItem'
+import { useRoute } from '@react-navigation/native'
 
-import { signal } from '@preact/signals-react'
-
-const CommunityView = (communityId = 'communityId') => {
+const CommunityView = ({ nav }) => {
     const [refreshing, setRefreshing] = React.useState(false)
     const [isHost, setIsHost] = useState(false)
     const [isPublicCommunity, setIsPublicCommunity] = useState(true)
@@ -40,13 +38,16 @@ const CommunityView = (communityId = 'communityId') => {
     const [communityInfo, setCommunityInfo] = useState({
         name: 'Community Name',
         host: 'Host Name',
-        followers: 0,
+        members: 0,
         posts: 0,
         description: STRINGS.exanple_text,
         rules: STRINGS.exanple_text,
     })
+
+    const [owner, setOwner] = useState({})
+
     const [globalCommunityId, setGlobalCommunityId] = useState(
-        communityId.route.params.communityId
+        useRoute().params.communityId
     )
     const [members, setMembers] = useState([])
 
@@ -87,26 +88,56 @@ const CommunityView = (communityId = 'communityId') => {
             },
         })
             .then((res) => {
+
+                // split and strip the string
+                membersListAsArray = getListFromString(res.data.members)
+                setMembers(membersListAsArray)
+
+
                 // updade only name, description and rules fields
                 setCommunityInfo((prevState) => ({
                     ...prevState,
                     name: res.data.name,
                     description: res.data.description,
                     rules: res.data.rules,
+                    posts: res.data.posts,
+                    followers: res.data.followers,
+                    members: membersListAsArray.length,
+                    owner: res.data.owner,
                 }))
-
-                // split and strip the string
-                membersListAsArray = res.data.members.split(',')
-                const membersListTrimmed = membersListAsArray.map((member) =>
-                    member.trim()
-                )
-                setMembers(membersListTrimmed)
             })
             .catch((err) => {
                 console.log(err)
             })
 
         return () => {}
+    }
+
+    useEffect(() => {
+        getUserInfo(communityInfo.owner)
+    }, [communityInfo.owner])
+
+    const getUserInfo = async (id) => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/user/get?userId=${id}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setOwner(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    const getListFromString = (string) => {
+        if (string === '') {
+            return []
+        }
+        return string.split(',').map((item) => item.trim())
     }
 
     useEffect(() => {
@@ -177,7 +208,8 @@ const CommunityView = (communityId = 'communityId') => {
     const viewPosts = () => {
         // Alert.alert('Viewing Posts')
         navigation.navigate('Post', {
-            community_id: globalCommunityId,
+            communityId: globalCommunityId,
+            isJoined: isJoined,
         })
     }
 
@@ -199,9 +231,9 @@ const CommunityView = (communityId = 'communityId') => {
                     display: 'flex',
                     justifyContent: 'flex-start',
                     flexGrow: 1,
-                    paddingVertical: 24,
+                    paddingTop: 24,
                     paddingHorizontal: 24,
-                    paddingBottom: 120,
+                    paddingBottom: 150,
                 }}
                 className="h-screen w-screen overflow-auto bg-white"
                 onTouchStart={Keyboard.dismiss}
@@ -239,11 +271,11 @@ const CommunityView = (communityId = 'communityId') => {
                             )}
                         </View>
                         <Text className="mb-1 text-base text-white shadow shadow-orchid-600">
-                            Host by {communityInfo.host}
+                            Host by {owner.lname}, {owner.fname}
                         </Text>
                         <View className="flex flex-row items-center justify-center gap-5">
                             <Text className="text-base text-white shadow shadow-orchid-600">
-                                {communityInfo.followers} Followers
+                                {communityInfo.members} Followers
                             </Text>
                             <Text className="text-base text-white shadow shadow-orchid-600">
                                 {communityInfo.posts} Posts
