@@ -5,6 +5,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import COLORS from '../../../constants/colors'
 import { SlideOutDown } from 'react-native-reanimated'
 
+import { displayDatetime } from '../../../utils/Utils'
+
 const RequestItem = ({ requestData }) => {
     const accept = () => {
         // handle accept request button
@@ -20,7 +22,7 @@ const RequestItem = ({ requestData }) => {
                     {requestData.name}
                 </Text>
                 <Text className="text-xs text-orchid-900 shadow-md shadow-slate-400">
-                    {requestData.dateTime}
+                    {displayDatetime(requestData.dateTime)}
                 </Text>
             </View>
             <View className="w-full flex-row justify-end space-x-2">

@@ -25,7 +25,7 @@ import axios from 'axios'
 import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
 import ImageView from 'react-native-image-viewing'
 
-import { displayDatetime, getDatetime } from '../../utils/Utils'
+import { displayDatetime, getDatetime } from '../../../utils/Utils'
 
 const PostItem = ({ post, userId }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false)

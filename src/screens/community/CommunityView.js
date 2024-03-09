@@ -25,6 +25,10 @@ import STRINGS from '../../constants/strings'
 
 import { useRoute } from '@react-navigation/native'
 
+import { getDatetime } from '../../utils/Utils'
+
+import RequestItem from './components/RequestItem'
+
 const CommunityView = ({ nav }) => {
     const [refreshing, setRefreshing] = React.useState(false)
     const [isHost, setIsHost] = useState(false)
@@ -60,22 +64,22 @@ const CommunityView = ({ nav }) => {
         {
             userId: '1',
             name: 'Vo, Thuan',
-            dateTime: '2021-10-01T00:00:00',
+            dateTime: getDatetime(),
         },
         {
             userId: '2',
             name: 'Tran, Doan',
-            dateTime: '2021-10-01T00:00:00',
+            dateTime: getDatetime(),
         },
         {
             userId: '1',
             name: 'Vo, Thuan',
-            dateTime: '2021-10-01T00:00:00',
+            dateTime: getDatetime(),
         },
         {
             userId: '2',
             name: 'Tran, Doan',
-            dateTime: '2021-10-01T00:00:00',
+            dateTime: getDatetime(),
         },
     ])
 
