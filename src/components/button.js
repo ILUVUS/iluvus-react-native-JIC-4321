@@ -8,7 +8,7 @@ const CommunityViewMainButton = styled(
 
 const CommunityViewImageButton = styled(
     TouchableOpacity,
-    'w-1/3 p-2 border-none flex justify-center items-center flex-col shadow shadow-orchid-200'
+    'w-1/3 p-2 border-none flex justify-start items-center flex-col shadow shadow-orchid-200'
 )
 
 const NewCommunityButton = styled(
@@ -18,7 +18,12 @@ const NewCommunityButton = styled(
 
 const PostButton = styled(
     TouchableOpacity,
-    'flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-orchid-200 px-5 py-2 shadow'
+    'flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-orchid-200 px-5 py-3 shadow'
 )
 
-export { CommunityViewMainButton, CommunityViewImageButton, NewCommunityButton, PostButton}
+export {
+    CommunityViewMainButton,
+    CommunityViewImageButton,
+    NewCommunityButton,
+    PostButton,
+}

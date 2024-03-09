@@ -23,32 +23,65 @@ import sampleIcon from '../../../assets/images/sampleicon.jpg'
 import communityBg from '../../../assets/images/communitybg.jpg'
 import STRINGS from '../../constants/strings'
 
-import { signal } from '@preact/signals-react'
+import { useRoute } from '@react-navigation/native'
 
-const CommunityView = (communityId = 'communityId') => {
+import { getDatetime } from '../../utils/Utils'
+
+import RequestItem from './components/RequestItem'
+
+const CommunityView = ({ nav }) => {
     const [refreshing, setRefreshing] = React.useState(false)
     const [isHost, setIsHost] = useState(false)
     const [isPublicCommunity, setIsPublicCommunity] = useState(true)
     const [isJoined, setIsJoined] = useState(false)
+
+    const [requestId, setRequestId] = useState('Tran, Doan')
 
     const navigation = useNavigation()
 
     const [communityInfo, setCommunityInfo] = useState({
         name: 'Community Name',
         host: 'Host Name',
-        followers: 0,
+        members: 0,
         posts: 0,
         description: STRINGS.exanple_text,
         rules: STRINGS.exanple_text,
     })
+
+    const [owner, setOwner] = useState({})
+
     const [globalCommunityId, setGlobalCommunityId] = useState(
-        communityId.route.params.communityId
+        useRoute().params.communityId
     )
     const [members, setMembers] = useState([])
 
     const onRefresh = React.useCallback(() => {
         getCommunityInfo()
+        getVerified()
     }, [])
+
+    const [requests, setRequests] = useState([
+        {
+            userId: '1',
+            name: 'Vo, Thuan',
+            dateTime: getDatetime(),
+        },
+        {
+            userId: '2',
+            name: 'Tran, Doan',
+            dateTime: getDatetime(),
+        },
+        {
+            userId: '1',
+            name: 'Vo, Thuan',
+            dateTime: getDatetime(),
+        },
+        {
+            userId: '2',
+            name: 'Tran, Doan',
+            dateTime: getDatetime(),
+        },
+    ])
 
     const getCommunityInfo = async () => {
         axios({
@@ -59,20 +92,23 @@ const CommunityView = (communityId = 'communityId') => {
             },
         })
             .then((res) => {
+
+                // split and strip the string
+                membersListAsArray = getListFromString(res.data.members)
+                setMembers(membersListAsArray)
+
+
                 // updade only name, description and rules fields
                 setCommunityInfo((prevState) => ({
                     ...prevState,
                     name: res.data.name,
                     description: res.data.description,
                     rules: res.data.rules,
+                    posts: res.data.posts,
+                    followers: res.data.followers,
+                    members: membersListAsArray.length,
+                    owner: res.data.owner,
                 }))
-
-                // split and strip the string
-                membersListAsArray = res.data.members.split(',')
-                const membersListTrimmed = membersListAsArray.map((member) =>
-                    member.trim()
-                )
-                setMembers(membersListTrimmed)
             })
             .catch((err) => {
                 console.log(err)
@@ -82,9 +118,37 @@ const CommunityView = (communityId = 'communityId') => {
     }
 
     useEffect(() => {
+        getUserInfo(communityInfo.owner)
+    }, [communityInfo.owner])
+
+    const getUserInfo = async (id) => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/user/get?userId=${id}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setOwner(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    const getListFromString = (string) => {
+        if (string === '') {
+            return []
+        }
+        return string.split(',').map((item) => item.trim())
+    }
+
+    useEffect(() => {
         // This is the community ID it receives from the community list
 
         getCommunityInfo()
+        getVerified()
     }, [])
 
     const checkIfJoined = async () => {
@@ -121,6 +185,26 @@ const CommunityView = (communityId = 'communityId') => {
             })
     }
 
+    const getVerified = async () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/user/verify`,
+            data: {
+                userId: await AsyncStorage.getItem('userId'),
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setIsHost(true)
+            })
+            .catch((err) => {
+                console.log(err)
+                setIsHost(false)
+            })
+    }
+
     const addNewMember = async () => {
         members.push(await AsyncStorage.getItem('userId'))
     }
@@ -128,7 +212,8 @@ const CommunityView = (communityId = 'communityId') => {
     const viewPosts = () => {
         // Alert.alert('Viewing Posts')
         navigation.navigate('Post', {
-            community_id: globalCommunityId,
+            communityId: globalCommunityId,
+            isJoined: isJoined,
         })
     }
 
@@ -150,8 +235,9 @@ const CommunityView = (communityId = 'communityId') => {
                     display: 'flex',
                     justifyContent: 'flex-start',
                     flexGrow: 1,
-                    paddingVertical: 24,
+                    paddingTop: 24,
                     paddingHorizontal: 24,
+                    paddingBottom: 150,
                 }}
                 className="h-screen w-screen overflow-auto bg-white"
                 onTouchStart={Keyboard.dismiss}
@@ -189,11 +275,11 @@ const CommunityView = (communityId = 'communityId') => {
                             )}
                         </View>
                         <Text className="mb-1 text-base text-white shadow shadow-orchid-600">
-                            Host by {communityInfo.host}
+                            Host by {owner.lname}, {owner.fname}
                         </Text>
                         <View className="flex flex-row items-center justify-center gap-5">
                             <Text className="text-base text-white shadow shadow-orchid-600">
-                                {communityInfo.followers} Followers
+                                {communityInfo.members} Followers
                             </Text>
                             <Text className="text-base text-white shadow shadow-orchid-600">
                                 {communityInfo.posts} Posts
@@ -241,6 +327,35 @@ const CommunityView = (communityId = 'communityId') => {
                     <Text className="text-base text-orchid-900">
                         {communityInfo.rules}
                     </Text>
+                </View>
+
+                <View>
+                    {isHost && (
+                        <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
+                            <Text className="mb-2 text-2xl font-bold text-orchid-900">
+                                Requests to Join
+                            </Text>
+                            <ScrollView
+                                horizontal={false}
+                                contentContainerStyle={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                    flexGrow: 1,
+                                    backgroundColor: 'white',
+                                }}
+                                className="h-64 w-full overflow-auto bg-white space-y-2"
+                            >
+                                {requests.map((request, index) => (
+                                    <View key={index}>
+                                        <RequestItem
+                                            key={index}
+                                            requestData={request}
+                                        />
+                                    </View>
+                                ))}
+                            </ScrollView>
+                        </View>
+                    )}
                 </View>
             </ScrollView>
         </View>

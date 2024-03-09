@@ -32,8 +32,11 @@ export default {
     hometab: 'Home',
     communitytab: 'Community',
     profiletab: 'Profile',
-    messagetab: 'Message',
+    notificationtab: 'Notification',
     settingstab: 'Settings',
+
+    // notification
+    isTagged:' tagged you in a post.',
 
     // navigation Community
     setupCommunity: 'SetupCommunity',
@@ -44,8 +47,10 @@ export default {
 
     // view community
     communityView: 'CommunityView',
+    request: " requests to join your community.",
 
     // community post
+    postscreen: 'PostView',
     Post: 'Post',
     CreatePost: 'New Post',
     TagUsers: 'Tag Friends...',
@@ -132,4 +137,7 @@ export default {
     This is an example of text. \
     It's used to show how text will look on the screen.\
     ",
+
+    // upload
+    uploadSuccess: 'Upload Successful',
 }

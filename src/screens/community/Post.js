@@ -6,32 +6,32 @@ import { BASE_URL } from '@env'
 import { Alert , FlatList} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faStar } from '@fortawesome/free-solid-svg-icons'
-import { faLeaf } from '@fortawesome/free-solid-svg-icons'
-import { faComment } from '@fortawesome/free-solid-svg-icons'
-import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useNavigation } from '@react-navigation/native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { PostInput } from '../../components/input'
-import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingView'
 import STRINGS from '../../constants/strings'
+import SIZES from '../../constants/sizes'
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
+import { uploadImage } from '../../utils/fbHelper'
 
 import Modal from 'react-native-modal'
-
 import COLORS from '../../constants/colors'
+import PostItem from './components/PostItem'
 
-import PostItem from './PostItem'
-import Comment from './Comments'
+import * as Progress from 'react-native-progress'
+
+import * as ImagePicker from 'expo-image-picker'
+
+import ImageView from 'react-native-image-viewing'
+
+import { getDatetime } from '../../utils/Utils'
 
 import {
-    Keyboard,
     View,
     Text,
-    TextInput,
     TouchableOpacity,
     Image,
-    ImageBackground,
     ScrollView,
     RefreshControl,
 } from 'react-native'
@@ -39,18 +39,44 @@ import { PostButton } from '../../components/button'
 import { SearchBar } from 'react-native-elements'
 import { inputStyle, searchBarStyle } from '../../../styles/style'
 
-const Post = (data) => {
-    const [refreshing, setRefreshing] = React.useState(false)
-    const navigation = useNavigation()
+import { useRoute } from '@react-navigation/native'
+
+const Post = (nav) => {
     const [postContent, setPostContent] = useState('')
-    const [fName, setFname] = useState('')
-    const [lName, setLname] = useState('')
+
     const [postData, setPostData] = useState([{}])
-    const [isVisible, setIsVisible] = useState(false)
-    const [commentView, setCommentView] = useState(false)
+    const [IsModalVisible, setIsModalVisible] = useState(false)
+
     const [userId, setUserId] = useState('')
+
     const [searchUsername, setSearchUsername] = useState('')
     const [searchUserList, setSearchUserList] = useState([])
+
+    const [community_id, setCommunityId] = useState(
+        useRoute().params.communityId
+    )
+    const [pickedImages, setPickedImages] = useState([])
+
+    const [uploadProgress, setUploadProgress] = useState(0)
+
+    const [eachImageProgress, setEachImageProgress] = useState([])
+
+    const [imageURLs, setImageURLs] = useState([])
+
+    const [refreshing, setRefreshing] = React.useState(false)
+
+    const [isJoined, setIsJoined] = useState(useRoute().params.communityId)
+
+    const [imageViewerVisible, setImageViewerVisible] = useState(false)
+
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true)
+        getPosts()
+        setTimeout(() => {
+            setRefreshing(false)
+        }, 1000)
+    }, [])
+
 
     const findUserId = async () => {
         try {
@@ -63,66 +89,148 @@ const Post = (data) => {
         }
     }
 
+    const pickingImageHandler = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: false,
+            quality: 0.8,
+        })
+
+        console.log(result)
+
+        if (!result.canceled) {
+            const resultImage = result.assets[0]
+            setPickedImages([...pickedImages, resultImage])
+            setEachImageProgress(
+                eachImageProgress.concat(Array(pickedImages.length).fill(0))
+            )
+        } else {
+            // alert('You did not select any image.')
+        }
+    }
+
     useEffect(() => {
+        console.log('Picked images:', pickedImages.length)
+        setUploadProgress(0)
+        setEachImageProgress([])
+    }, [pickedImages])
+
+    useEffect(() => {
+        getPosts()
+        findUserId()
+
+        console.log(community_id)
+        console.log(userId)
+    }, [])
+
+    const getPosts = async () => {
+        console.log('Community ID:', community_id)
         axios({
             method: 'GET',
-            url: `${BASE_URL}/post/getPostsByCommunityID?id=${data.route.params.community_id}`,
+            url: `${BASE_URL}/post/getPostsByCommunityID?id=${community_id}`,
             headers: {
                 'Content-Type': 'application/json',
             },
         })
             .then((res) => {
-                setPostData(res.data)
+                // reverse the array to show the latest post first
+                setPostData(res.data.reverse())
             })
             .catch((err) => {
                 console.log('Cannot get posts', err)
             })
-        findUserId()
-    }, [])
-
-    const getDatetime = () => {
-        // get current datetime in format 2024-01-29T05:00:00.000+00:00
-        const date = new Date()
-        console.log('Date', date.toISOString())
-        return date.toISOString()
     }
 
     const handleOpenPopup = () => {
-        setIsVisible(true)
+        setIsModalVisible(true)
     }
 
     const handleClosePopup = () => {
-        setIsVisible(false)
+        setPostContent('')
+        setPickedImages([])
+        setImageURLs([])
+        setIsModalVisible(false)
     }
 
-    const handlePublish = () => {
-        axios({
-            method: 'POST',
-            url: `${BASE_URL}/post/create`,
-            data: {
-                text: postContent,
-                communityId: data.route.params.community_id,
-                authorId: userId,
-                dateTime: getDatetime(),
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                console.log('Post published', res.data)
-                setPostData(res.data)
-                setPostContent('')
-                handleClosePopup()
+    useEffect(() => {
+        // console.log('Each image progress:', eachImageProgress)
+        if (eachImageProgress.length > 0) {
+            setUploadProgress(
+                eachImageProgress.reduce((a, b) => a + b, 0) /
+                    eachImageProgress.length /
+                    100
+            )
+        }
+    }, [eachImageProgress])
+
+    // SUCCESS MESSAGE HERE
+    useEffect(() => {
+        if (
+            imageURLs.length != 0 &&
+            pickedImages != 0 &&
+            imageURLs.length === pickedImages.length
+        ) {
+            console.log('Image URLs:', imageURLs)
+
+            setPickedImages([])
+            setEachImageProgress([])
+
+            // turn array of objects into array of strings
+
+            axios({
+                method: 'POST',
+                url: `${BASE_URL}/post/create`,
+                data: {
+                    text: postContent,
+                    communityId: community_id,
+                    authorId: userId,
+                    dateTime: getDatetime(),
+                    medias: JSON.stringify({ urls: imageURLs }),
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             })
-            .catch((err) => {
-                console.log('Cannot publish the post', err)
-            })
+                .then((res) => {
+                    console.log('Post published', res.data)
+
+                    setPostData(res.data)
+                    handleClosePopup()
+                })
+                .catch((err) => {
+                    console.log('Cannot publish the post', err)
+                })
+        }
+    }, [imageURLs])
+
+    const handlePublish = async () => {
+        setImageURLs([])
+
+        for (let i = 0; i < pickedImages.length; i++) {
+            try {
+                const uploadedImage = await uploadImage(
+                    community_id,
+                    userId,
+                    pickedImages[i],
+                    i,
+                    setEachImageProgress,
+                    setImageURLs
+                )
+            } catch (e) {
+                console.log(e)
+                return
+            }
+        }
     }
 
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true)
-    }, [])
+    // const onRefresh = React.useCallback(() => {
+    //     setRefreshing(true)
+    // }, [])
+
+    const removePickedImage = (index) => {
+        pickedImages.splice(index, 1)
+        setPickedImages([...pickedImages])
+    }
 
     useEffect(() => {
         axios({
@@ -158,8 +266,14 @@ const Post = (data) => {
                             flexGrow: 1,
                         }}
                         className="h-full w-full overflow-auto bg-white p-5"
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                        }
                     >
-                        {postData.reverse().map((post, index) => {
+                        {postData.map((post, index) => {
                             return (
                                 <PostItem
                                     key={index}
@@ -172,14 +286,27 @@ const Post = (data) => {
                 </View>
 
                 <View className="h-screen w-screen">
+                    {/* image viewer */}
+
+                    <ImageView
+                        images={pickedImages.map((image) => {
+                            return { uri: image.uri }
+                        })}
+                        imageIndex={0}
+                        visible={imageViewerVisible}
+                        onRequestClose={() => setImageViewerVisible(false)}
+                        swipeToCloseEnabled={true}
+                        doubleTapToZoomEnabled={true}
+                    />
+
                     <Modal
-                        visible={isVisible}
+                        visible={IsModalVisible && !imageViewerVisible}
                         transparent={false}
                         animationType="slide"
                     >
                         <View className="flex flex-1">
                         <TouchableOpacity activeOpacity={1}>
-                            <View className="w-fit flex-col items-center justify-start pb-10 pt-10 shadow">
+<View className="w-fit flex-col items-center justify-start pb-10 pt-10 shadow">
                                 <SearchBar
                                     placeholder={STRINGS.TagUsers}
                                     onChangeText={(text) => searchUser(text)}
@@ -268,16 +395,18 @@ const Post = (data) => {
                 </View>
             </View>
 
-            <TouchableOpacity
-                onPress={() => handleOpenPopup()}
-                className="absolute bottom-6 right-6 h-16 w-16 items-center justify-center rounded-full bg-orchid-500 px-5 py-2 shadow shadow-slate-500"
-            >
-                <Ionicons
-                    name="create-outline"
-                    size={30}
-                    color={COLORS.white}
-                />
-            </TouchableOpacity>
+            {isJoined && (
+                <TouchableOpacity
+                    onPress={() => handleOpenPopup()}
+                    className="absolute bottom-6 right-6 h-16 w-16 items-center justify-center rounded-full bg-orchid-500 px-5 py-2 shadow shadow-slate-500"
+                >
+                    <Ionicons
+                        name="create-outline"
+                        size={30}
+                        color={COLORS.white}
+                    />
+                </TouchableOpacity>
+            )}
         </>
     )
 }

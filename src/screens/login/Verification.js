@@ -4,10 +4,11 @@ import OTPTextView from 'react-native-otp-textinput'
 import STRINGS from '../../constants/strings'
 import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
+import { useRoute } from '@react-navigation/native'
 
 import { BASE_URL } from '@env'
 
-const Verification = (data) => {
+const Verification = (nav) => {
     const navigation = useNavigation()
 
     const [verificationCode, setVerificationCode] = useState('')
@@ -37,7 +38,7 @@ const Verification = (data) => {
             url: `${BASE_URL}/user/sendEmail`,
             data: {
                 verificationCode: code,
-                email: data.route.params.data.proEmail,
+                email: useRoute().params.data.proEmail,
             },
             headers: {
                 'Content-Type': 'application/json',
@@ -68,7 +69,7 @@ const Verification = (data) => {
             axios({
                 method: 'POST',
                 url: `${BASE_URL}/user/create`,
-                data: data.route.params.data,
+                data: useRoute().params.data,
                 headers: {
                     'Content-Type': 'application/json',
                 },

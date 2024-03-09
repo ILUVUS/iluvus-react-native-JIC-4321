@@ -20,8 +20,11 @@ import {
     CommunityViewMainButton,
 } from '../../components/button'
 
+import { useIsFocused } from '@react-navigation/native'
+
 const Community = () => {
     const navigation = useNavigation()
+    const isFocused = useIsFocused()
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -31,6 +34,12 @@ const Community = () => {
     const [verify, setVerify] = useState(false)
     const [searchResultList, setSearchResultList] = useState([])
 
+
+    useEffect(() => {
+        getVerified()
+        fetchCommunityList()
+    }, [isFocused])
+
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
         getVerified()
@@ -38,11 +47,6 @@ const Community = () => {
         setTimeout(() => {
             setRefreshing(false)
         }, 1000)
-    }, [])
-
-    useEffect(() => {
-        getVerified()
-        fetchCommunityList()
     }, [])
 
     useEffect(() => {
@@ -100,11 +104,11 @@ const Community = () => {
     }
 
     const myCommunity = () => {
-        navigation.navigate('SetupCommunity')
+        // navigation.navigate('SetupCommunity')
     }
 
     const myFriend = () => {
-        navigation.navigate('SetupCommunity')
+        // navigation.navigate('SetupCommunity')
     }
 
     const communityClick = (id) => {
@@ -147,7 +151,9 @@ const Community = () => {
                 >
                     <View className="my-3 flex w-screen flex-row justify-evenly">
                         {verify && (
-                            <CommunityViewMainButton onPress={newCommunity}>
+                            <CommunityViewMainButton
+                                onPress={() => newCommunity()}
+                            >
                                 <Icon
                                     name="plus"
                                     size={SIZES.communityIconSize}
@@ -159,7 +165,7 @@ const Community = () => {
                             </CommunityViewMainButton>
                         )}
 
-                        <CommunityViewMainButton onPress={myCommunity}>
+                        <CommunityViewMainButton onPress={() => myCommunity()}>
                             <Icon
                                 name="users"
                                 size={SIZES.communityIconSize}
@@ -170,7 +176,7 @@ const Community = () => {
                             </Text>
                         </CommunityViewMainButton>
 
-                        <CommunityViewMainButton onPress={myFriend}>
+                        <CommunityViewMainButton onPress={() => myFriend()}>
                             <Icon
                                 name="child"
                                 size={SIZES.communityIconSize}
@@ -198,8 +204,12 @@ const Community = () => {
                                     source={sampleIcon}
                                     className="h-24 w-24 rounded-3xl"
                                 />
-                                <Text className="mt-1 text-base text-orchid-900">
-                                    {communityList[key]}
+                                <Text className="mt-1 text-sm text-orchid-900">
+                                    {/* only allow 10 characters */}
+                                    {communityList[key].substring(0, 10)}
+                                    {communityList[key].length > 10
+                                        ? '...'
+                                        : ''}
                                 </Text>
                             </CommunityViewImageButton>
                         ))}
