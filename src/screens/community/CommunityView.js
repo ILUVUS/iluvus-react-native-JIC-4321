@@ -99,14 +99,6 @@ const CommunityView = (communityId = 'communityId') => {
         checkIfJoined()
     }, [members])
 
-    const requestToJoin = async () => {
-        //request to join community
-    }
-
-    useEffect(() => {
-        checkIfPublic()
-    }, [])
-
     const checkIfPublic = async () => {
         axios({
             method: 'GET',
@@ -116,10 +108,23 @@ const CommunityView = (communityId = 'communityId') => {
             },
         })
             .then((res) => {
-                setIsPublicCommunity((prevState) => ({
-                    ...prevState,
-                    isPublicCommunity: res.data ==="true",
-                }))
+                setIsPublicCommunity(res.data == true)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    useEffect(() => {
+        checkIfPublic()
+    }, [])
+
+    const requestToJoin = async () => {
+        axios({
+            // Request JOIN AXIOS
+        })
+            .then((res) => {
+                Alert.alert("Requested To Join")
             })
             .catch((err) => {
                 console.log(err)
@@ -229,7 +234,7 @@ const CommunityView = (communityId = 'communityId') => {
                     </View>
 
                     <View className="flex flex-row items-center justify-center gap-5">
-                    {(!isJoined && isPublicCommunity) && (
+                        {(!isJoined && isPublicCommunity) && (
                             <TouchableOpacity
                                 onPress={() => joinCommunity()}
                                 className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
