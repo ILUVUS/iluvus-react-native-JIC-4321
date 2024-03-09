@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
@@ -22,8 +22,23 @@ export default function SetupCommunity() {
     const [communityDescription, setCommunityDescription] = useState('')
     const [communityRule, setCommunityRule] = useState('')
     const [visibility, setVisibility] = useState('')
+    const [ownerId, setOwnerId] = useState('')
 
     const navigation = useNavigation()
+
+    useEffect(() => {
+        const getUserId = async () => {
+            try {
+                const value = await AsyncStorage.getItem('userId')
+                if (value !== null) {
+                    setOwnerId(value)
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        getUserId()
+    }, [])
 
     const publishCommunity = async () => {
         if (
@@ -33,7 +48,7 @@ export default function SetupCommunity() {
             visibility.trim() !== ''
         ) {
             console.log(visibility)
-            await axios({
+            axios({
                 method: 'POST',
                 url: `${BASE_URL}/community/create`,
                 data: {
@@ -41,7 +56,7 @@ export default function SetupCommunity() {
                     description: String(communityDescription),
                     rules: String(communityRule),
                     visibility: String(visibility),
-                    ownerId: await AsyncStorage.getItem('userId'),
+                    ownerId: String(ownerId),
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -49,7 +64,9 @@ export default function SetupCommunity() {
             })
                 .then((res) => {
                     Alert.alert('Successful', 'Community Created')
-                    navigation.navigate('Home')
+                    // navigation.navigate('Home')
+                    // go back to previous screen
+                    navigation.goBack()
                 })
                 .catch((err) => {
                     Alert.alert('Unsuccessful', 'Community not created')
