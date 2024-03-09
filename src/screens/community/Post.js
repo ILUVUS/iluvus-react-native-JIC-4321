@@ -21,7 +21,7 @@ import PostItem from './PostItem'
 import * as Progress from 'react-native-progress'
 
 import * as ImagePicker from 'expo-image-picker'
-import { useRoute } from '@react-navigation/native'
+
 import ImageView from 'react-native-image-viewing'
 
 import { getDatetime } from '../../utils/Utils'
@@ -36,8 +36,9 @@ import {
 } from 'react-native'
 import { PostButton } from '../../components/button'
 
+import { useRoute } from '@react-navigation/native'
+
 const Post = (nav) => {
-  
     const [postContent, setPostContent] = useState('')
 
     const [postData, setPostData] = useState([{}])
@@ -115,9 +116,10 @@ const Post = (nav) => {
     }, [])
 
     const getPosts = async () => {
+        console.log('Community ID:', community_id)
         axios({
             method: 'GET',
-            url: `${BASE_URL}/post/getPostsByCommunityID?id=${data.route.params.community_id}`,
+            url: `${BASE_URL}/post/getPostsByCommunityID?id=${community_id}`,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -180,7 +182,6 @@ const Post = (nav) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-
             })
                 .then((res) => {
                     console.log('Post published', res.data)
