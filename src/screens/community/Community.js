@@ -198,8 +198,12 @@ const Community = () => {
                                     source={sampleIcon}
                                     className="h-24 w-24 rounded-3xl"
                                 />
-                                <Text className="mt-1 text-base text-orchid-900">
-                                    {communityList[key]}
+                                <Text className="mt-1 text-sm text-orchid-900">
+                                    {/* only allow 10 characters */}
+                                    {communityList[key].substring(0, 10)}
+                                    {communityList[key].length > 10
+                                        ? '...'
+                                        : ''}
                                 </Text>
                             </CommunityViewImageButton>
                         ))}
