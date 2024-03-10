@@ -1,5 +1,5 @@
 import { styled } from 'nativewind'
-import { TextInput, View } from 'react-native'
+import { TextInput } from 'react-native'
 
 const LoginInput = styled(
     TextInput,

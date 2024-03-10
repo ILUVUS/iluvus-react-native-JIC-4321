@@ -1,23 +1,23 @@
 // Import package and project components
-import React, { useEffect, useState, Component } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
-import { Alert, FlatList } from 'react-native'
+
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCircleXmark, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { useNavigation } from '@react-navigation/native'
+
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { PostInput } from '../../components/input'
 import STRINGS from '../../constants/strings'
 import SIZES from '../../constants/sizes'
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
+
 import { uploadImage } from '../../utils/fbHelper'
 
 import Modal from 'react-native-modal'
 import COLORS from '../../constants/colors'
-import PostItem from './PostItem'
+import PostItem from './components/PostItem'
 
 import * as Progress from 'react-native-progress'
 
@@ -43,7 +43,7 @@ const Post = (nav) => {
     const [postContent, setPostContent] = useState('')
 
     const [postData, setPostData] = useState([{}])
-    const [IsModalVisible, setIsModalVisible] = useState(true)
+    const [IsModalVisible, setIsModalVisible] = useState(false)
 
     const [userId, setUserId] = useState('')
     const [community_id, setCommunityId] = useState(
@@ -77,6 +77,7 @@ const Post = (nav) => {
     const tagUser = (index) => {
         setTaggedUsers([...taggedUsers, searchUserList[index]])
         searchUserList.splice(index, 1)
+        setSearchUsername('')
     }
 
     const removeTaggedUser = (index) => {
@@ -85,16 +86,18 @@ const Post = (nav) => {
         if (removedUser[0].username.includes(searchUsername.toLowerCase())) {
             setSearchUserList([...searchUserList, removedUser[0]])
         }
-        
     }
 
     const [taggedUsersId, setTaggedUsersId] = useState([])
 
     useEffect(() => {
+        console.log('Tagged users:', taggedUsersId)
+    }, [taggedUsersId])
+
+    useEffect(() => {
         taggedUsers.map((user) => {
             setTaggedUsersId([...taggedUsersId, user.id])
         })
-
     }, [taggedUsers])
 
     const findUserId = async () => {
@@ -167,6 +170,8 @@ const Post = (nav) => {
         setPostContent('')
         setPickedImages([])
         setImageURLs([])
+        setTaggedUsers([])
+        setTaggedUsersId([])
         setIsModalVisible(false)
     }
 
@@ -204,6 +209,8 @@ const Post = (nav) => {
                     authorId: userId,
                     dateTime: getDatetime(),
                     medias: JSON.stringify({ urls: imageURLs }),
+                    //join the tagged users id into a string
+                    tagged: taggedUsersId.join(','),
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -255,7 +262,7 @@ const Post = (nav) => {
             },
         })
             .then((res) => {
-                console.log('Search result:', res.data)
+                // console.log('Search result:', res.data)
                 // remove the tagged users from the search result
                 const filteredUsers = res.data.filter(
                     (user) =>
@@ -281,31 +288,37 @@ const Post = (nav) => {
     return (
         <>
             <View className="h-screen w-screen flex-1 bg-white">
-                <View className="h-full w-full">
-                    <ScrollView
-                        contentContainerStyle={{
-                            paddingBottom: 120,
-                            flexGrow: 1,
-                        }}
-                        className="h-full w-full overflow-auto bg-white p-5"
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={refreshing}
-                                onRefresh={onRefresh}
-                            />
-                        }
-                    >
-                        {postData.map((post, index) => {
-                            return (
-                                <PostItem
-                                    key={index}
-                                    post={post}
-                                    userId={userId}
+                {postData.length > 0 && Object.keys(postData[0]).length > 0 ? (
+                    <View className="h-full w-full">
+                        <ScrollView
+                            contentContainerStyle={{
+                                paddingBottom: 120,
+                                flexGrow: 1,
+                            }}
+                            className="h-full w-full overflow-auto bg-white p-5"
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
                                 />
-                            )
-                        })}
-                    </ScrollView>
-                </View>
+                            }
+                        >
+                            {postData.map((post, index) => {
+                                return (
+                                    <PostItem
+                                        key={index}
+                                        post={post}
+                                        userId={userId}
+                                    />
+                                )
+                            })}
+                        </ScrollView>
+                    </View>
+                ) : (
+                    <View className="flex h-full w-full items-center justify-center">
+                        <Text className="text-orchid-900">Make First Post</Text>
+                    </View>
+                )}
 
                 <View className="h-screen w-screen">
                     {/* image viewer */}
@@ -359,16 +372,14 @@ const Post = (nav) => {
                                             }}
                                         >
                                             {taggedUsers.map((user, index) => (
-                                                <View
-                                                    key={index}
-                                                    className="mx-1 my-2 flex flex-row items-center justify-center space-x-2 rounded-full bg-orchid-100 px-3 py-2 shadow-sm"
-                                                >
+                                                <View className="mx-1 my-2 flex flex-row items-center justify-center space-x-2 rounded-full bg-orchid-100 px-3 py-2 shadow-sm">
                                                     <View>
                                                         <Text className="text-base text-orchid-900">
                                                             {user.username}
                                                         </Text>
                                                     </View>
                                                     <TouchableOpacity
+                                                        key={index}
                                                         onPress={() =>
                                                             removeTaggedUser(
                                                                 index

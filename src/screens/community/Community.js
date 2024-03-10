@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { useEffect, useState } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
 import { Image, SearchBar } from 'react-native-elements'
-import { Alert, RefreshControl, ScrollView, Text, View } from 'react-native'
+import { RefreshControl, ScrollView, Text, View } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/FontAwesome5'

@@ -9,23 +9,22 @@ import {
     Image,
 } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faStar } from '@fortawesome/free-solid-svg-icons'
+import { faFlag, faStar } from '@fortawesome/free-solid-svg-icons'
 import { faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
-import COLORS from '../../constants/colors'
-import STRINGS from '../../constants/strings'
+
+import COLORS from '../../../constants/colors'
+import STRINGS from '../../../constants/strings'
 import { useState } from 'react'
-import Comment from './Comments'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import Comment from '../Comments'
 
 import { BASE_URL } from '@env'
 import axios from 'axios'
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
+
 import ImageView from 'react-native-image-viewing'
 
-import { displayDatetime, getDatetime } from '../../utils/Utils'
+import { displayDatetime, getDatetime } from '../../../utils/Utils'
 
 const PostItem = ({ post, userId }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false)
@@ -33,6 +32,22 @@ const PostItem = ({ post, userId }) => {
     const [commentsNumber, setCommentsNumber] = useState(0)
     const [comments, setComments] = useState([])
     const [commentText, setCommentText] = useState('')
+    const [taggedUsers, setTaggedUsers] = useState([])
+
+    const [taggedUsernames, setTaggedUsernames] = useState([])
+
+    useEffect(() => {
+        setTaggedUsernames([])
+        taggedUsers.map((userId) => {
+            getUserInfo(userId)
+        })
+    }, [taggedUsers])
+
+    useEffect(() => {
+        if (post.tagged && post.tagged.length > 0) {
+            setTaggedUsers(post.tagged)
+        }
+    }, [post.tagged])
 
     const handleComment = () => {
         setCommentText('')
@@ -82,7 +97,21 @@ const PostItem = ({ post, userId }) => {
             })
     }
 
-    
+    const reportConfirm = () => {
+        Alert.alert(
+            'Report Post',
+            'Are you sure you want to report this post?',
+            [
+                {
+                    text: 'Cancel',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                { text: 'Yes', onPress: () => handleReport() },
+            ],
+            { cancelable: false }
+        )
+    }
 
     const handleReport = () => {
         axios({
@@ -105,6 +134,23 @@ const PostItem = ({ post, userId }) => {
             })
     }
 
+    const getUserInfo = (userId) => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/user/get?userId=${userId}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                console.log('User info', res.data.username)
+                setTaggedUsernames((prev) => [...prev, res.data.username])
+            })
+            .catch((err) => {
+                console.log('Cannot like the post', err)
+            })
+    }
+
     const writeComment = async () => {
         axios({
             method: 'POST',
@@ -121,7 +167,7 @@ const PostItem = ({ post, userId }) => {
         })
             .then((res) => {
                 setCommentText('')
-                console.log('Comment written', res.data)
+                // console.log('Comment written', res.data)
                 setComments(res.data)
                 setCommentsNumber(res.data.length)
             })
@@ -131,8 +177,8 @@ const PostItem = ({ post, userId }) => {
     }
 
     useEffect(() => {
-        if (post.likedBy) {
-            setUpliftNumber(post.likedBy.length)
+        if (post['likedBy']) {
+            setUpliftNumber(post['likedBy'].length)
         }
     }, [post])
 
@@ -173,7 +219,7 @@ const PostItem = ({ post, userId }) => {
                         {post.text}
                     </Text>
                     {post.medias && (
-                        <View className="mt-3 flex h-fit w-full flex-row justify-start space-x-2">
+                        <View className="my-3 flex h-fit w-full flex-row justify-start space-x-2">
                             {post.medias.map((url, index) => (
                                 <TouchableOpacity
                                     key={index}
@@ -190,6 +236,18 @@ const PostItem = ({ post, userId }) => {
                             ))}
                         </View>
                     )}
+                    <View className="flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
+                        {taggedUsernames.map((username, index) => (
+                            <View
+                                key={index}
+                                className="mx-1 my-2 rounded-full bg-orchid-100 px-2 py-1 shadow-sm"
+                            >
+                                <Text className="text-sm text-orchid-900">
+                                    {username}
+                                </Text>
+                            </View>
+                        ))}
+                    </View>
                 </View>
                 <View className="h-fit w-full flex-row justify-evenly space-x-10 rounded-b-3xl bg-orchid-200 p-2 ">
                     <View className="flex flex-row items-center justify-center space-x-2">
@@ -231,10 +289,10 @@ const PostItem = ({ post, userId }) => {
                     </TouchableOpacity>
 
                     {/* REPORT BUTTON HERE */}
-                    <TouchableOpacity onPress={() => handleReport()}>
+                    <TouchableOpacity onPress={() => reportConfirm()}>
                         <FontAwesomeIcon
-                            icon={faEllipsis}
-                            color={COLORS.gray[500]}
+                            icon={faFlag}
+                            color={COLORS.red}
                             size={22}
                         />
                     </TouchableOpacity>

@@ -1,7 +1,6 @@
 const getDatetime = () => {
     // get current datetime in format 2024-01-29T05:00:00.000+00:00
     const date = new Date()
-    console.log('Date', date.toISOString())
     return date.toISOString()
 }
 
