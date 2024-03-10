@@ -3,9 +3,6 @@ import { View, Text } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { BASE_URL } from '@env'
 
-import COLORS from '../../../constants/colors'
-import { SlideOutDown } from 'react-native-reanimated'
-
 import { displayDatetime } from '../../../utils/Utils'
 import axios from 'axios'
 
@@ -29,7 +26,6 @@ const RequestItem = ({ requestData, setRequests }) => {
             .catch((err) => {
                 console.log(err)
             })
-
     }
     const decline = () => {
         // handle decline request button
@@ -54,7 +50,7 @@ const RequestItem = ({ requestData, setRequests }) => {
 
     return (
         <View className="flex w-full flex-col flex-wrap items-start justify-stretch rounded-3xl bg-slate-100 p-3 shadow-slate-300 ">
-            <View className="w-full flex flex-row justify-between items-start px-2 shadow">
+            <View className="flex w-full flex-row items-start justify-between px-2 shadow">
                 <Text className="text-base text-orchid-900 shadow-md shadow-slate-400">
                     {requestData.lname}, {requestData.fname}
                 </Text>

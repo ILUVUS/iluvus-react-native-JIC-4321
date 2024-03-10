@@ -1,18 +1,18 @@
 // Import package and project components
-import React, { useEffect, useState, Component } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
-import { Alert, FlatList } from 'react-native'
+
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCircleXmark, faPlus } from '@fortawesome/free-solid-svg-icons'
-import { useNavigation } from '@react-navigation/native'
+
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { PostInput } from '../../components/input'
 import STRINGS from '../../constants/strings'
 import SIZES from '../../constants/sizes'
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
+
 import { uploadImage } from '../../utils/fbHelper'
 
 import Modal from 'react-native-modal'
@@ -77,6 +77,7 @@ const Post = (nav) => {
     const tagUser = (index) => {
         setTaggedUsers([...taggedUsers, searchUserList[index]])
         searchUserList.splice(index, 1)
+        setSearchUsername('')
     }
 
     const removeTaggedUser = (index) => {
@@ -88,6 +89,10 @@ const Post = (nav) => {
     }
 
     const [taggedUsersId, setTaggedUsersId] = useState([])
+
+    useEffect(() => {
+        console.log('Tagged users:', taggedUsersId)
+    }, [taggedUsersId])
 
     useEffect(() => {
         taggedUsers.map((user) => {
@@ -165,6 +170,8 @@ const Post = (nav) => {
         setPostContent('')
         setPickedImages([])
         setImageURLs([])
+        setTaggedUsers([])
+        setTaggedUsersId([])
         setIsModalVisible(false)
     }
 
@@ -202,6 +209,8 @@ const Post = (nav) => {
                     authorId: userId,
                     dateTime: getDatetime(),
                     medias: JSON.stringify({ urls: imageURLs }),
+                    //join the tagged users id into a string
+                    tagged: taggedUsersId.join(','),
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -253,7 +262,7 @@ const Post = (nav) => {
             },
         })
             .then((res) => {
-                console.log('Search result:', res.data)
+                // console.log('Search result:', res.data)
                 // remove the tagged users from the search result
                 const filteredUsers = res.data.filter(
                     (user) =>
@@ -363,16 +372,14 @@ const Post = (nav) => {
                                             }}
                                         >
                                             {taggedUsers.map((user, index) => (
-                                                <View
-                                                    key={index}
-                                                    className="mx-1 my-2 flex flex-row items-center justify-center space-x-2 rounded-full bg-orchid-100 px-3 py-2 shadow-sm"
-                                                >
+                                                <View className="mx-1 my-2 flex flex-row items-center justify-center space-x-2 rounded-full bg-orchid-100 px-3 py-2 shadow-sm">
                                                     <View>
                                                         <Text className="text-base text-orchid-900">
                                                             {user.username}
                                                         </Text>
                                                     </View>
                                                     <TouchableOpacity
+                                                        key={index}
                                                         onPress={() =>
                                                             removeTaggedUser(
                                                                 index

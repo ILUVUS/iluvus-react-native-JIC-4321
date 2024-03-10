@@ -13,16 +13,15 @@ import { faFlag, faStar } from '@fortawesome/free-solid-svg-icons'
 import { faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
-import { faEllipsis } from '@fortawesome/free-solid-svg-icons'
+
 import COLORS from '../../../constants/colors'
 import STRINGS from '../../../constants/strings'
 import { useState } from 'react'
 import Comment from '../Comments'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { BASE_URL } from '@env'
 import axios from 'axios'
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
+
 import ImageView from 'react-native-image-viewing'
 
 import { displayDatetime, getDatetime } from '../../../utils/Utils'
@@ -35,7 +34,7 @@ const PostItem = ({ post, userId }) => {
     const [commentText, setCommentText] = useState('')
     const [taggedUsers, setTaggedUsers] = useState([])
 
-    const [taggedUsername, setTaggedUsernames] = useState([])
+    const [taggedUsernames, setTaggedUsernames] = useState([])
 
     useEffect(() => {
         setTaggedUsernames([])
@@ -43,6 +42,12 @@ const PostItem = ({ post, userId }) => {
             getUserInfo(userId)
         })
     }, [taggedUsers])
+
+    useEffect(() => {
+        if (post.tagged && post.tagged.length > 0) {
+            setTaggedUsers(post.tagged)
+        }
+    }, [post.tagged])
 
     const handleComment = () => {
         setCommentText('')
@@ -92,8 +97,6 @@ const PostItem = ({ post, userId }) => {
             })
     }
 
-    
-
     const reportConfirm = () => {
         Alert.alert(
             'Report Post',
@@ -131,7 +134,7 @@ const PostItem = ({ post, userId }) => {
             })
     }
 
-    const getUserInfo = () => {
+    const getUserInfo = (userId) => {
         axios({
             method: 'GET',
             url: `${BASE_URL}/user/get?userId=${userId}`,
@@ -140,6 +143,7 @@ const PostItem = ({ post, userId }) => {
             },
         })
             .then((res) => {
+                console.log('User info', res.data.username)
                 setTaggedUsernames((prev) => [...prev, res.data.username])
             })
             .catch((err) => {
@@ -163,7 +167,7 @@ const PostItem = ({ post, userId }) => {
         })
             .then((res) => {
                 setCommentText('')
-                console.log('Comment written', res.data)
+                // console.log('Comment written', res.data)
                 setComments(res.data)
                 setCommentsNumber(res.data.length)
             })
@@ -215,7 +219,7 @@ const PostItem = ({ post, userId }) => {
                         {post.text}
                     </Text>
                     {post.medias && (
-                        <View className="mt-3 flex h-fit w-full flex-row justify-start space-x-2">
+                        <View className="my-3 flex h-fit w-full flex-row justify-start space-x-2">
                             {post.medias.map((url, index) => (
                                 <TouchableOpacity
                                     key={index}
@@ -232,21 +236,18 @@ const PostItem = ({ post, userId }) => {
                             ))}
                         </View>
                     )}
-                    <View className="my-3 flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
-                                                    {setTaggedUsernames.map(
-                                                        (username, index) => (
-                                                            <View
-                                                                key={index}
-                                                                className="mx-1 my-2 rounded-full bg-orchid-100 px-3 py-2 shadow-sm"
-                                                                
-                                                            >
-                                                                <Text className="text-base text-orchid-900">
-                                                                    {username}
-                                                                </Text>
-                                                            </View>
-                                                        )
-                                                    )}
-                                                </View>
+                    <View className="flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
+                        {taggedUsernames.map((username, index) => (
+                            <View
+                                key={index}
+                                className="mx-1 my-2 rounded-full bg-orchid-100 px-2 py-1 shadow-sm"
+                            >
+                                <Text className="text-sm text-orchid-900">
+                                    {username}
+                                </Text>
+                            </View>
+                        ))}
+                    </View>
                 </View>
                 <View className="h-fit w-full flex-row justify-evenly space-x-10 rounded-b-3xl bg-orchid-200 p-2 ">
                     <View className="flex flex-row items-center justify-center space-x-2">
