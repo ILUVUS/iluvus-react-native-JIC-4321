@@ -44,6 +44,10 @@ export default {
 
     // view community
     communityView: 'CommunityView',
+    requestToJoin: 'Request to Join',
+    requestJoin: 'REQUEST JOIN',
+    joinUs: 'JOIN US',
+    viewPosts: 'VIEW POSTS',
 
     // community post
     postscreen: 'PostView',
@@ -116,7 +120,7 @@ export default {
     verificationCancel: 'Verification Cancelled',
     verificationFailed: 'Verification Failed',
     verificationSuccess: 'Verification Successful',
-    enterCode: 'Please enter the entire verification code.',
+    // enterCode: 'Please enter the entire verification code.',
 
     //community
     communitySearchBar: 'Explore communities',

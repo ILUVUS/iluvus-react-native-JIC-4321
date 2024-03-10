@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
@@ -23,15 +23,23 @@ import sampleIcon from '../../../assets/images/sampleicon.jpg'
 import communityBg from '../../../assets/images/communitybg.jpg'
 import STRINGS from '../../constants/strings'
 
+import RequestItem from './components/RequestItem'
+
 import { useRoute } from '@react-navigation/native'
 
-import { signal } from '@preact/signals-react'
-
+import { getDatetime } from '../../utils/Utils'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faCircleXmark, faSync } from '@fortawesome/free-solid-svg-icons'
+import COLORS from '../../constants/colors'
+import SIZES from '../../constants/sizes'
 const CommunityView = ({ nav }) => {
-    const [refreshing, setRefreshing] = React.useState(false)
+    const [refreshing, setRefreshing] = useState(false)
+    const [refreshingPendingRequests, setRefreshingPendingRequests] =
+        useState(false)
     const [isHost, setIsHost] = useState(false)
     const [isPublicCommunity, setIsPublicCommunity] = useState(true)
     const [isJoined, setIsJoined] = useState(false)
+    const [isWaiting, setIsWaiting] = useState(false)
 
     const navigation = useNavigation()
 
@@ -44,15 +52,40 @@ const CommunityView = ({ nav }) => {
         rules: STRINGS.exanple_text,
     })
 
+    const [requests, setRequests] = useState([
+        {
+            userId: '1',
+            name: 'Vo, Thuan',
+            dateTime: getDatetime(),
+        },
+        {
+            userId: '2',
+            name: 'Tran, Doan',
+            dateTime: getDatetime(),
+        },
+        {
+            userId: '1',
+            name: 'Vo, Thuan',
+            dateTime: getDatetime(),
+        },
+        {
+            userId: '2',
+            name: 'Tran, Doan',
+            dateTime: getDatetime(),
+        },
+    ])
+
     const [owner, setOwner] = useState({})
 
     const [globalCommunityId, setGlobalCommunityId] = useState(
         useRoute().params.communityId
     )
-    const [members, setMembers] = useState([])
+    const [members, setMembers] = useState([{}])
 
-    const onRefresh = React.useCallback(() => {
+    const onRefresh = useCallback(() => {
         getCommunityInfo()
+        getVerified()
+        getPendingRequests()
     }, [])
 
     const getCommunityInfo = async () => {
@@ -64,23 +97,22 @@ const CommunityView = ({ nav }) => {
             },
         })
             .then((res) => {
+                // console.log(res.data.members)
 
                 // split and strip the string
-                const membersListAsArray = getListFromString(res.data.members)
-                setMembers(membersListAsArray)
-
+                // const membersListAsArray = getListFromString(res.data.members)
+                setMembers(res.data.members)
 
                 // updade only name, description and rules fields
-                setCommunityInfo((prevState) => ({
-                    ...prevState,
+                setCommunityInfo({
                     name: res.data.name,
                     description: res.data.description,
                     rules: res.data.rules,
                     posts: res.data.posts,
                     followers: res.data.followers,
-                    members: membersListAsArray.length,
-                    owner: res.data.owner,
-                }))
+                    members: res.data.members.length,
+                    owner: res.data.owner
+                })
             })
             .catch((err) => {
                 console.log(err)
@@ -89,8 +121,17 @@ const CommunityView = ({ nav }) => {
         return () => {}
     }
 
+    const getUser = async () => {
+        const userId = await AsyncStorage.getItem('userId')
+        return userId
+    }
+
     useEffect(() => {
         getUserInfo(communityInfo.owner)
+        console.log('Owner: ', communityInfo.owner)
+        getUser().then((userId) => {
+            setIsHost(communityInfo.owner === userId)
+        })
     }, [communityInfo.owner])
 
     const getUserInfo = async (id) => {
@@ -109,6 +150,24 @@ const CommunityView = ({ nav }) => {
             })
     }
 
+    const getPendingRequests = async (communityId) => {
+        setRefreshingPendingRequests(false)
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/community/getPendingRequests?communityId=${globalCommunityId}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setRequests(res.data)
+                setRefreshingPendingRequests(true)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
     const getListFromString = (string) => {
         if (string === '') {
             return []
@@ -117,21 +176,43 @@ const CommunityView = ({ nav }) => {
     }
 
     useEffect(() => {
-        // This is the community ID it receives from the community list
-
+        checkIfPublic()
         getCommunityInfo()
+        getVerified()
+        getPendingRequests()
     }, [])
 
     const checkIfJoined = async () => {
-        if (members.includes(await AsyncStorage.getItem('userId'))) {
-            setIsJoined(true) // Update isJoined state using setIsJoined
-        } else {
-            setIsJoined(false) // Update isJoined state using setIsJoined
-        }
+        getUser().then((userId) => {
+            for (let i = 0; i < members.length; i++) {
+                if (members[i].memberId === userId) {
+                    setIsJoined(true)
+                    return
+                }
+            }
+            setIsJoined(false)
+        })
+    }
+
+    const isWaitingForApproval = async () => {
+        getUser().then((userId) => {
+            for (let i = 0; i < members.length; i++) {
+                if (members[i].memberId === userId) {
+                    if (members[i].status === 'PENDING') {
+                        setIsWaiting(true)
+                        return
+                    } else if (members[i].status === 'APPROVED') {
+                        setIsWaiting(false)
+                        return
+                    }
+                }
+            }
+        })
     }
 
     useEffect(() => {
         checkIfJoined()
+        isWaitingForApproval()
     }, [members])
 
     const checkIfPublic = async () => {
@@ -143,23 +224,19 @@ const CommunityView = ({ nav }) => {
             },
         })
             .then((res) => {
-                setIsPublicCommunity(res.data == true)
+                setIsPublicCommunity(Boolean(res.data))
             })
             .catch((err) => {
                 console.log(err)
             })
     }
 
-    useEffect(() => {
-        checkIfPublic()
-    }, [])
-
     const requestToJoin = async () => {
         axios({
             // Request JOIN AXIOS
         })
             .then((res) => {
-                Alert.alert("Requested To Join")
+                Alert.alert('Requested To Join')
             })
             .catch((err) => {
                 console.log(err)
@@ -179,18 +256,40 @@ const CommunityView = ({ nav }) => {
             },
         })
             .then((res) => {
-                addNewMember()
+                getCommunityInfo()
+                // addNewMember()
 
-                checkIfJoined()
+                // checkIfJoined()
             })
             .catch((err) => {
                 console.log(err)
             })
     }
 
-    const addNewMember = async () => {
-        members.push(await AsyncStorage.getItem('userId'))
+    const getVerified = async () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/user/verify`,
+            data: {
+                userId: await AsyncStorage.getItem('userId'),
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                console.log(res.data)
+                // setIsHost(true)
+            })
+            .catch((err) => {
+                console.log(err)
+                // setIsHost(false)
+            })
     }
+
+    // const addNewMember = async () => {
+    //     members.push(await AsyncStorage.getItem('userId'))
+    // }
 
     const viewPosts = () => {
         // Alert.alert('Viewing Posts')
@@ -235,7 +334,7 @@ const CommunityView = ({ nav }) => {
                     blurRadius={5}
                     className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl  py-12 shadow-md shadow-orchid-300"
                 >
-                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-transparent shadow shadow-orchid-600">
+                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full shadow shadow-orchid-600">
                         <Image
                             source={sampleIcon}
                             className="h-40 w-40 rounded-full "
@@ -264,43 +363,44 @@ const CommunityView = ({ nav }) => {
                             <Text className="text-base text-white shadow shadow-orchid-600">
                                 {communityInfo.members} Followers
                             </Text>
-                            <Text className="text-base text-white shadow shadow-orchid-600">
-                                {communityInfo.posts} Posts
-                            </Text>
                         </View>
                     </View>
 
                     <View className="flex flex-row items-center justify-center gap-5">
-                        {(!isJoined && isPublicCommunity) && (
+                        {!isJoined && !isHost && isPublicCommunity && (
                             <TouchableOpacity
                                 onPress={() => joinCommunity()}
                                 className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
                             >
                                 <Text className="text-md text-orchid-900">
-                                    JOIN US
+                                    {STRINGS.joinUs}
                                 </Text>
                             </TouchableOpacity>
                         )}
-                        {(!isJoined && !isPublicCommunity) && (
-                            <TouchableOpacity
-                                onPress={() => requestToJoin()}
-                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
-                            >
-                                <Text className="text-md text-orchid-900">
-                                    REQUEST JOIN
-                                </Text>
-                            </TouchableOpacity>
-                        )}
-                        {(isPublicCommunity || isJoined) && (
-                            <TouchableOpacity
-                                onPress={viewPosts}
-                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
-                            >
-                                <Text className="text-md text-orchid-900">
-                                    VIEW POSTS
-                                </Text>
-                            </TouchableOpacity>
-                        )}
+                        {!isJoined &&
+                            !isWaiting &&
+                            !isPublicCommunity &&
+                            !isHost && (
+                                <TouchableOpacity
+                                    onPress={() => joinCommunity()}
+                                    className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
+                                >
+                                    <Text className="text-md text-orchid-900">
+                                        {STRINGS.requestJoin}
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                        {(isPublicCommunity || isJoined || isHost) &&
+                            !isWaiting && (
+                                <TouchableOpacity
+                                    onPress={viewPosts}
+                                    className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
+                                >
+                                    <Text className="text-md text-orchid-900">
+                                        {STRINGS.viewPosts}
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
                     </View>
                 </ImageBackground>
 
@@ -321,6 +421,51 @@ const CommunityView = ({ nav }) => {
                         {communityInfo.rules}
                     </Text>
                 </View>
+
+                {isHost && !isPublicCommunity && (
+                    <View>
+                        <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
+                            <View className="flex w-full flex-row items-center justify-between">
+                                <Text className="mb-2 text-2xl font-bold text-orchid-900">
+                                    {STRINGS.requestToJoin}
+                                </Text>
+                                {refreshingPendingRequests && (
+                                    <TouchableOpacity
+                                        onPress={() => getPendingRequests()}
+                                    >
+                                        <FontAwesomeIcon
+                                            icon={faSync}
+                                            color={COLORS['orchid'][900]}
+                                            size={SIZES['xMarkIconSizeTag']}
+                                        />
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                            {requests.length > 0 && (
+                                <ScrollView
+                                    horizontal={false}
+                                    contentContainerStyle={{
+                                        display: 'flex',
+                                        justifyContent: 'flex-start',
+                                        flexGrow: 1,
+                                        backgroundColor: 'white',
+                                    }}
+                                    className="h-64 w-full space-y-2 overflow-auto bg-white"
+                                >
+                                    {requests.map((request, index) => (
+                                        <View key={index}>
+                                            <RequestItem
+                                                key={index}
+                                                requestData={request}
+                                                setRequests={setRequests}
+                                            />
+                                        </View>
+                                    ))}
+                                </ScrollView>
+                            )}
+                        </View>
+                    </View>
+                )}
             </ScrollView>
         </View>
     )

@@ -17,7 +17,7 @@ import { uploadImage } from '../../utils/fbHelper'
 
 import Modal from 'react-native-modal'
 import COLORS from '../../constants/colors'
-import PostItem from './PostItem'
+import PostItem from './components/PostItem'
 
 import * as Progress from 'react-native-progress'
 
@@ -43,7 +43,7 @@ const Post = (nav) => {
     const [postContent, setPostContent] = useState('')
 
     const [postData, setPostData] = useState([{}])
-    const [IsModalVisible, setIsModalVisible] = useState(true)
+    const [IsModalVisible, setIsModalVisible] = useState(false)
 
     const [userId, setUserId] = useState('')
     const [community_id, setCommunityId] = useState(
@@ -85,7 +85,6 @@ const Post = (nav) => {
         if (removedUser[0].username.includes(searchUsername.toLowerCase())) {
             setSearchUserList([...searchUserList, removedUser[0]])
         }
-        
     }
 
     const [taggedUsersId, setTaggedUsersId] = useState([])
@@ -94,7 +93,6 @@ const Post = (nav) => {
         taggedUsers.map((user) => {
             setTaggedUsersId([...taggedUsersId, user.id])
         })
-
     }, [taggedUsers])
 
     const findUserId = async () => {
@@ -281,31 +279,37 @@ const Post = (nav) => {
     return (
         <>
             <View className="h-screen w-screen flex-1 bg-white">
-                <View className="h-full w-full">
-                    <ScrollView
-                        contentContainerStyle={{
-                            paddingBottom: 120,
-                            flexGrow: 1,
-                        }}
-                        className="h-full w-full overflow-auto bg-white p-5"
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={refreshing}
-                                onRefresh={onRefresh}
-                            />
-                        }
-                    >
-                        {postData.map((post, index) => {
-                            return (
-                                <PostItem
-                                    key={index}
-                                    post={post}
-                                    userId={userId}
+                {postData.length > 0 && Object.keys(postData[0]).length > 0 ? (
+                    <View className="h-full w-full">
+                        <ScrollView
+                            contentContainerStyle={{
+                                paddingBottom: 120,
+                                flexGrow: 1,
+                            }}
+                            className="h-full w-full overflow-auto bg-white p-5"
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
                                 />
-                            )
-                        })}
-                    </ScrollView>
-                </View>
+                            }
+                        >
+                            {postData.map((post, index) => {
+                                return (
+                                    <PostItem
+                                        key={index}
+                                        post={post}
+                                        userId={userId}
+                                    />
+                                )
+                            })}
+                        </ScrollView>
+                    </View>
+                ) : (
+                    <View className="flex h-full w-full items-center justify-center">
+                        <Text className="text-orchid-900">Make First Post</Text>
+                    </View>
+                )}
 
                 <View className="h-screen w-screen">
                     {/* image viewer */}
