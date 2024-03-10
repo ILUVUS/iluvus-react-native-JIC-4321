@@ -231,18 +231,6 @@ const CommunityView = ({ nav }) => {
             })
     }
 
-    const requestToJoin = async () => {
-        axios({
-            // Request JOIN AXIOS
-        })
-            .then((res) => {
-                Alert.alert('Requested To Join')
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
     const joinCommunity = async () => {
         axios({
             method: 'POST',
@@ -257,9 +245,6 @@ const CommunityView = ({ nav }) => {
         })
             .then((res) => {
                 getCommunityInfo()
-                // addNewMember()
-
-                // checkIfJoined()
             })
             .catch((err) => {
                 console.log(err)
