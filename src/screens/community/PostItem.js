@@ -33,6 +33,16 @@ const PostItem = ({ post, userId }) => {
     const [commentsNumber, setCommentsNumber] = useState(0)
     const [comments, setComments] = useState([])
     const [commentText, setCommentText] = useState('')
+    const [taggedUsers, setTaggedUsers] = useState([])
+
+    const [taggedUsername, setTaggedUsernames] = useState([])
+
+    useEffect(() => {
+        setTaggedUsernames([])
+        taggedUsers.map((userId) => {
+            getUserInfo(userId)
+        })
+    }, [taggedUsers])
 
     const handleComment = () => {
         setCommentText('')
@@ -99,6 +109,22 @@ const PostItem = ({ post, userId }) => {
             .then((res) => {
                 Alert.alert('Post Reported')
                 console.log(res.data)
+            })
+            .catch((err) => {
+                console.log('Cannot like the post', err)
+            })
+    }
+
+    const getUserInfo = () => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/user/get?userId=${userId}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setTaggedUsernames((prev) => [...prev, res.data.username])
             })
             .catch((err) => {
                 console.log('Cannot like the post', err)
@@ -190,6 +216,21 @@ const PostItem = ({ post, userId }) => {
                             ))}
                         </View>
                     )}
+                    <View className="my-3 flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
+                                                    {setTaggedUsernames.map(
+                                                        (username, index) => (
+                                                            <View
+                                                                key={index}
+                                                                className="mx-1 my-2 rounded-full bg-orchid-100 px-3 py-2 shadow-sm"
+                                                                
+                                                            >
+                                                                <Text className="text-base text-orchid-900">
+                                                                    {username}
+                                                                </Text>
+                                                            </View>
+                                                        )
+                                                    )}
+                                                </View>
                 </View>
                 <View className="h-fit w-full flex-row justify-evenly space-x-10 rounded-b-3xl bg-orchid-200 p-2 ">
                     <View className="flex flex-row items-center justify-center space-x-2">
