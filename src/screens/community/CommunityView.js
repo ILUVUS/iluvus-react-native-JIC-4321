@@ -111,7 +111,7 @@ const CommunityView = ({ nav }) => {
                     posts: res.data.posts,
                     followers: res.data.followers,
                     members: res.data.members.length,
-                    owner: res.data.owner
+                    owner: res.data.owner,
                 })
             })
             .catch((err) => {
@@ -376,16 +376,26 @@ const CommunityView = ({ nav }) => {
                                 </TouchableOpacity>
                             )}
                         {(isPublicCommunity || isJoined || isHost) &&
-                            !isWaiting && (
-                                <TouchableOpacity
-                                    onPress={viewPosts}
-                                    className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
-                                >
-                                    <Text className="text-md text-orchid-900">
-                                        {STRINGS.viewPosts}
-                                    </Text>
-                                </TouchableOpacity>
-                            )}
+                        !isWaiting ? (
+                            <TouchableOpacity
+                                onPress={viewPosts}
+                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
+                            >
+                                <Text className="text-md text-orchid-900">
+                                    {STRINGS.viewPosts}
+                                </Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <View
+                                className="flex h-fit w-fit flex-row flex-wrap
+                                items-center justify-center rounded-full
+                                bg-white px-5 py-2 shadow shadow-orchid-600"
+                            >
+                                <Text className="text-md text-orchid-900">
+                                    Waiting for Approval
+                                </Text>
+                            </View>
+                        )}
                     </View>
                 </ImageBackground>
 
