@@ -376,16 +376,17 @@ const CommunityView = ({ nav }) => {
                                 </TouchableOpacity>
                             )}
                         {(isPublicCommunity || isJoined || isHost) &&
-                        !isWaiting ? (
-                            <TouchableOpacity
-                                onPress={viewPosts}
-                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
-                            >
-                                <Text className="text-md text-orchid-900">
-                                    {STRINGS.viewPosts}
-                                </Text>
-                            </TouchableOpacity>
-                        ) : (
+                            !isWaiting && (
+                                <TouchableOpacity
+                                    onPress={viewPosts}
+                                    className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
+                                >
+                                    <Text className="text-md text-orchid-900">
+                                        {STRINGS.viewPosts}
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                        {isWaiting && (
                             <View
                                 className="flex h-fit w-fit flex-row flex-wrap
                                 items-center justify-center rounded-full
