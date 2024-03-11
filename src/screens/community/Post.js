@@ -81,8 +81,12 @@ const Post = (nav) => {
     }
 
     const removeTaggedUser = (index) => {
-        const removedUser = taggedUsers.splice(index, 1)
-        setTaggedUsers([...taggedUsers])
+        const removedUser = taggedUsers.slice(index)
+        const removeUserId = taggedUsersId.slice(index)
+
+        setTaggedUsers(taggedUsers.filter((user) => user.id !== removedUser[0].id))
+        setTaggedUsersId(taggedUsersId.filter((id) => id !== removeUserId[0]))
+
         if (removedUser[0].username.includes(searchUsername.toLowerCase())) {
             setSearchUserList([...searchUserList, removedUser[0]])
         }
@@ -92,6 +96,7 @@ const Post = (nav) => {
 
     useEffect(() => {
         console.log('Tagged users:', taggedUsersId)
+        console.log('Tagged users:', taggedUsers)
     }, [taggedUsersId])
 
     useEffect(() => {
