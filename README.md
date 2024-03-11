@@ -59,8 +59,8 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 
 ### New Features
 
-- Users can now upload and share images and videos along with their posts.
-- Implemented images and videos processing capabilities (resizing/compression).
+- Users can now upload and share images along with their posts.
+- Implemented image processing capabilities such as resizing and compression.
 - Ability to tag other users in a post has been added.
 - Users receive notifications if they are tagged in a post.
 - Communities can now be set as either public or private.
