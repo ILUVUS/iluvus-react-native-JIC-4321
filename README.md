@@ -71,6 +71,7 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 
 - Corrected the display of the number of likes/uplifts.
 - Fixed the problem where posts were not displaying properly.
+- Fixed the report button and added a report message when reporting.
 
 ### Known Issues
 
