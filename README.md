@@ -75,6 +75,8 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 
 ### Known Issues
 
+- Users can tag people not in the community.
+
 ## Version 0.2.0
 
 ### New Features
