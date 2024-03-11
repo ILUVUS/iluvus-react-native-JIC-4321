@@ -65,7 +65,7 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 - Users receive notifications if they are tagged in a post.
 - Communities can now be set as either public or private.
 - Added a "Request Join" button for private communities.
-- Owners of private communities can now accept/decline join requests
+- Owners of private communities can now accept/decline join requests.
 
 ### Bug Fixes
 
