@@ -66,6 +66,7 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 - Communities can now be set as either public or private.
 - Added a "Request Join" button for private communities.
 - Owners of private communities can now accept/decline join requests.
+- All login passwords are now hashed to increase security.
 
 ### Bug Fixes
 
