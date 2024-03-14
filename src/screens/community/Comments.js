@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import { displayDatetime } from '../../utils/Utils'
 
-const Comment = ({ authorName, text, dateTime }) => {
+const Comments = ({ authorName, text, dateTime }) => {
     return (
         <View className="h-col mb-3 h-fit w-full space-y-1 rounded-l-full rounded-tr-full bg-slate-200 px-6 py-2 shadow-sm">
             <View className="flex flex-row items-center space-x-2">
@@ -16,4 +16,4 @@ const Comment = ({ authorName, text, dateTime }) => {
     )
 }
 
-export default Comment
+export default Comments
