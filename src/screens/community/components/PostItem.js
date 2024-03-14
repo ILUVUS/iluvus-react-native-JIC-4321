@@ -215,32 +215,42 @@ const PostItem = ({ post, userId }) => {
                             {displayDatetime(post.dateTime)}
                         </Text>
                     </View>
-                    <Text className="my-2 text-base text-orchid-700">
+                    <Text className="my-1 text-base text-orchid-700">
                         {post.text}
                     </Text>
-                    {post.medias && (
-                        <View className="my-3 flex h-fit w-full flex-row justify-start space-x-2">
-                            {post.medias.map((url, index) => (
-                                <TouchableOpacity
-                                    key={index}
-                                    onPress={() =>
-                                        openImageViewer(post.medias, index)
-                                    }
-                                >
-                                    <Image
+                    {/* horizontal scroll view for media */}
+                    <ScrollView
+                        horizontal={true}
+                        contentContainerStyle={{
+                            flexGrow: 1,
+                            justifyContent: 'flex-start',
+                        }}
+                        className="my-2 h-fit w-full"
+                    >
+                        {post.medias && (
+                            <View className="flex h-fit w-full flex-row justify-start space-x-2">
+                                {post.medias.map((url, index) => (
+                                    <TouchableOpacity
                                         key={index}
-                                        source={{ uri: url }}
-                                        className="h-16 w-16 rounded-2xl"
-                                    />
-                                </TouchableOpacity>
-                            ))}
-                        </View>
-                    )}
-                    <View className="flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
+                                        onPress={() =>
+                                            openImageViewer(post.medias, index)
+                                        }
+                                    >
+                                        <Image
+                                            key={index}
+                                            source={{ uri: url }}
+                                            className="h-16 w-16 rounded-2xl"
+                                        />
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        )}
+                    </ScrollView>
+                    <View className="mt-2 flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
                         {taggedUsernames.map((username, index) => (
                             <View
                                 key={index}
-                                className="mx-1 my-2 rounded-full bg-orchid-100 px-2 py-1 shadow-sm"
+                                className="mx-1 rounded-full bg-orchid-100 px-2 py-1 shadow-sm"
                             >
                                 <Text className="text-sm text-orchid-900">
                                     {username}

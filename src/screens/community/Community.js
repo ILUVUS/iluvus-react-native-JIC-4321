@@ -205,7 +205,7 @@ const Community = () => {
                                     className="h-24 w-24 rounded-3xl"
                                 />
                                 <Text className="mt-1 text-sm text-orchid-900">
-                                    {communityList[key].substring(0, 15) +
+                                    {communityList[key].substring(0, 12) +
                                         '...'}
                                 </Text>
                             </CommunityViewImageButton>
