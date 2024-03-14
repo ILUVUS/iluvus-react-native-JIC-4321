@@ -13,7 +13,7 @@ const CommunityViewImageButton = styled(
 
 const NewCommunityButton = styled(
     TouchableOpacity,
-    'items-center justify-between rounded-3xl border-none bg-orchid-100 p-5 shadow-md'
+    'items-center justify-start rounded-3xl border-none bg-orchid-100 px-5 py-2 shadow-md'
 )
 
 const PostButton = styled(

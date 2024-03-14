@@ -17,12 +17,21 @@ import { NewCommunityButton } from '../../components/button'
 import { dropDownStyle, inputStyle } from '../../../styles/style'
 import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingView'
 
+import { Image } from 'react-native'
+
+import * as ImagePicker from 'expo-image-picker'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+
 export default function SetupCommunity() {
     const [communityName, setCommunityName] = useState('')
     const [communityDescription, setCommunityDescription] = useState('')
     const [communityRule, setCommunityRule] = useState('')
     const [visibility, setVisibility] = useState('')
     const [ownerId, setOwnerId] = useState('')
+
+    const [communityImage, setCommunityImage] = useState('')
 
     const navigation = useNavigation()
 
@@ -39,6 +48,25 @@ export default function SetupCommunity() {
         }
         getUserId()
     }, [])
+
+    const pickingImageHandler = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: false,
+            quality: 0.5,
+            aspect: [1, 1],
+            base64: true,
+            allowsEditing: true,
+        })
+
+        // console.log(result.assets[0].base64)
+
+        if (!result.canceled) {
+            setCommunityImage(result.assets[0].base64)
+        } else {
+            // alert('You did not select any image.')
+        }
+    }
 
     const publishCommunity = async () => {
         if (
@@ -74,7 +102,9 @@ export default function SetupCommunity() {
         }
     }
 
-    const addPicture = () => {}
+    const removePicture = () => {
+        setCommunityImage('')
+    }
 
     return (
         <CustomKeyboardAvoidingView>
@@ -124,16 +154,37 @@ export default function SetupCommunity() {
             />
 
             <View className="flex w-full flex-row justify-start gap-4 pt-5">
-                <NewCommunityButton onPress={addPicture}>
-                    <Ionicons
-                        name="ios-add-circle-outline"
-                        size={SIZES.communityIconSize}
-                        color={COLORS['orchid'][900]}
-                    />
-                    <Text className="mt-2 text-center text-sm text-orchid-900">
-                        {STRINGS.picturebtn}
-                    </Text>
-                </NewCommunityButton>
+                {communityImage.length > 0 ? (
+                    <View className="relative h-24 w-24 rounded-3xl border-none bg-orchid-100 shadow-md">
+                        <Image
+                            source={{
+                                uri: `data:image/jpg;base64,${communityImage}`,
+                            }}
+                            className="absolute h-24 w-24 rounded-3xl"
+                        />
+                        <TouchableOpacity
+                            className="absolute right-2 top-2"
+                            onPress={() => removePicture()}
+                        >
+                            <FontAwesomeIcon
+                                icon={faCircleXmark}
+                                color={COLORS.white}
+                                size={SIZES.xMarkIconSizeTag}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                ) : (
+                    <NewCommunityButton onPress={() => pickingImageHandler()}>
+                        <Ionicons
+                            name="ios-add-circle-outline"
+                            size={SIZES.communityIconSize}
+                            color={COLORS['orchid'][900]}
+                        />
+                        <Text className="mt-2 text-center text-sm text-orchid-900">
+                            {STRINGS.picturebtn}
+                        </Text>
+                    </NewCommunityButton>
+                )}
 
                 <NewCommunityButton onPress={publishCommunity}>
                     <Ionicons
