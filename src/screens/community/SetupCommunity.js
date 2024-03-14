@@ -84,6 +84,7 @@ export default function SetupCommunity() {
                     rules: String(communityRule),
                     visibility: String(visibility),
                     ownerId: String(ownerId),
+                    image: communityImage,
                 },
                 headers: {
                     'Content-Type': 'application/json',
