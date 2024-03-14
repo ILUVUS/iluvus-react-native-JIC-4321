@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
-import { Alert, Text, View } from 'react-native'
+import { Alert, Text, View, TouchableOpacity } from 'react-native'
 import { SelectList } from 'react-native-dropdown-select-list'
 
 import { useNavigation } from '@react-navigation/native'
@@ -22,7 +22,6 @@ import { Image } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export default function SetupCommunity() {
     const [communityName, setCommunityName] = useState('')
@@ -155,12 +154,12 @@ export default function SetupCommunity() {
 
             <View className="flex w-full flex-row justify-start gap-4 pt-5">
                 {communityImage.length > 0 ? (
-                    <View className="relative h-24 w-24 rounded-3xl border-none bg-orchid-100 shadow-md">
+                    <View className="relative h-24 w-24 overflow-auto rounded-3xl border-none bg-gray-100 shadow-lg">
                         <Image
                             source={{
                                 uri: `data:image/jpg;base64,${communityImage}`,
                             }}
-                            className="absolute h-24 w-24 rounded-3xl"
+                            className="absolute h-full w-full overflow-hidden rounded-3xl "
                         />
                         <TouchableOpacity
                             className="absolute right-2 top-2"
