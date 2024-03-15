@@ -342,7 +342,7 @@ const CommunityView = ({ nav }) => {
                     <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full shadow shadow-orchid-600">
                         <Image
                             source={
-                                communityInfo.image
+                                communityInfo.image && communityInfo.image != ''
                                     ? {
                                           uri: `data:image/jpg;base64,${communityInfo.image}`,
                                       }
