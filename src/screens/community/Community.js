@@ -139,9 +139,12 @@ const Community = () => {
         }
     }
 
-    useEffect(() => {
-        console.log(communityListInfo[4])
-    }, [communityListInfo])
+    // useEffect(() => {
+    //     communityListInfo.map((info, index) => {
+    //         console.log("image " + info.image)
+    //     }
+    //     )
+    // }, [communityListInfo])
 
     const newCommunity = () => {
         navigation.navigate('SetupCommunity')
@@ -240,21 +243,6 @@ const Community = () => {
                     </View>
 
                     <View className="flex flex-row flex-wrap overflow-auto">
-                        {/* {Object.keys(communityList).map((key, index) => (
-                            <CommunityViewImageButton
-                                key={key}
-                                onPress={() => communityClick(key)}
-                            >
-                                <Image
-                                    source={sampleIcon}
-                                    className="h-24 w-24 rounded-3xl"
-                                />
-                                <Text className="mt-1 text-sm text-orchid-900">
-                                    {communityList[key].substring(0, 12) +
-                                        '...'}
-                                </Text>
-                            </CommunityViewImageButton>
-                        ))} */}
 
                         {communityListInfo.map((info, index) => (
                             <CommunityViewImageButton
@@ -262,12 +250,11 @@ const Community = () => {
                                 onPress={() => communityClick(info.id)}
                             >
                                 <Image
-                                    source={info.image != null ? { uri: `data:image/jpg;base64,${info.image}` } : sampleIcon}
+                                    source={(info.image != null && info.image !== "") ? { uri: `data:image/jpg;base64,${info.image}` } : sampleIcon}
                                     className="h-24 w-24 rounded-3xl"
                                 />
                                 <Text className="mt-1 text-sm text-orchid-900">
-                                    {info.name.substring(0, 12) +
-                                        '...'}
+                                    {info.name.length > 12 ? info.name.substring(0, 10) + "..." : info.name}
                                 </Text>
                             </CommunityViewImageButton>
                         ))}
