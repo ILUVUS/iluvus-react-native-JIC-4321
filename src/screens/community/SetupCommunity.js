@@ -192,7 +192,7 @@ export default function SetupCommunity() {
 
             {chosenModerators.length > 0 && (
                 <View className="w-full">
-                    <View className="flex w-full flex-col items-start justify-start">
+                    <View className="my-3 flex w-full flex-col items-start justify-start">
                         <Text className="text-base font-bold text-orchid-900">
                             Chosen Moderators
                         </Text>
@@ -243,7 +243,7 @@ export default function SetupCommunity() {
                 </View>
             )}
             <View className="flex h-fit w-full">
-                <View className="w-fit flex-col items-center justify-start">
+                <View className="my-3 w-fit flex-col items-center justify-start">
                     <SearchBar
                         placeholder={STRINGS.ChooseModerators}
                         onChangeText={(text) =>
