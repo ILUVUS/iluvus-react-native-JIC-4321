@@ -142,4 +142,7 @@ export default {
     uploadSuccess: 'Upload Successful',
 
     notificationtab: 'Notification',
+
+    // settings
+    settings: 'Settings',
 }

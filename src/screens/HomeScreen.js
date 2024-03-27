@@ -1,4 +1,4 @@
-import { Alert, Text, View } from 'react-native'
+import { Alert, Settings, Text, View } from 'react-native'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -9,6 +9,8 @@ import Community from './community/Community'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Profile from './Profile/Profile'
 import Notification from './Notification/Notification'
+import Setting from './Settings/Settings'
+
 
 import { useEffect, useState } from 'react'
 import axios from 'axios'
@@ -74,11 +76,7 @@ function MessageScreenNav() {
 }
 
 function SettingsScreenNav() {
-    return (
-        <View className="flex h-screen justify-center bg-white p-2 align-middle">
-            <Text>Settings!</Text>
-        </View>
-    )
+    return <Setting/>
 }
 
 const Tab = createBottomTabNavigator()

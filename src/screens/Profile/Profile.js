@@ -6,37 +6,30 @@ import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { BASE_URL } from '@env'
 import { useIsFocused } from '@react-navigation/native'
-
+import { ScrollView } from 'react-native-gesture-handler'
+import { RefreshControl } from 'react-native'
+import { useCallback } from 'react'
+import { ImageBackground } from 'react-native'
+import profileBg from '../../../assets/images/profileBg.png'
+import { Image } from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
+import profile_icon from '../../../assets/images/profile_icon.png'
+import { Keyboard } from 'react-native'
+import COLORS from '../../constants/colors'
+import { faAward } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
 const Profile = () => {
-    const [userId, setUserId] = useState('')
-
-    const [userInfo, setUserInfo] = useState({})
-
     const navigation = useNavigation()
     const isFocused = useIsFocused()
-
-    const handleLogout = () => {
-        removeUserId()
-    }
-
-    const removeUserId = async () => {
-        try {
-            const value = await AsyncStorage.getItem('userId')
-            if (value !== null) {
-                await AsyncStorage.removeItem('userId')
-            }
-        } catch (e) {
-            console.log(e)
-        } finally {
-            navigation.reset({
-                index: 0,
-                routes: [{ name: STRINGS.loginscreen }],
-            })
-        }
-    }
+    const [userId, setUserId] = useState('')
+    const [userInfo, setUserInfo] = useState({})
+    const [refreshing, setRefreshing] = useState(false)
+    const [isEdit, setIsEdit] = useState(false)
+    const [verify, setVerify] = useState(false)
 
     useEffect(() => {
+        getVerified()
         const findUserInfoById = async () => {
             try {
                 const value = await AsyncStorage.getItem('userId')
@@ -49,6 +42,30 @@ const Profile = () => {
         }
         findUserInfoById()
     }, [isFocused])
+
+    const onRefresh = useCallback(() => {
+        getVerified()
+    }, [refreshing])
+
+    const getVerified = async () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/user/verify`,
+            data: {
+                userId: await AsyncStorage.getItem('userId'),
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setVerify(true)
+            })
+            .catch((err) => {
+                console.log(err)
+                setVerify(false)
+            })
+    }
 
     useEffect(() => {
         console.log(userId)
@@ -68,21 +85,93 @@ const Profile = () => {
             })
     }, [userId, isFocused])
 
+    const editProfile = () => {}
+
     return (
-        <View className="flex h-screen w-screen items-center bg-white p-2">
-            <View className="flex flex-col">
-                <Text>{userInfo.fname}</Text>
-                <Text>{userInfo.lname}</Text>
-                <Text>{userInfo.username}</Text>
-                <Text>{userInfo.email}</Text>
-                <Text>{userId}</Text>
-            </View>
-            <TouchableOpacity
-                className="inline-block w-fit items-center justify-center rounded-3xl bg-gold-900 px-5 py-4 shadow-md shadow-slate-200"
-                onPress={handleLogout}
+        <View className="flex h-screen w-screen">
+            <ScrollView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
+                horizontal={false}
+                contentContainerStyle={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    flexGrow: 1,
+                    paddingTop: 24,
+                    paddingHorizontal: 24,
+                    paddingBottom: 150,
+                }}
+                className="h-screen w-screen overflow-auto bg-white"
+                onTouchStart={Keyboard.dismiss}
             >
-                <Text className="text-sm text-orchid-900">Logout</Text>
-            </TouchableOpacity>
+                <ImageBackground
+                    source={profileBg}
+                    resizeMode="cover"
+                    imageStyle={{
+                        borderRadius: 24,
+                        opacity: 0.8,
+                    }}
+                    blurRadius={3}
+                    className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl  py-12 shadow-md shadow-orchid-300"
+                >
+                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full shadow shadow-orchid-600">
+                        <Image
+                            source={profile_icon}
+                            className="h-40 w-40 rounded-full "
+                        />
+                    </View>
+
+                    <View className="mb-5 flex items-center justify-center">
+                        <View className="mb-1 flex flex-row gap-2">
+                            <Text className="text-2xl font-semibold text-white shadow shadow-orchid-600">
+                                {userInfo.lname}, {userInfo.fname}
+                            </Text>
+                            <Text className="text-base text-orchid-800 ">
+                                {verify && (
+                                    <FontAwesomeIcon
+                                        icon={faAward}
+                                        size={30}
+                                        color={COLORS['gold'][900]}
+                                    />
+                                )}
+                            </Text>
+                        </View>
+                    </View>
+
+                    <View className="flex flex-row items-center justify-center gap-5"></View>
+                </ImageBackground>
+
+                <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
+                    <View className="mb-1 flex flex-row gap-2">
+                        <Text className="mb-2 text-2xl font-bold text-orchid-900">
+                            Details
+                        </Text>
+                        <TouchableOpacity onPress={editProfile}>
+                            <Ionicons
+                                name="create-outline"
+                                size={26}
+                                color={COLORS['orchid'][900]}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    {verify && (
+                        <Text className="text-base italic text-orchid-900">
+                            Profesional Account
+                        </Text>
+                    )}
+
+                    <Text className="text-base text-orchid-800 ">
+                        Date of Birth: {userInfo.dob}
+                    </Text>
+                    <Text className="text-base text-orchid-800 ">
+                        Interests: {userInfo.interests}
+                    </Text>
+                </View>
+            </ScrollView>
         </View>
     )
 }

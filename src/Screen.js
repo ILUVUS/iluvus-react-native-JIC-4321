@@ -15,6 +15,7 @@ import Post from './screens/community/Post'
 import Comments from './screens/community/Comments'
 import Verification from './screens/login/Verification'
 import Notification from './screens/Notification/Notification.js'
+import Settings from './screens/Settings/Settings'
 
 LogBox.ignoreAllLogs(true)
 
@@ -112,6 +113,16 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
+
+                <Stack.Screen
+                    name={STRINGS.settings}
+                    component={Settings}
+                    options={{
+                        title: STRINGS.settings,
+                        headerShown: true,
+                    }}
+                />
+
             </Stack.Navigator>
         </NavigationContainer>
     )
