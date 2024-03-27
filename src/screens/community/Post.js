@@ -48,7 +48,7 @@ const Post = (nav) => {
     const [postContent, setPostContent] = useState('')
 
     const [postData, setPostData] = useState([{}])
-    const [IsModalVisible, setIsModalVisible] = useState(false)
+    const [IsModalVisible, setIsModalVisible] = useState(true)
 
     const [userId, setUserId] = useState('')
     const [community_id, setCommunityId] = useState(
@@ -372,11 +372,11 @@ const Post = (nav) => {
                                     }
                                 />
 
-                                <View className="flex h-fit w-full flex-row items-center justify-evenly">
+                                <View className="flex h-fit w-full flex-row items-center justify-between">
                                     <Text className="text-orchid-900">
                                         Select a Post Topic
                                     </Text>
-                                    <View className="flex-row items-center justify-center rounded-full bg-orchid-100 px-6 py-2 text-orchid-900 shadow">
+                                    <View className="flex-row items-center justify-center rounded-full bg-gold-900 px-6 py-2 text-orchid-900 shadow">
                                         <TouchableOpacity
                                             onPress={() => handleAddTag()}
                                             className="flex-row items-center justify-center space-x-2"
@@ -393,60 +393,10 @@ const Post = (nav) => {
                                     </View>
                                 </View>
 
-                                {taggedUsers.length > 0 && (
-                                    <View className="w-full space-y-2">
-                                        <View className="flex w-full flex-col items-start justify-start">
-                                            <Text className="text-orchid-900">
-                                                Tagged Users
-                                            </Text>
-                                        </View>
-
-                                        <ScrollView
-                                            className="min-h-16 max-h-26 w-fit overflow-auto"
-                                            contentContainerStyle={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                flexWrap: 'wrap',
-                                                justifyContent: 'flex-start',
-                                                flexGrow: 1,
-                                            }}
-                                        >
-                                            {taggedUsers.map((user, index) => (
-                                                <View className="mx-1 my-2 flex flex-row items-center justify-center space-x-2 rounded-full bg-orchid-100 px-3 py-1.5 shadow-sm">
-                                                    <View>
-                                                        <Text className="text-sm text-orchid-900">
-                                                            {user.username}
-                                                        </Text>
-                                                    </View>
-                                                    <TouchableOpacity
-                                                        key={index}
-                                                        onPress={() =>
-                                                            removeTaggedUser(
-                                                                index
-                                                            )
-                                                        }
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={faCircleXmark}
-                                                            color={
-                                                                COLORS[
-                                                                    'orchid'
-                                                                ][800]
-                                                            }
-                                                            size={
-                                                                SIZES[
-                                                                    'xMarkIconSizeTag'
-                                                                ]
-                                                            }
-                                                        />
-                                                    </TouchableOpacity>
-                                                </View>
-                                            ))}
-                                        </ScrollView>
-                                    </View>
-                                )}
-
                                 <View className="flex h-fit w-full">
+                                    <Text className="text-orchid-900">
+                                        Tag Users
+                                    </Text>
                                     <View className="w-fit flex-col items-center justify-start">
                                         <SearchBar
                                             placeholder={STRINGS.TagUsers}
@@ -504,6 +454,59 @@ const Post = (nav) => {
                                         )}
                                     </View>
                                 </View>
+
+                                {taggedUsers.length > 0 && (
+                                    <View className="w-full space-y-1">
+                                        <View className="flex w-full flex-col items-start justify-start">
+                                            <Text className="text-orchid-900">
+                                                Tagged Users
+                                            </Text>
+                                        </View>
+
+                                        <ScrollView
+                                            className="min-h-16 max-h-26 w-fit overflow-auto"
+                                            contentContainerStyle={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                flexWrap: 'wrap',
+                                                justifyContent: 'flex-start',
+                                                flexGrow: 1,
+                                            }}
+                                        >
+                                            {taggedUsers.map((user, index) => (
+                                                <View className="mx-1 my-2 flex flex-row items-center justify-center space-x-2 rounded-full bg-orchid-100 px-3 py-1.5 shadow-sm">
+                                                    <View>
+                                                        <Text className="text-sm text-orchid-900">
+                                                            {user.username}
+                                                        </Text>
+                                                    </View>
+                                                    <TouchableOpacity
+                                                        key={index}
+                                                        onPress={() =>
+                                                            removeTaggedUser(
+                                                                index
+                                                            )
+                                                        }
+                                                    >
+                                                        <FontAwesomeIcon
+                                                            icon={faCircleXmark}
+                                                            color={
+                                                                COLORS[
+                                                                    'orchid'
+                                                                ][800]
+                                                            }
+                                                            size={
+                                                                SIZES[
+                                                                    'xMarkIconSizeTag'
+                                                                ]
+                                                            }
+                                                        />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            ))}
+                                        </ScrollView>
+                                    </View>
+                                )}
 
                                 <View className="h-fit w-full flex-row items-center justify-center space-x-2">
                                     {pickedImages.length >= 0 &&
@@ -564,6 +567,13 @@ const Post = (nav) => {
                                                 </TouchableOpacity>
                                             )
                                         })}
+                                    {pickedImages.length < 5 &&
+                                        Array.from(
+                                            { length: 4 - pickedImages.length },
+                                            (_, i) => (
+                                                <View className="h-16 w-16 rounded-lg bg-slate-100 shadow shadow-slate-300"></View>
+                                            )
+                                        )}
                                 </View>
                                 {uploadProgress > 0 && uploadProgress < 1 && (
                                     <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
