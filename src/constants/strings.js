@@ -56,6 +56,7 @@ export default {
     TagUsers: 'Find Community Users...',
     postDescription: 'Description',
     postContentPlaceholder: 'Please input the content of the post...',
+    InterestTopics: 'Find a Interest Topic...',
 
     // Comment
     Comment: 'Comment',

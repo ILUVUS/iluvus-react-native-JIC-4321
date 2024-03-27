@@ -1,12 +1,17 @@
 // Import package and project components
 import React, { useEffect, useState } from 'react'
+import { SearchBar as SB } from '@rneui/themed'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCircleXmark, faPlus } from '@fortawesome/free-solid-svg-icons'
+import {
+    faCircleXmark,
+    faPlus,
+    faPencil,
+} from '@fortawesome/free-solid-svg-icons'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { PostInput } from '../../components/input'
@@ -84,7 +89,9 @@ const Post = (nav) => {
         const removedUser = taggedUsers.slice(index)
         const removeUserId = taggedUsersId.slice(index)
 
-        setTaggedUsers(taggedUsers.filter((user) => user.id !== removedUser[0].id))
+        setTaggedUsers(
+            taggedUsers.filter((user) => user.id !== removedUser[0].id)
+        )
         setTaggedUsersId(taggedUsersId.filter((id) => id !== removeUserId[0]))
 
         if (removedUser[0].username.includes(searchUsername.toLowerCase())) {
@@ -290,6 +297,12 @@ const Post = (nav) => {
         //
     }
 
+    const [search, setSearch] = useState('')
+
+    const updateSearch = (search) => {
+        setSearch(search)
+    }
+
     return (
         <>
             <View className="h-screen w-screen flex-1 bg-white">
@@ -345,12 +358,12 @@ const Post = (nav) => {
                         animationType="slide"
                     >
                         <View className="flex flex-1">
-                            <View className="w-fit flex-col items-center justify-start space-y-6 pb-10 pt-10 shadow">
+                            <View className="w-fit flex-col items-center justify-start space-y-5 pb-10 pt-10 shadow">
                                 <Text className="text-2xl font-bold text-orchid-900">
                                     {STRINGS.CreatePost}
                                 </Text>
                                 <PostInput
-                                    className="h-52"
+                                    className="h-48"
                                     multiline={true}
                                     placeholder={STRINGS.postContentPlaceholder}
                                     value={postContent}
@@ -358,10 +371,32 @@ const Post = (nav) => {
                                         setPostContent(text)
                                     }
                                 />
+
+                                <View className="flex h-fit w-full flex-row items-center justify-evenly">
+                                    <Text className="text-orchid-900">
+                                        Select a Post Topic
+                                    </Text>
+                                    <View className="flex-row items-center justify-center rounded-full bg-orchid-100 px-6 py-2 text-orchid-900 shadow">
+                                        <TouchableOpacity
+                                            onPress={() => handleAddTag()}
+                                            className="flex-row items-center justify-center space-x-2"
+                                        >
+                                            <Text className="text-orchid-900">
+                                                Machine Learning
+                                            </Text>
+                                            <FontAwesomeIcon
+                                                icon={faPencil}
+                                                color={COLORS.orchid[900]}
+                                                size={SIZES.xMarkIconSizeTag}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+
                                 {taggedUsers.length > 0 && (
-                                    <View className="w-full">
+                                    <View className="w-full space-y-2">
                                         <View className="flex w-full flex-col items-start justify-start">
-                                            <Text className="text-base font-bold text-orchid-900">
+                                            <Text className="text-orchid-900">
                                                 Tagged Users
                                             </Text>
                                         </View>
@@ -377,9 +412,9 @@ const Post = (nav) => {
                                             }}
                                         >
                                             {taggedUsers.map((user, index) => (
-                                                <View className="mx-1 my-2 flex flex-row items-center justify-center space-x-2 rounded-full bg-orchid-100 px-3 py-2 shadow-sm">
+                                                <View className="mx-1 my-2 flex flex-row items-center justify-center space-x-2 rounded-full bg-orchid-100 px-3 py-1.5 shadow-sm">
                                                     <View>
-                                                        <Text className="text-base text-orchid-900">
+                                                        <Text className="text-sm text-orchid-900">
                                                             {user.username}
                                                         </Text>
                                                     </View>
@@ -410,6 +445,7 @@ const Post = (nav) => {
                                         </ScrollView>
                                     </View>
                                 )}
+
                                 <View className="flex h-fit w-full">
                                     <View className="w-fit flex-col items-center justify-start">
                                         <SearchBar
