@@ -45,7 +45,7 @@ const Home = (nav) => {
     const getPosts = async () => {
         axios({
             method: 'GET',
-            url: `${BASE_URL}/post/getHomePagePost`,
+            url: `${BASE_URL}/post/getPostForHomePage?userId=${userId}`,
             headers: {
                 'Content-Type': 'application/json',
             },
