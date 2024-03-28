@@ -3,6 +3,7 @@
 .DS_Store
 
 iluvus_*.js
+iluvus_bucket_credential.js
 
 # Xcode
 #

@@ -255,7 +255,7 @@ const Post = (nav) => {
                     medias: JSON.stringify({ urls: imageURLs }),
                     //join the tagged users id into a string
                     tagged: taggedUsersId.join(','),
-                    topic: selectedTopic.id,
+                    topicId: selectedTopic.id,
                 },
                 headers: {
                     'Content-Type': 'application/json',
