@@ -90,6 +90,8 @@ const Post = (nav) => {
     const [searchUserList, setSearchUserList] = useState([])
     const [taggedUsers, setTaggedUsers] = useState([])
 
+    const [isPosting, setIsPosting] = useState(false)
+
     const tagUser = (index) => {
         setTaggedUsers([...taggedUsers, searchUserList[index]])
         searchUserList.splice(index, 1)
@@ -253,6 +255,7 @@ const Post = (nav) => {
                     medias: JSON.stringify({ urls: imageURLs }),
                     //join the tagged users id into a string
                     tagged: taggedUsersId.join(','),
+                    topic: selectedTopic.id,
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -265,12 +268,15 @@ const Post = (nav) => {
                     handleClosePopup()
                 })
                 .catch((err) => {
+                    setIsPosting(false)
                     console.log('Cannot publish the post', err)
                 })
         }
     }, [imageURLs])
 
     const handlePublish = async () => {
+        setIsPosting(true)
+
         setImageURLs([])
 
         for (let i = 0; i < pickedImages.length; i++) {
@@ -284,6 +290,7 @@ const Post = (nav) => {
                     setImageURLs
                 )
             } catch (e) {
+                setIsPosting(false)
                 console.log(e)
                 return
             }
@@ -396,6 +403,7 @@ const Post = (nav) => {
                         <ScrollView
                             className="flex-1"
                             showsVerticalScrollIndicator={false}
+                            pointerEvents={isPosting ? 'none' : 'auto'}
                         >
                             <View className="flex flex-1">
                                 <View className="w-fit flex-col items-center justify-start space-y-5">
