@@ -41,6 +41,7 @@ import {
     Image,
     ScrollView,
     RefreshControl,
+    Alert,
 } from 'react-native'
 import { PostButton } from '../../components/button'
 import { SearchBar } from 'react-native-elements'
@@ -189,14 +190,31 @@ const Post = (nav) => {
     }
 
     const handleClosePopup = () => {
-        setPostContent('')
-        setPickedImages([])
-        setImageURLs([])
-        setTaggedUsers([])
-        setTaggedUsersId([])
-        setIsModalVisible(false)
-        setIsTopicSelectorModalVisible(false)
-        setSelectedTopic({})
+        Alert.alert(
+            'Discard Post',
+            'Are you sure you want to discard this post? You will lose all inputs.',
+            [
+                {
+                    text: 'No',
+                    onPress: () => console.log('Cancel Pressed'),
+                    style: 'cancel',
+                },
+                {
+                    text: 'Yes',
+                    onPress: () => {
+                        setPostContent('')
+                        setPickedImages([])
+                        setImageURLs([])
+                        setTaggedUsers([])
+                        setTaggedUsersId([])
+                        setIsModalVisible(false)
+                        setIsTopicSelectorModalVisible(false)
+                        setSelectedTopic({})
+                    },
+                },
+            ],
+            { cancelable: false }
+        )
     }
 
     useEffect(() => {
@@ -599,7 +617,7 @@ const Post = (nav) => {
                                                         }
                                                     />
                                                     <Text className="text-xs text-orchid-900">
-                                                        Images...
+                                                        Images
                                                     </Text>
                                                 </TouchableOpacity>
                                             )}
@@ -693,14 +711,14 @@ const Post = (nav) => {
                                             </Text>
                                         </View>
                                     )}
-                                    {uploadProgress === 0 && (
+                                    {/* {uploadProgress === 0 && (
                                         <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
                                             <Text className="text-orchid-900">
                                                 {pickedImages.length}/5 images
                                                 selected
                                             </Text>
                                         </View>
-                                    )}
+                                    )} */}
                                     <View className="flex-row justify-evenly space-x-10">
                                         <PostButton
                                             onPress={() => handlePublish()}
