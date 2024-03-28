@@ -1,6 +1,5 @@
 // Import package and project components
 import React, { useEffect, useState } from 'react'
-import { SearchBar as SB } from '@rneui/themed'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
@@ -11,6 +10,7 @@ import {
     faCircleXmark,
     faPlus,
     faPencil,
+    faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -32,6 +32,8 @@ import ImageView from 'react-native-image-viewing'
 
 import { getDatetime } from '../../utils/Utils'
 
+import TopicSelector from './components/TopicSelector'
+
 import {
     View,
     Text,
@@ -48,7 +50,7 @@ const Post = (nav) => {
     const [postContent, setPostContent] = useState('')
 
     const [postData, setPostData] = useState([{}])
-    const [IsModalVisible, setIsModalVisible] = useState(true)
+    const [IsModalVisible, setIsModalVisible] = useState(false)
 
     const [userId, setUserId] = useState('')
     const [community_id, setCommunityId] = useState(
@@ -67,6 +69,14 @@ const Post = (nav) => {
     const [isJoined, setIsJoined] = useState(useRoute().params.communityId)
 
     const [imageViewerVisible, setImageViewerVisible] = useState(false)
+
+    const [tagUserSearchBarVisibility, setTagUserSearchBarVisibility] =
+        useState(false)
+
+    const [isTopicSelectorModalVisible, setIsTopicSelectorModalVisible] =
+        useState(false)
+
+    const [selectedTopic, setSelectedTopic] = useState({})
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
@@ -102,8 +112,8 @@ const Post = (nav) => {
     const [taggedUsersId, setTaggedUsersId] = useState([])
 
     useEffect(() => {
-        console.log('Tagged users:', taggedUsersId)
-        console.log('Tagged users:', taggedUsers)
+        // console.log('Tagged users:', taggedUsersId)
+        // console.log('Tagged users:', taggedUsers)
     }, [taggedUsersId])
 
     useEffect(() => {
@@ -144,7 +154,7 @@ const Post = (nav) => {
     }
 
     useEffect(() => {
-        console.log('Picked images:', pickedImages.length)
+        // console.log('Picked images:', pickedImages.length)
         setUploadProgress(0)
         setEachImageProgress([])
     }, [pickedImages])
@@ -153,8 +163,8 @@ const Post = (nav) => {
         getPosts()
         findUserId()
 
-        console.log(community_id)
-        console.log(userId)
+        // console.log(community_id)
+        // console.log(userId)
     }, [])
 
     const getPosts = async () => {
@@ -185,6 +195,8 @@ const Post = (nav) => {
         setTaggedUsers([])
         setTaggedUsersId([])
         setIsModalVisible(false)
+        setIsTopicSelectorModalVisible(false)
+        setSelectedTopic({})
     }
 
     useEffect(() => {
@@ -205,7 +217,7 @@ const Post = (nav) => {
             pickedImages != 0 &&
             imageURLs.length === pickedImages.length
         ) {
-            console.log('Image URLs:', imageURLs)
+            // console.log('Image URLs:', imageURLs)
 
             setPickedImages([])
             setEachImageProgress([])
@@ -229,7 +241,7 @@ const Post = (nav) => {
                 },
             })
                 .then((res) => {
-                    console.log('Post published', res.data)
+                    // console.log('Post published', res.data)
 
                     setPostData(res.data)
                     handleClosePopup()
@@ -297,6 +309,11 @@ const Post = (nav) => {
         //
     }
 
+    const handleEditTopic = () => {
+        setIsModalVisible(false)
+        setIsTopicSelectorModalVisible(true)
+    }
+
     const [search, setSearch] = useState('')
 
     const updateSearch = (search) => {
@@ -338,7 +355,7 @@ const Post = (nav) => {
                     </View>
                 )}
 
-                <View className="h-screen w-screen">
+                <View className="h-screen w-screen bg-black">
                     {/* image viewer */}
 
                     <ImageView
@@ -356,284 +373,378 @@ const Post = (nav) => {
                         visible={IsModalVisible && !imageViewerVisible}
                         transparent={false}
                         animationType="slide"
+                        presentationStyle="pageSheet"
                     >
-                        <View className="flex flex-1">
-                            <View className="w-fit flex-col items-center justify-start space-y-5 pb-10 pt-10 shadow">
-                                <Text className="text-2xl font-bold text-orchid-900">
-                                    {STRINGS.CreatePost}
-                                </Text>
-                                <PostInput
-                                    className="h-48"
-                                    multiline={true}
-                                    placeholder={STRINGS.postContentPlaceholder}
-                                    value={postContent}
-                                    onChangeText={(text) =>
-                                        setPostContent(text)
-                                    }
-                                />
-
-                                <View className="flex h-fit w-full flex-row items-center justify-between">
-                                    <Text className="text-orchid-900">
-                                        Select a Post Topic
-                                    </Text>
-                                    <View className="flex-row items-center justify-center rounded-full bg-gold-900 px-6 py-2 text-orchid-900 shadow">
-                                        <TouchableOpacity
-                                            onPress={() => handleAddTag()}
-                                            className="flex-row items-center justify-center space-x-2"
-                                        >
-                                            <Text className="text-orchid-900">
-                                                Machine Learning
-                                            </Text>
-                                            <FontAwesomeIcon
-                                                icon={faPencil}
-                                                color={COLORS.orchid[900]}
-                                                size={SIZES.xMarkIconSizeTag}
-                                            />
-                                        </TouchableOpacity>
+                        <ScrollView
+                            className="flex-1"
+                            showsVerticalScrollIndicator={false}
+                        >
+                            <View className="flex flex-1">
+                                <View className="w-fit flex-col items-center justify-start space-y-5">
+                                    <View className="flex w-full items-center">
+                                        <Text className="text-2xl font-bold text-orchid-900">
+                                            {STRINGS.CreatePost}
+                                        </Text>
                                     </View>
-                                </View>
+                                    <PostInput
+                                        className="h-48"
+                                        multiline={true}
+                                        placeholder={
+                                            STRINGS.postContentPlaceholder
+                                        }
+                                        value={postContent}
+                                        onChangeText={(text) =>
+                                            setPostContent(text)
+                                        }
+                                    />
 
-                                <View className="flex h-fit w-full">
-                                    <Text className="text-orchid-900">
-                                        Tag Users
-                                    </Text>
-                                    <View className="w-fit flex-col items-center justify-start">
-                                        <SearchBar
-                                            placeholder={STRINGS.TagUsers}
-                                            onChangeText={(text) =>
-                                                searchUser(text)
-                                            }
-                                            value={searchUsername}
-                                            containerStyle={[
-                                                searchBarStyle.containerSearchBar,
-                                                inputStyle.inputShadow,
-                                            ]}
-                                            inputContainerStyle={
-                                                searchBarStyle.inputSearchBar
-                                            }
-                                            inputStyle={searchBarStyle.input}
-                                            placeholderTextColor={
-                                                COLORS['orchid'][400]
-                                            }
-                                            searchIcon={
-                                                searchBarStyle.seachIcon
-                                            }
-                                            clearIcon={searchBarStyle.clearIcon}
-                                        />
+                                    <View className="flex h-fit w-full flex-row items-center justify-between">
+                                        <Text className="text-orchid-900">
+                                            Select a Post Topic
+                                        </Text>
+                                        <View className="flex-row items-center justify-center rounded-full bg-gold-900 px-6 py-2 text-orchid-900">
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    handleEditTopic()
+                                                }
+                                                className="flex-row items-center justify-center space-x-2"
+                                            >
+                                                {selectedTopic.name && (
+                                                    <Text className="text-orchid-900">
+                                                        {selectedTopic.name}
+                                                    </Text>
+                                                )}
+                                                <FontAwesomeIcon
+                                                    icon={faPencil}
+                                                    color={COLORS.orchid[900]}
+                                                    size={SIZES.smallIconSize}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
 
-                                        {searchUsername.length > 0 && (
+                                    <View className="flex h-fit w-full">
+                                        <View className="mb-2 flex flex-row items-center justify-between">
+                                            <Text className="text-orchid-900">
+                                                Tag Users
+                                            </Text>
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    setTagUserSearchBarVisibility(
+                                                        (prev) => !prev
+                                                    )
+                                                }
+                                                className="flex-row items-center justify-center space-x-2 rounded-full bg-gold-900 px-5 py-2"
+                                            >
+                                                <Text className="text-sm text-orchid-900">
+                                                    Find Users
+                                                </Text>
+                                                <FontAwesomeIcon
+                                                    icon={faMagnifyingGlass}
+                                                    color={COLORS.orchid[900]}
+                                                    size={SIZES.smallIconSize}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                        {tagUserSearchBarVisibility && (
+                                            <View className="w-fit flex-col items-center justify-start">
+                                                <SearchBar
+                                                    placeholder={
+                                                        STRINGS.TagUsers
+                                                    }
+                                                    onChangeText={(text) =>
+                                                        searchUser(text)
+                                                    }
+                                                    value={searchUsername}
+                                                    containerStyle={[
+                                                        searchBarStyle.containerSearchBar,
+                                                        inputStyle.inputShadow,
+                                                    ]}
+                                                    inputContainerStyle={
+                                                        searchBarStyle.inputSearchBar
+                                                    }
+                                                    inputStyle={
+                                                        searchBarStyle.input
+                                                    }
+                                                    placeholderTextColor={
+                                                        COLORS['orchid'][400]
+                                                    }
+                                                    searchIcon={
+                                                        searchBarStyle.seachIcon
+                                                    }
+                                                    clearIcon={
+                                                        searchBarStyle.clearIcon
+                                                    }
+                                                />
+
+                                                {searchUsername.length > 0 &&
+                                                    searchUserList.length >
+                                                        0 && (
+                                                        <ScrollView
+                                                            className="mt-1 h-24 w-fit overflow-auto"
+                                                            contentContainerStyle={{
+                                                                flexDirection:
+                                                                    'row',
+                                                                flexGrow: 1,
+                                                            }}
+                                                        >
+                                                            <View className="flex h-full w-full flex-row flex-wrap items-start justify-start overflow-auto">
+                                                                {searchUserList.map(
+                                                                    (
+                                                                        user,
+                                                                        index
+                                                                    ) => (
+                                                                        <TouchableOpacity
+                                                                            key={
+                                                                                index
+                                                                            }
+                                                                            className="mx-1 my-2 rounded-full bg-orchid-100 px-3 py-1.5 shadow-sm"
+                                                                            onPress={() =>
+                                                                                tagUser(
+                                                                                    index
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            <Text className="text-sm text-orchid-900">
+                                                                                {
+                                                                                    user.username
+                                                                                }
+                                                                            </Text>
+                                                                        </TouchableOpacity>
+                                                                    )
+                                                                )}
+                                                            </View>
+                                                        </ScrollView>
+                                                    )}
+                                            </View>
+                                        )}
+                                    </View>
+
+                                    {taggedUsers.length > 0 && (
+                                        <View className="w-full space-y-1">
+                                            <View className="flex w-full flex-col items-start justify-start">
+                                                <Text className="text-orchid-900">
+                                                    Tagged Users
+                                                </Text>
+                                            </View>
+
                                             <ScrollView
-                                                className="mt-2 h-28 w-fit overflow-auto"
+                                                className="min-h-16 max-h-26 w-fit overflow-auto"
                                                 contentContainerStyle={{
+                                                    display: 'flex',
                                                     flexDirection: 'row',
+                                                    flexWrap: 'wrap',
+                                                    justifyContent:
+                                                        'flex-start',
                                                     flexGrow: 1,
                                                 }}
                                             >
-                                                <View className="flex h-full w-full flex-row flex-wrap items-start justify-start overflow-auto">
-                                                    {searchUserList.map(
-                                                        (user, index) => (
-                                                            <TouchableOpacity
-                                                                key={index}
-                                                                className="mx-1 my-2 rounded-full bg-orchid-100 px-3 py-2 shadow-sm"
-                                                                onPress={() =>
-                                                                    tagUser(
-                                                                        index
-                                                                    )
-                                                                }
-                                                            >
-                                                                <Text className="text-base text-orchid-900">
+                                                {taggedUsers.map(
+                                                    (user, index) => (
+                                                        <View className="mx-1 my-2 flex flex-row items-center justify-center space-x-2 rounded-full bg-orchid-100 px-3 py-1.5 shadow-sm">
+                                                            <View>
+                                                                <Text className="text-sm text-orchid-900">
                                                                     {
                                                                         user.username
                                                                     }
                                                                 </Text>
+                                                            </View>
+                                                            <TouchableOpacity
+                                                                key={index}
+                                                                onPress={() =>
+                                                                    removeTaggedUser(
+                                                                        index
+                                                                    )
+                                                                }
+                                                            >
+                                                                <FontAwesomeIcon
+                                                                    icon={
+                                                                        faCircleXmark
+                                                                    }
+                                                                    color={
+                                                                        COLORS[
+                                                                            'orchid'
+                                                                        ][800]
+                                                                    }
+                                                                    size={
+                                                                        SIZES[
+                                                                            'xMarkIconSizeTag'
+                                                                        ]
+                                                                    }
+                                                                />
                                                             </TouchableOpacity>
-                                                        )
-                                                    )}
-                                                </View>
+                                                        </View>
+                                                    )
+                                                )}
                                             </ScrollView>
-                                        )}
-                                    </View>
-                                </View>
-
-                                {taggedUsers.length > 0 && (
-                                    <View className="w-full space-y-1">
-                                        <View className="flex w-full flex-col items-start justify-start">
-                                            <Text className="text-orchid-900">
-                                                Tagged Users
-                                            </Text>
                                         </View>
+                                    )}
 
-                                        <ScrollView
-                                            className="min-h-16 max-h-26 w-fit overflow-auto"
-                                            contentContainerStyle={{
-                                                display: 'flex',
-                                                flexDirection: 'row',
-                                                flexWrap: 'wrap',
-                                                justifyContent: 'flex-start',
-                                                flexGrow: 1,
-                                            }}
-                                        >
-                                            {taggedUsers.map((user, index) => (
-                                                <View className="mx-1 my-2 flex flex-row items-center justify-center space-x-2 rounded-full bg-orchid-100 px-3 py-1.5 shadow-sm">
-                                                    <View>
-                                                        <Text className="text-sm text-orchid-900">
-                                                            {user.username}
-                                                        </Text>
-                                                    </View>
-                                                    <TouchableOpacity
-                                                        key={index}
-                                                        onPress={() =>
-                                                            removeTaggedUser(
-                                                                index
-                                                            )
-                                                        }
-                                                    >
-                                                        <FontAwesomeIcon
-                                                            icon={faCircleXmark}
-                                                            color={
-                                                                COLORS[
-                                                                    'orchid'
-                                                                ][800]
-                                                            }
-                                                            size={
-                                                                SIZES[
-                                                                    'xMarkIconSizeTag'
-                                                                ]
-                                                            }
-                                                        />
-                                                    </TouchableOpacity>
-                                                </View>
-                                            ))}
-                                        </ScrollView>
-                                    </View>
-                                )}
-
-                                <View className="h-fit w-full flex-row items-center justify-center space-x-2">
-                                    {pickedImages.length >= 0 &&
-                                        pickedImages.length < 5 && (
-                                            <TouchableOpacity
-                                                onPress={() =>
-                                                    pickingImageHandler()
-                                                }
-                                                className="flex h-16 w-16 items-center justify-center space-y-1 rounded-lg bg-orchid-100 shadow shadow-slate-300"
-                                            >
-                                                <FontAwesomeIcon
-                                                    icon={faPlus}
-                                                    color={COLORS.orchid[900]}
-                                                    size={
-                                                        SIZES.postImageIconSize
-                                                    }
-                                                />
-                                                <Text className="text-xs text-orchid-900">
-                                                    Images...
-                                                </Text>
-                                            </TouchableOpacity>
-                                        )}
-                                    {pickedImages.length > 0 &&
-                                        pickedImages.map((imageInfo, index) => {
-                                            return (
+                                    <View className="h-fit w-full flex-row items-center justify-center space-x-2">
+                                        {pickedImages.length >= 0 &&
+                                            pickedImages.length < 5 && (
                                                 <TouchableOpacity
                                                     onPress={() =>
-                                                        setImageViewerVisible(
-                                                            true
-                                                        )
+                                                        pickingImageHandler()
                                                     }
+                                                    className="flex h-16 w-16 items-center justify-center space-y-1 rounded-lg bg-orchid-100"
                                                 >
-                                                    <View className="relative h-16 w-16 bg-transparent shadow shadow-slate-300">
-                                                        <Image
-                                                            source={{
-                                                                uri: imageInfo.uri,
-                                                            }}
-                                                            className="h-16 w-16 rounded-lg"
-                                                        />
+                                                    <FontAwesomeIcon
+                                                        icon={faPlus}
+                                                        color={
+                                                            COLORS.orchid[900]
+                                                        }
+                                                        size={
+                                                            SIZES.postImageIconSize
+                                                        }
+                                                    />
+                                                    <Text className="text-xs text-orchid-900">
+                                                        Images...
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            )}
+                                        {pickedImages.length > 0 &&
+                                            pickedImages.map(
+                                                (imageInfo, index) => {
+                                                    return (
                                                         <TouchableOpacity
-                                                            className="absolute right-1 top-1"
                                                             onPress={() =>
-                                                                removePickedImage(
-                                                                    index
+                                                                setImageViewerVisible(
+                                                                    true
                                                                 )
                                                             }
                                                         >
-                                                            <FontAwesomeIcon
-                                                                icon={
-                                                                    faCircleXmark
-                                                                }
-                                                                color={
-                                                                    COLORS.white
-                                                                }
-                                                            />
+                                                            <View className="relative h-16 w-16 bg-transparent">
+                                                                <Image
+                                                                    source={{
+                                                                        uri: imageInfo.uri,
+                                                                    }}
+                                                                    className="h-16 w-16 rounded-lg"
+                                                                />
+                                                                <TouchableOpacity
+                                                                    className="absolute right-1 top-1"
+                                                                    onPress={() =>
+                                                                        removePickedImage(
+                                                                            index
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    <FontAwesomeIcon
+                                                                        icon={
+                                                                            faCircleXmark
+                                                                        }
+                                                                        color={
+                                                                            COLORS.white
+                                                                        }
+                                                                    />
+                                                                </TouchableOpacity>
+                                                            </View>
                                                         </TouchableOpacity>
-                                                    </View>
-                                                </TouchableOpacity>
-                                            )
-                                        })}
-                                    {pickedImages.length < 5 &&
-                                        Array.from(
-                                            { length: 4 - pickedImages.length },
-                                            (_, i) => (
-                                                <View className="h-16 w-16 rounded-lg bg-slate-100 shadow shadow-slate-300"></View>
-                                            )
-                                        )}
-                                </View>
-                                {uploadProgress > 0 && uploadProgress < 1 && (
-                                    <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
-                                        <View className="flex h-2 w-full shadow shadow-slate-200">
-                                            <Progress.Bar
-                                                animated={true}
-                                                progress={uploadProgress}
-                                                width={null}
-                                                height={6}
-                                                borderRadius={4}
-                                                borderColor={COLORS.orchid[500]}
-                                                borderWidth={0}
-                                                unfilledColor={
-                                                    COLORS.orchid[100]
+                                                    )
                                                 }
-                                                color={COLORS.orchid[500]}
-                                            />
+                                            )}
+                                        {pickedImages.length < 5 &&
+                                            Array.from(
+                                                {
+                                                    length:
+                                                        4 - pickedImages.length,
+                                                },
+                                                (_, i) => (
+                                                    <View className="h-16 w-16 rounded-lg bg-slate-100"></View>
+                                                )
+                                            )}
+                                    </View>
+                                    {uploadProgress > 0 &&
+                                        uploadProgress < 1 && (
+                                            <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
+                                                <View className="flex h-2 w-full shadow shadow-slate-200">
+                                                    <Progress.Bar
+                                                        animated={true}
+                                                        progress={
+                                                            uploadProgress
+                                                        }
+                                                        width={null}
+                                                        height={6}
+                                                        borderRadius={4}
+                                                        borderColor={
+                                                            COLORS.orchid[500]
+                                                        }
+                                                        borderWidth={0}
+                                                        unfilledColor={
+                                                            COLORS.orchid[100]
+                                                        }
+                                                        color={
+                                                            COLORS.orchid[500]
+                                                        }
+                                                    />
+                                                </View>
+                                                <Text>
+                                                    {Math.round(
+                                                        uploadProgress * 100
+                                                    )}
+                                                    %
+                                                </Text>
+                                            </View>
+                                        )}
+                                    {uploadProgress === 1 && (
+                                        <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
+                                            <Text className="text-orchid-900">
+                                                {STRINGS.uploadSuccess}
+                                            </Text>
                                         </View>
-                                        <Text>
-                                            {Math.round(uploadProgress * 100)}%
-                                        </Text>
+                                    )}
+                                    {uploadProgress === 0 && (
+                                        <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
+                                            <Text className="text-orchid-900">
+                                                {pickedImages.length}/5 images
+                                                selected
+                                            </Text>
+                                        </View>
+                                    )}
+                                    <View className="flex-row justify-evenly space-x-10">
+                                        <PostButton
+                                            onPress={() => handlePublish()}
+                                            className="bg-gold-900"
+                                        >
+                                            <Text className="text-base text-orchid-900">
+                                                {' '}
+                                                {STRINGS.publish}
+                                            </Text>
+                                        </PostButton>
+                                        <PostButton
+                                            onPress={() => handleClosePopup()}
+                                            className="bg-gray-300"
+                                        >
+                                            <Text className="justify-center text-base  text-orchid-900">
+                                                {' '}
+                                                {STRINGS.cancel}
+                                            </Text>
+                                        </PostButton>
                                     </View>
-                                )}
-                                {uploadProgress === 1 && (
-                                    <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
-                                        <Text className="text-orchid-900">
-                                            {STRINGS.uploadSuccess}
-                                        </Text>
-                                    </View>
-                                )}
-                                {uploadProgress === 0 && (
-                                    <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
-                                        <Text className="text-orchid-900">
-                                            {pickedImages.length}/5 images
-                                            selected
-                                        </Text>
-                                    </View>
-                                )}
-                                <View className="flex-row justify-evenly space-x-10">
-                                    <PostButton
-                                        onPress={() => handlePublish()}
-                                        className="bg-gold-900"
-                                    >
-                                        <Text className="text-base text-orchid-900">
-                                            {' '}
-                                            {STRINGS.publish}
-                                        </Text>
-                                    </PostButton>
-                                    <PostButton
-                                        onPress={() => handleClosePopup()}
-                                        className="bg-gray-300"
-                                    >
-                                        <Text className="justify-center text-base  text-orchid-900">
-                                            {' '}
-                                            {STRINGS.cancel}
-                                        </Text>
-                                    </PostButton>
                                 </View>
                             </View>
-                        </View>
+                        </ScrollView>
+                    </Modal>
+
+                    <Modal
+                        presentationStyle="pageSheet"
+                        visible={
+                            isTopicSelectorModalVisible &&
+                            !imageViewerVisible &&
+                            !IsModalVisible
+                        }
+                        transparent={false}
+                        animationType="slide"
+                    >
+                        {/* safe area? */}
+
+                        <TopicSelector
+                            key={Math.random()}
+                            setModalVisibility={setIsTopicSelectorModalVisible}
+                            setPostModalVisibility={setIsModalVisible}
+                            selectedTopic={selectedTopic}
+                            setSelectedTopic={setSelectedTopic}
+                        />
                     </Modal>
                 </View>
             </View>

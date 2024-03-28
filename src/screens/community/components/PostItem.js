@@ -143,7 +143,7 @@ const PostItem = ({ post, userId }) => {
             },
         })
             .then((res) => {
-                console.log('User info', res.data.username)
+                // console.log('User info', res.data.username)
                 setTaggedUsernames((prev) => [...prev, res.data.username])
             })
             .catch((err) => {
