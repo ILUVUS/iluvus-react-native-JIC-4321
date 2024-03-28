@@ -4,12 +4,7 @@ import axios from 'axios'
 import { BASE_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PostItem from '../community/components/PostItem'
-import {
-    View,
-    Text,
-    ScrollView,
-    RefreshControl,
-} from 'react-native'
+import { View, Text, ScrollView, RefreshControl } from 'react-native'
 
 const Home = (nav) => {
     const [postData, setPostData] = useState([{}])
@@ -36,11 +31,12 @@ const Home = (nav) => {
     }
 
     useEffect(() => {
-        getPosts()
         findUserId()
-
-        console.log(userId)
     }, [])
+
+    useEffect(() => {
+        getPosts()
+    }, [userId !== ''])
 
     const getPosts = async () => {
         axios({
@@ -62,8 +58,7 @@ const Home = (nav) => {
     return (
         <>
             <View className="h-screen w-screen flex-1 bg-white">
-                
-                {postData.length > 0  ? (
+                {postData.length > 0 ? (
                     <View className="h-full w-full">
                         <ScrollView
                             contentContainerStyle={{
