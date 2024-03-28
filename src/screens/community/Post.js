@@ -191,7 +191,7 @@ const Post = (nav) => {
         setIsModalVisible(true)
     }
 
-    const handleClosePopup = () => {
+    const handleCancelPopup = () => {
         Alert.alert(
             'Discard Post',
             'Are you sure you want to discard this post? You will lose all inputs.',
@@ -217,6 +217,17 @@ const Post = (nav) => {
             ],
             { cancelable: false }
         )
+    }
+
+    const handleClosePopup = () => {
+        setPostContent('')
+        setPickedImages([])
+        setImageURLs([])
+        setTaggedUsers([])
+        setTaggedUsersId([])
+        setIsModalVisible(false)
+        setIsTopicSelectorModalVisible(false)
+        setSelectedTopic({})
     }
 
     useEffect(() => {
@@ -428,12 +439,12 @@ const Post = (nav) => {
                                         <Text className="text-orchid-900">
                                             Select a Post Topic
                                         </Text>
-                                        <View className="flex-row items-center justify-center rounded-full bg-gold-900 px-6 py-2 text-orchid-900">
+                                        <View className="flex-row items-center justify-center">
                                             <TouchableOpacity
                                                 onPress={() =>
                                                     handleEditTopic()
                                                 }
-                                                className="flex-row items-center justify-center space-x-2"
+                                                className="flex-row items-center justify-center space-x-2 rounded-full bg-gold-900 px-6 py-2"
                                             >
                                                 {selectedTopic.name && (
                                                     <Text className="text-orchid-900">
@@ -738,7 +749,7 @@ const Post = (nav) => {
                                             </Text>
                                         </PostButton>
                                         <PostButton
-                                            onPress={() => handleClosePopup()}
+                                            onPress={() => handleCancelPopup()}
                                             className="bg-gray-300"
                                         >
                                             <Text className="justify-center text-base  text-orchid-900">

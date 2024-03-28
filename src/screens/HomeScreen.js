@@ -87,8 +87,7 @@ export default function HomeScreen() {
     return (
         <Tab.Navigator
             // unmount the screen when switching to another screen
-            unmountOnBlur={true}
-
+            // unmountOnBlur={false}
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName

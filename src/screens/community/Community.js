@@ -102,26 +102,24 @@ const Community = () => {
 
     useEffect(() => {
         setCommunityListInfo([])
-        Object.keys(communityList).map((key, index) => {
+        // make sure data arrive in order
+        const promises = Object.keys(communityList).map((key) =>
             getCommunityInfo(key)
-                .then((info) => {
-                    setCommunityListInfo((prev) => [...prev, {
-                        id: key,
-                        name: info.name,
-                        description: info.description,
-                        rules: info.rules,
-                        visibility: info.visibility,
-                        ownerId: info.ownerId,
-                        image: info.image,
-                    
-                    }])
-                })
-                .catch((err) => {
-                    console.log(err)
-                })
+        )
+        Promise.all(promises).then((infos) => {
+            setCommunityListInfo((prev) =>
+                infos.map((info, index) => ({
+                    id: Object.keys(communityList)[index],
+                    name: info.name,
+                    description: info.description,
+                    rules: info.rules,
+                    visibility: info.visibility,
+                    ownerId: info.ownerId,
+                    image: info.image,
+                }))
+            )
         })
-    },[communityList])
-
+    }, [communityList])
 
     const getCommunityInfo = async (id) => {
         try {
@@ -243,18 +241,25 @@ const Community = () => {
                     </View>
 
                     <View className="flex flex-row flex-wrap overflow-auto">
-
                         {communityListInfo.map((info, index) => (
                             <CommunityViewImageButton
                                 key={index}
                                 onPress={() => communityClick(info.id)}
                             >
                                 <Image
-                                    source={(info.image != null && info.image !== "") ? { uri: `data:image/jpg;base64,${info.image}` } : sampleIcon}
+                                    source={
+                                        info.image != null && info.image !== ''
+                                            ? {
+                                                  uri: `data:image/jpg;base64,${info.image}`,
+                                              }
+                                            : sampleIcon
+                                    }
                                     className="h-24 w-24 rounded-3xl"
                                 />
                                 <Text className="mt-1 text-sm text-orchid-900">
-                                    {info.name.length > 12 ? info.name.substring(0, 10) + "..." : info.name}
+                                    {info.name.length > 12
+                                        ? info.name.substring(0, 10) + '...'
+                                        : info.name}
                                 </Text>
                             </CommunityViewImageButton>
                         ))}
