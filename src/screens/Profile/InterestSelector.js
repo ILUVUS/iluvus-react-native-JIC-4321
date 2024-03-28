@@ -6,16 +6,15 @@ import { BASE_URL } from '@env'
 import axios from 'axios'
 import { ScrollView } from 'react-native-gesture-handler'
 
-import STRINGS from '../../../constants/strings'
+import STRINGS from '../../constants/strings'
 
-export default TopicSelector = ({
+export default InterestSelector = ({
     setModalVisibility,
-    setPostModalVisibility,
     selectedTopic,
     setSelectedTopic,
 }) => {
     const [topicList, setTopicList] = useState({})
-    const [currentTopic, setCurrentTopic] = useState({selectedTopic})
+    const [selectedInterests, setSelectedInterests] = useState(selectedTopic)
 
     const getTopics = async (name) => {
         axios({
@@ -41,16 +40,43 @@ export default TopicSelector = ({
         // console.log('Topic List:', topicList)
     }, [topicList])
 
+    const toggleInterestSelection = (interestId, interestName) => {
+        setSelectedInterests((prevSelectedInterests) => {
+            const interestIndex = prevSelectedInterests.findIndex(
+                (interest) => interest.id === interestId
+            )
+            if (interestIndex !== -1) {
+                // Remove the interest if already selected
+                return prevSelectedInterests.filter(
+                    (interest) => interest.id !== interestId
+                )
+            } else {
+                // Add the interest if not selected
+                if (prevSelectedInterests.length < 5) {
+                    return [
+                        ...prevSelectedInterests,
+                        { id: interestId, name: interestName },
+                    ]
+                }
+                return prevSelectedInterests
+            }
+        })
+    }
+
+    useEffect(() => {
+        console.log('Selected Interests:', selectedInterests)
+    }, [selectedInterests])
+
     return (
-        <View className="mb-2 flex w-full flex-1">
+        <View className="mb-2 flex w-full flex-1 p-5">
             <View className="flex items-center">
                 <Text className="mb-3 text-2xl font-bold text-orchid-900">
-                    Select Post Topic
+                    Select Your Interests
                 </Text>
             </View>
             <TextInput
                 className="mb-4 rounded-lg bg-orchid-100 px-6 py-4 shadow-sm"
-                placeholder="Search for Topics"
+                placeholder="Search for Interests"
                 onChangeText={(text) => {
                     getTopics(text)
                 }}
@@ -60,20 +86,19 @@ export default TopicSelector = ({
                 showsVerticalScrollIndicator={false}
             >
                 {Object.keys(topicList).map((key) => {
+                    const isSelected = selectedInterests.some(
+                        (interest) => interest.id === key
+                    )
                     return (
                         <TouchableOpacity
                             className={
                                 'rounded-lg bg-orchid-100 px-6 py-4 shadow-sm' +
-                                (currentTopic.id === key ? ' bg-gold-900' : '')
+                                (isSelected ? ' bg-gold-900' : '')
                             }
                             key={key}
                             onPress={() => {
-                                setCurrentTopic({
-                                    id: key,
-                                    name: topicList[key],
-                                })
+                                toggleInterestSelection(key, topicList[key])
                             }}
-
                         >
                             <Text className="text-sm text-orchid-900">
                                 {topicList[key]}
@@ -86,7 +111,6 @@ export default TopicSelector = ({
                 <TouchableOpacity
                     className="flex h-fit flex-1 items-center rounded-xl bg-red-300 px-8 py-2 shadow"
                     onPress={() => {
-                        setPostModalVisibility(true)
                         setModalVisibility(false)
                     }}
                 >
@@ -97,9 +121,9 @@ export default TopicSelector = ({
                 <TouchableOpacity
                     className="flex h-fit w-1/2 items-center rounded-xl bg-green-300 px-10 py-2 shadow"
                     onPress={() => {
-                        setSelectedTopic(currentTopic)
+                        setSelectedTopic(selectedInterests)
+                        console.log('Selected Interests:', selectedTopic)
                         setModalVisibility(false)
-                        setPostModalVisibility(true)
                     }}
                 >
                     <Text className="align-middle text-base font-bold text-green-900">

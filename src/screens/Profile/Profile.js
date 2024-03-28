@@ -1,6 +1,5 @@
 import { TouchableOpacity, View, Text } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import STRINGS from '../../constants/strings'
 import { useState, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
@@ -18,6 +17,8 @@ import { Keyboard } from 'react-native'
 import COLORS from '../../constants/colors'
 import { faAward } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { Modal } from 'react-native'
+import InterestSelector from './InterestSelector'
 
 const Profile = () => {
     const navigation = useNavigation()
@@ -25,8 +26,14 @@ const Profile = () => {
     const [userId, setUserId] = useState('')
     const [userInfo, setUserInfo] = useState({})
     const [refreshing, setRefreshing] = useState(false)
-    const [isEdit, setIsEdit] = useState(false)
+    const [isTopicSelectorModalVisible, setIsTopicSelectorModalVisible] =
+        useState(false)
     const [verify, setVerify] = useState(false)
+    const [selectedTopic, setSelectedTopic] = useState([])
+
+    useEffect(() => {
+        console.log(selectedTopic)
+    }, [selectedTopic])
 
     useEffect(() => {
         getVerified()
@@ -85,7 +92,9 @@ const Profile = () => {
             })
     }, [userId, isFocused])
 
-    const editProfile = () => {}
+    const editProfile = () => {
+        setIsTopicSelectorModalVisible(true)
+    }
 
     return (
         <View className="flex h-screen w-screen">
@@ -140,6 +149,9 @@ const Profile = () => {
                                 )}
                             </Text>
                         </View>
+                        <Text className="text-base text-orchid-800 ">
+                                {userInfo.dateOfBirth}
+                        </Text>
                     </View>
 
                     <View className="flex flex-row items-center justify-center gap-5"></View>
@@ -158,19 +170,47 @@ const Profile = () => {
                             />
                         </TouchableOpacity>
                     </View>
+                    <View className="mb-1 flex flex-row gap-2 items-center justify-center">
                     {verify && (
                         <Text className="text-base italic text-orchid-900">
                             Profesional Account
                         </Text>
                     )}
+                    </View>
 
-                    <Text className="text-base text-orchid-800 ">
-                        Date of Birth: {userInfo.dob}
+                    <Text className="text-base text-orchid-800 font-semibold ">
+                        Interests:
                     </Text>
-                    <Text className="text-base text-orchid-800 ">
-                        Interests: {userInfo.interests}
-                    </Text>
+                    <View>
+                        {selectedTopic.map((topic, index) => (
+                            <View
+                                key={index}
+                                className="mx-1 my-2 rounded-full bg-orchid-100 px-3 py-1.5 shadow-sm items-center"
+                            >
+                                <Text className="text-sm text-orchid-900 justify-center items-center ">
+                                    {topic.name}
+                                </Text>
+                            </View>
+                        ))}
+
+                    </View>
                 </View>
+
+                <Modal
+                    presentationStyle="pageSheet"
+                    visible={isTopicSelectorModalVisible}
+                    transparent={false}
+                    animationType="slide"
+                >
+                    {/* safe area? */}
+
+                    <InterestSelector
+                        key={Math.random()}
+                        setModalVisibility={setIsTopicSelectorModalVisible}
+                        selectedTopic={selectedTopic}
+                        setSelectedTopic={setSelectedTopic}
+                    />
+                </Modal>
             </ScrollView>
         </View>
     )
