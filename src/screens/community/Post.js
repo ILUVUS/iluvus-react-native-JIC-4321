@@ -180,6 +180,7 @@ const Post = (nav) => {
         })
             .then((res) => {
                 // reverse the array to show the latest post first
+                console.log('Posts:', res.data)
                 setPostData(res.data.reverse())
             })
             .catch((err) => {
