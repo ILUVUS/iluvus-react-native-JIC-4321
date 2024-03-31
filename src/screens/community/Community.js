@@ -126,7 +126,6 @@ const Community = () => {
                 value={searchValue}
                 containerStyle={[
                     searchBarStyle.containerSearchBar,
-                    inputStyle.inputShadow,
                 ]}
                 inputContainerStyle={searchBarStyle.inputSearchBar}
                 inputStyle={searchBarStyle.input}
@@ -200,11 +199,13 @@ const Community = () => {
                                 key={key}
                                 onPress={() => communityClick(key)}
                             >
-                                <Image
-                                    source={sampleIcon}
-                                    className="h-24 w-24 rounded-3xl"
-                                />
-                                <Text className="mt-1 text-sm text-orchid-900">
+                                <View className="h-24 w-24 rounded-3xl bg-white shadow shadow-orchid-200">
+                                    <Image
+                                        source={sampleIcon}
+                                        className="h-24 w-24 rounded-3xl"
+                                    />
+                                </View>
+                                <Text className="mt-1 text-sm text-orchid-900 shadow shadow-orchid-200">
                                     {communityList[key].substring(0, 12) +
                                         '...'}
                                 </Text>
