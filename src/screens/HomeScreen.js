@@ -58,10 +58,10 @@ export default function HomeScreen() {
                                 ? 'person-circle'
                                 : 'person-circle-outline'
                             break
-                        case STRINGS.messagetab:
+                        case STRINGS.notificationtab:
                             iconName = focused
-                                ? 'chatbubble'
-                                : 'chatbubble-outline'
+                                ? 'notifications'
+                                : 'notifications-outline'
                             break
                         case STRINGS.settingstab:
                             iconName = focused ? 'list' : 'list-outline'
@@ -90,8 +90,8 @@ export default function HomeScreen() {
                 component={ProfileScreenNav}
             />
             <Tab.Screen
-                name={STRINGS.messagetab}
-                component={MessageScreenNav}
+                name={STRINGS.notificationtab}
+                component={Notification}
             />
             <Tab.Screen
                 name={STRINGS.settingstab}
