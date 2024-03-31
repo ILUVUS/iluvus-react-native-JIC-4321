@@ -36,27 +36,25 @@ export default InterestSelector = ({
         getTopics('')
     }, [])
 
-    useEffect(() => {
-        // console.log('Topic List:', topicList)
-    }, [topicList])
 
     const toggleInterestSelection = (interestId, interestName) => {
         setSelectedInterests((prevSelectedInterests) => {
-            const interestIndex = prevSelectedInterests.findIndex(
-                (interest) => interest.id === interestId
+            const interestIndex = Object.keys(prevSelectedInterests).includes(
+                interestId
             )
-            if (interestIndex !== -1) {
-                // Remove the interest if already selected
-                return prevSelectedInterests.filter(
-                    (interest) => interest.id !== interestId
-                )
+
+            if (interestIndex) {
+                const { [interestId]: value, ...rest } = prevSelectedInterests
+                return rest
             } else {
-                // Add the interest if not selected
-                if (prevSelectedInterests.length < 5) {
-                    return [
+                const selectedInterestsLength = Object.keys(
+                    prevSelectedInterests
+                ).length
+                if (selectedInterestsLength < 5) {
+                    return {
                         ...prevSelectedInterests,
-                        { id: interestId, name: interestName },
-                    ]
+                        [interestId]: interestName,
+                    }
                 }
                 return prevSelectedInterests
             }
@@ -64,7 +62,6 @@ export default InterestSelector = ({
     }
 
     useEffect(() => {
-        console.log('Selected Interests:', selectedInterests)
     }, [selectedInterests])
 
     return (
@@ -86,13 +83,14 @@ export default InterestSelector = ({
                 showsVerticalScrollIndicator={false}
             >
                 {Object.keys(topicList).map((key) => {
-                    const isSelected = selectedInterests.some(
-                        (interest) => interest.id === key
-                    )
+                    const isSelected =
+                        Object.keys(selectedInterests).includes(key)
+
                     return (
                         <TouchableOpacity
                             className={
-                                'rounded-lg bg-orchid-100 px-6 py-4 shadow-sm' +
+                                'rounded-lg bg-orchid-100 px-6 py-4 shadow-sm'
+                                +
                                 (isSelected ? ' bg-gold-900' : '')
                             }
                             key={key}
@@ -122,7 +120,6 @@ export default InterestSelector = ({
                     className="flex h-fit w-1/2 items-center rounded-xl bg-green-300 px-10 py-2 shadow"
                     onPress={() => {
                         setSelectedTopic(selectedInterests)
-                        console.log('Selected Interests:', selectedTopic)
                         setModalVisibility(false)
                     }}
                 >

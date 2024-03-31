@@ -21,7 +21,6 @@ import { Modal } from 'react-native'
 import InterestSelector from './InterestSelector'
 
 const Profile = () => {
-    const navigation = useNavigation()
     const isFocused = useIsFocused()
     const [userId, setUserId] = useState('')
     const [userInfo, setUserInfo] = useState({})
@@ -29,11 +28,9 @@ const Profile = () => {
     const [isTopicSelectorModalVisible, setIsTopicSelectorModalVisible] =
         useState(false)
     const [verify, setVerify] = useState(false)
-    const [selectedTopic, setSelectedTopic] = useState([])
-
-    useEffect(() => {
-        console.log(selectedTopic)
-    }, [selectedTopic])
+    const [selectedTopic, setSelectedTopic] = useState({})
+    const interestInteger = parseInt(userInfo.interest)
+    const [interestList, setInterestList] = useState({})
 
     useEffect(() => {
         getVerified()
@@ -74,6 +71,56 @@ const Profile = () => {
             })
     }
 
+    const getTopics = async (name) => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/interest/getByName?name=${name}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setInterestList(res.data)
+            })
+            .catch((err) => {
+                console.log('Cannot get the interest list', err)
+            })
+    }
+
+    useEffect(() => {
+        getTopics('')
+    }, [])
+
+    const saveInterests = async () => {
+        const selectedTopicString = Object.keys(selectedTopic).join(',')
+
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/user/editInterest`,
+            data: {
+                userId: userId,
+                selectedTopic: selectedTopicString,
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                Object.keys(selectedTopic).map((key) => {
+                    if (selectedTopic[key] === res.data[key]) {
+                        setSelectedTopic(res.data)
+                    }
+                })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
+    useEffect(() => {
+        saveInterests()
+    }, [selectedTopic])
+
     useEffect(() => {
         console.log(userId)
         axios({
@@ -84,13 +131,17 @@ const Profile = () => {
             },
         })
             .then((res) => {
-                console.log(res.data)
+                // console.log(res.data)
                 setUserInfo(res.data)
             })
             .catch((err) => {
                 console.log(err)
             })
     }, [userId, isFocused])
+
+    useEffect(() => {
+        setSelectedTopic(userInfo.interest)
+    }, [userInfo.interest])
 
     const editProfile = () => {
         setIsTopicSelectorModalVisible(true)
@@ -149,9 +200,7 @@ const Profile = () => {
                                 )}
                             </Text>
                         </View>
-                        <Text className="text-base text-orchid-800 ">
-                                {userInfo.dateOfBirth}
-                        </Text>
+                        <Text className="text-base text-orchid-800 ">{}</Text>
                     </View>
 
                     <View className="flex flex-row items-center justify-center gap-5"></View>
@@ -170,29 +219,31 @@ const Profile = () => {
                             />
                         </TouchableOpacity>
                     </View>
-                    <View className="mb-1 flex flex-row gap-2 items-center justify-center">
-                    {verify && (
-                        <Text className="text-base italic text-orchid-900">
-                            Profesional Account
-                        </Text>
-                    )}
+                    <View className="mb-1 flex flex-row items-center justify-center gap-2">
+                        {verify && (
+                            <Text className="text-base italic text-orchid-900">
+                                Profesional Account
+                            </Text>
+                        )}
                     </View>
 
-                    <Text className="text-base text-orchid-800 font-semibold ">
+                    <Text className="text-base font-semibold text-orchid-800 ">
                         Interests:
                     </Text>
-                    <View>
-                        {selectedTopic.map((topic, index) => (
-                            <View
-                                key={index}
-                                className="mx-1 my-2 rounded-full bg-orchid-100 px-3 py-1.5 shadow-sm items-center"
-                            >
-                                <Text className="text-sm text-orchid-900 justify-center items-center ">
-                                    {topic.name}
-                                </Text>
-                            </View>
-                        ))}
-
+                    <View className="flex flex-grow flex-row flex-wrap gap-2">
+                        {selectedTopic &&
+                            Object.keys(selectedTopic).map((key) => {
+                                return (
+                                    <View
+                                        key={key}
+                                        className="rounded-full bg-orchid-100 px-3 py-1 "
+                                    >
+                                        <Text className="text-base text-orchid-900">
+                                            {selectedTopic[key]}
+                                        </Text>
+                                    </View>
+                                )
+                            })}
                     </View>
                 </View>
 
