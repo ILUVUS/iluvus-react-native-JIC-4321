@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useState } from 'react'
@@ -10,40 +10,51 @@ import {
     faFlag,
     faStar,
     faComment,
-    faS,
+    faSquareInfo,
 } from '@fortawesome/free-solid-svg-icons'
 import COLORS from '../../constants/colors'
+import axios from 'axios'
+import {displayDatetime} from '../../utils/Utils'
 
 const NotItemIdentify = ({ data }) => {
     let msg = ''
     let tag = faTag
     let bgColor = 'bg-orchid-100'
 
+    // Object.keys(data).map((key) => {
     switch (data.type) {
-        case 'tag':
-            msg = `${data.userFullName} tagged you in a post in ${data.communityName}`
+        case 'TAG':
+            msg = data.message
             tag = faTag
             bgColor = 'bg-orchid-100'
             break
 
-        case 'report':
-            msg = `${data.userFullName} reported your post in ${data.communityName}`
+        case 'REPORT':
+            msg = data.message
             tag = faFlag
             bgColor = 'bg-red-100'
             break
 
-        case 'like':
-            msg = `${data.userFullName} liked your post in ${data.communityName}`
+        case 'UPLIFT':
+            msg = data.message
             tag = faStar
             bgColor = 'bg-gold-500'
             break
 
-        case 'comment':
-            msg = `${data.userFullName} commented on your post in ${data.communityName}`
+        case 'COMMENT':
+            msg = data.message
             tag = faComment
             bgColor = 'bg-blue-100'
             break
+
+        case 'OTHER':
+            msg = data.message
+            tag = faSquareInfo
+            bgColor = 'bg-gray-100'
+            break
     }
+
+    // })
 
     return { msg, tag, bgColor }
 }
@@ -64,7 +75,7 @@ const Notitem = ({ data }) => {
             </View>
             <View className="mr-5 flex flex-col">
                 <Text className="mb-2 text-xs text-orchid-700">
-                    {data.dateTime}
+                    {displayDatetime(data.datetime)}
                 </Text>
                 <Text
                     className="items-start justify-start text-orchid-900 shadow"
