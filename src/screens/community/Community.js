@@ -21,7 +21,6 @@ import {
 } from '../../components/button'
 
 import { useIsFocused } from '@react-navigation/native'
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry'
 
 const Community = () => {
     const navigation = useNavigation()
@@ -139,13 +138,6 @@ const Community = () => {
         }
     }
 
-    // useEffect(() => {
-    //     communityListInfo.map((info, index) => {
-    //         console.log("image " + info.image)
-    //     }
-    //     )
-    // }, [communityListInfo])
-
     const newCommunity = () => {
         navigation.navigate('SetupCommunity')
     }
@@ -174,7 +166,6 @@ const Community = () => {
                 value={searchValue}
                 containerStyle={[
                     searchBarStyle.containerSearchBar,
-                    inputStyle.inputShadow,
                 ]}
                 inputContainerStyle={searchBarStyle.inputSearchBar}
                 inputStyle={searchBarStyle.input}
