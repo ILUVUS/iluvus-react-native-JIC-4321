@@ -20,8 +20,6 @@ import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingV
 import { Image } from 'react-native'
 
 import * as ImagePicker from 'expo-image-picker'
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCircleXmark } from '@fortawesome/free-solid-svg-icons'
 
 import { SearchBar } from 'react-native-elements'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
@@ -62,10 +60,10 @@ export default function SetupCommunity() {
 
     const [chosenModeratorsId, setChosenModeratorsId] = useState([])
 
-    useEffect(() => {
-        console.log('Chosen Moderators:', chosenModeratorsId)
-        console.log('Chosen Moderators:', chosenModerators)
-    }, [chosenModeratorsId])
+    // useEffect(() => {
+    //     console.log('Chosen Moderators:', chosenModeratorsId)
+    //     console.log('Chosen Moderators:', chosenModerators)
+    // }, [chosenModeratorsId])
 
     useEffect(() => {
         chosenModerators.map((user) => {
@@ -134,6 +132,10 @@ export default function SetupCommunity() {
         }
     }
 
+    useEffect(() => {
+    console.log(chosenModeratorsId)
+    }, [chosenModeratorsId])
+
     const publishCommunity = async () => {
         if (
             communityName.trim() !== '' &&
@@ -141,7 +143,6 @@ export default function SetupCommunity() {
             communityRule.trim() !== '' &&
             visibility.trim() !== ''
         ) {
-            console.log(visibility)
             axios({
                 method: 'POST',
                 url: `${BASE_URL}/community/create`,
@@ -152,6 +153,7 @@ export default function SetupCommunity() {
                     visibility: String(visibility),
                     ownerId: String(ownerId),
                     image: communityImage,
+                    moderators: chosenModeratorsId.join(','),
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -174,7 +176,7 @@ export default function SetupCommunity() {
     }
 
     return (
-        <CustomKeyboardAvoidingView>
+        <CustomKeyboardAvoidingView keyboardPadding={100}>
             <Text className="my-2 text-base text-orchid-900 shadow-md shadow-slate-400">
                 {STRINGS.setupCommunityName}
             </Text>
@@ -220,13 +222,16 @@ export default function SetupCommunity() {
                 placeholder={STRINGS.setupCommunityVisibilityPlaceholder}
             />
 
+            <Text className="mt-5 mb-2 text-base text-orchid-900 shadow-md shadow-slate-400">
+                Choose Moderators
+            </Text>
             {chosenModerators.length > 0 && (
                 <View className="w-full">
-                    <View className="my-3 flex w-full flex-col items-start justify-start">
-                        <Text className="text-base font-bold text-orchid-900">
-                            Chosen Moderators
-                        </Text>
-                    </View>
+                    {/*<View className="my-3 flex w-full flex-col items-start justify-start">*/}
+                        {/*<Text className="text-base font-bold text-orchid-900">*/}
+                        {/*    Chosen Moderators*/}
+                        {/*</Text>*/}
+                    {/*</View>*/}
 
                     <ScrollView
                         className="min-h-16 max-h-26 w-fit overflow-auto"
