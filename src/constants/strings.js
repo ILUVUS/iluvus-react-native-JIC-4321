@@ -141,4 +141,15 @@ export default {
 
     // upload
     uploadSuccess: 'Upload Successful',
+    notificationtab: 'Notification',
+
+    // report
+    reportscreen: 'Report',
+    review_reports: 'Review Reports',
+
+    keep_post_title: 'Keep Post',
+    keep_post_confirmation: 'Are you sure you want to keep this post?',
+
+    remove_post_title: 'Remove Post',
+    remove_post_confirmation: 'Are you sure you want to remove this post?',
 }

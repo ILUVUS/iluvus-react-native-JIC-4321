@@ -6,54 +6,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import COLORS from '../constants/colors'
 import STRINGS from '../constants/strings'
 import Community from './community/Community'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import Profile from './Profile/Profile'
-
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { BASE_URL } from '@env'
+import Home from './Home/Home.js'
+import Notification from './Notification/Notification'
 
 function HomeScreenNav() {
-    const [userId, setUserId] = useState('')
-    const [userInfo, setUserInfo] = useState({})
-
-    useEffect(() => {
-        const getUserId = async () => {
-            try {
-                const value = await AsyncStorage.getItem('userId')
-                if (value !== null) {
-                    setUserId(value)
-                }
-            } catch (e) {
-                console.log(e)
-            }
-        }
-        getUserId()
-    }, [])
-
-    useEffect(() => {
-        axios({
-            method: 'GET',
-            url: `${BASE_URL}/user/get?userId=${userId}`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                setUserInfo(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }, [userId])
-
-    return (
-        <View className="flex h-screen justify-center bg-white p-2 align-middle">
-            <Text>
-                Welcome {userInfo.lname}, {userInfo.fname}
-            </Text>
-        </View>
-    )
+    return <Home />
 }
 
 function CommunityScreenNav() {
@@ -101,10 +59,10 @@ export default function HomeScreen() {
                                 ? 'person-circle'
                                 : 'person-circle-outline'
                             break
-                        case STRINGS.messagetab:
+                        case STRINGS.notificationtab:
                             iconName = focused
-                                ? 'chatbubble'
-                                : 'chatbubble-outline'
+                                ? 'notifications'
+                                : 'notifications-outline'
                             break
                         case STRINGS.settingstab:
                             iconName = focused ? 'list' : 'list-outline'
@@ -133,8 +91,8 @@ export default function HomeScreen() {
                 component={ProfileScreenNav}
             />
             <Tab.Screen
-                name={STRINGS.messagetab}
-                component={MessageScreenNav}
+                name={STRINGS.notificationtab}
+                component={Notification}
             />
             <Tab.Screen
                 name={STRINGS.settingstab}
