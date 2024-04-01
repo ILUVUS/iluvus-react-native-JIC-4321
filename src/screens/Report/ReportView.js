@@ -31,7 +31,7 @@ const ReportView = ({ nav }) => {
     const getReportPosts = async () => {
         axios({
             method: 'GET',
-            url: `${BASE_URL}/post/getPostsByCommunityID?id=${communityId}`,
+            url: `${BASE_URL}/post/getReportedPosts?communityId=${communityId}`,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -71,8 +71,7 @@ const ReportView = ({ nav }) => {
                                         onChange={getReportPosts}
                                     />
                                 </View>
-                            ))
-                            }
+                            ))}
                         </ScrollView>
                     </View>
                 ) : (

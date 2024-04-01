@@ -36,6 +36,7 @@ const Home = (nav) => {
     }, [])
 
     useEffect(() => {
+        console.log(userId)
         if (userId !== '') {
             getPosts()
         }
