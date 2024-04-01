@@ -22,7 +22,6 @@ const displayDatetime = (postDatetime) => {
             return `${Math.round(diffHours)} hours ago`
         }
     } else {
-        // display date only
         return parseDatetime.toDateString()
     }
 }

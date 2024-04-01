@@ -36,6 +36,8 @@ const PostItem = ({ post, userId }) => {
 
     const [taggedUsernames, setTaggedUsernames] = useState([])
 
+    const [topic, setTopic] = useState({})
+
     useEffect(() => {
         setTaggedUsernames([])
         taggedUsers.map((userId) => {
@@ -48,6 +50,11 @@ const PostItem = ({ post, userId }) => {
             setTaggedUsers(post.tagged)
         }
     }, [post.tagged])
+
+    useEffect(() => {
+        console.log('topic id', post.topicId)
+        getPostTopicById(post.topicId)
+    }, [post.topicId])
 
     const handleComment = () => {
         setCommentText('')
@@ -143,11 +150,36 @@ const PostItem = ({ post, userId }) => {
             },
         })
             .then((res) => {
-                console.log('User info', res.data.username)
+                // console.log('User info', res.data.username)
                 setTaggedUsernames((prev) => [...prev, res.data.username])
             })
             .catch((err) => {
                 console.log('Cannot like the post', err)
+            })
+    }
+
+    const getPostTopicById = (id) => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/interest/getById?id=${id}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                // map the response to the topic object { 0: text } => { id: 0, name: text }
+                const topic = Object.keys(res.data).map((key) => ({
+                    id: key,
+                    name: res.data[key],
+                }))
+                setTopic(topic[0])
+            })
+            .catch((err) => {
+                setTopic({
+                    id: 200,
+                    name: 'Other',
+                })
+                console.log('Cannot get topic', err)
             })
     }
 
@@ -215,32 +247,58 @@ const PostItem = ({ post, userId }) => {
                             {displayDatetime(post.dateTime)}
                         </Text>
                     </View>
-                    <Text className="my-2 text-base text-orchid-700">
+                    <View className="my-2 flex h-fit w-full flex-row flex-wrap items-start justify-start">
+                        <View
+                            key={topic.id}
+                            className="rounded-full bg-gold-900 px-3 py-1 shadow-sm"
+                        >
+                            <Text className="text-sm text-orchid-900">
+                                {topic.name}
+                            </Text>
+                        </View>
+                    </View>
+                    <Text className="my-1 text-base text-orchid-700">
                         {post.text}
                     </Text>
+                    {/* horizontal scroll view for media */}
                     {post.medias && (
-                        <View className="my-3 flex h-fit w-full flex-row justify-start space-x-2">
-                            {post.medias.map((url, index) => (
-                                <TouchableOpacity
-                                    key={index}
-                                    onPress={() =>
-                                        openImageViewer(post.medias, index)
-                                    }
-                                >
-                                    <Image
-                                        key={index}
-                                        source={{ uri: url }}
-                                        className="h-16 w-16 rounded-2xl"
-                                    />
-                                </TouchableOpacity>
-                            ))}
-                        </View>
+                        <ScrollView
+                            horizontal={true}
+                            contentContainerStyle={{
+                                flexGrow: 1,
+                                justifyContent: 'flex-start',
+                            }}
+                            className="my-2 h-fit w-full"
+                        >
+                            {post.medias && (
+                                <View className="flex h-fit w-full flex-row justify-start space-x-2">
+                                    {post.medias.map((url, index) => (
+                                        <TouchableOpacity
+                                            key={index}
+                                            onPress={() =>
+                                                openImageViewer(
+                                                    post.medias,
+                                                    index
+                                                )
+                                            }
+                                        >
+                                            <Image
+                                                key={index}
+                                                source={{ uri: url }}
+                                                className="h-16 w-16 rounded-2xl"
+                                            />
+                                        </TouchableOpacity>
+                                    ))}
+                                </View>
+                            )}
+                        </ScrollView>
                     )}
-                    <View className="flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
+
+                    <View className="mt-2 flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
                         {taggedUsernames.map((username, index) => (
                             <View
                                 key={index}
-                                className="mx-1 my-2 rounded-full bg-orchid-100 px-2 py-1 shadow-sm"
+                                className="mx-1 rounded-full bg-orchid-100 px-2 py-1 shadow-sm"
                             >
                                 <Text className="text-sm text-orchid-900">
                                     {username}

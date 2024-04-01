@@ -32,11 +32,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCircleXmark, faSync } from '@fortawesome/free-solid-svg-icons'
 import COLORS from '../../constants/colors'
 import SIZES from '../../constants/sizes'
+
 const CommunityView = ({ nav }) => {
     const [refreshing, setRefreshing] = useState(false)
     const [refreshingPendingRequests, setRefreshingPendingRequests] =
         useState(false)
     const [isHost, setIsHost] = useState(false)
+    const [isModerator, setIsModerator] = useState(false)
     const [isPublicCommunity, setIsPublicCommunity] = useState(true)
     const [isJoined, setIsJoined] = useState(false)
     const [isWaiting, setIsWaiting] = useState(false)
@@ -112,6 +114,9 @@ const CommunityView = ({ nav }) => {
                     followers: res.data.followers,
                     members: res.data.members.length,
                     owner: res.data.owner,
+                    image: res.data.image,
+                    // fake moderator
+                    moderator: ['65b7fed89cb7885873ade787'], //res.data.moderator,
                 })
             })
             .catch((err) => {
@@ -128,11 +133,19 @@ const CommunityView = ({ nav }) => {
 
     useEffect(() => {
         getUserInfo(communityInfo.owner)
-        console.log('Owner: ', communityInfo.owner)
+        // console.log('Owner: ', communityInfo.owner)
         getUser().then((userId) => {
             setIsHost(communityInfo.owner === userId)
         })
     }, [communityInfo.owner])
+
+    useEffect(() => {
+        if (communityInfo.moderator) {
+            getUser().then((userId) => {
+                setIsModerator(communityInfo.moderator.includes(userId))
+            })
+        }
+    }, [communityInfo])
 
     const getUserInfo = async (id) => {
         axios({
@@ -263,7 +276,7 @@ const CommunityView = ({ nav }) => {
             },
         })
             .then((res) => {
-                console.log(res.data)
+                // console.log(res.data)
                 // setIsHost(true)
             })
             .catch((err) => {
@@ -281,6 +294,15 @@ const CommunityView = ({ nav }) => {
         navigation.navigate('Post', {
             communityId: globalCommunityId,
             isJoined: isJoined,
+        })
+    }
+
+    const viewAllReports = () => {
+        getUser().then((userId) => {
+            navigation.navigate(STRINGS.reportscreen, {
+                communityId: globalCommunityId,
+                moderatorId: userId,
+            })
         })
     }
 
@@ -317,11 +339,17 @@ const CommunityView = ({ nav }) => {
                         opacity: 0.8,
                     }}
                     blurRadius={5}
-                    className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl  py-12 shadow-md shadow-orchid-300"
+                    className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl bg-white py-12 shadow-md shadow-orchid-300"
                 >
-                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full shadow shadow-orchid-600">
+                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-orchid-600">
                         <Image
-                            source={sampleIcon}
+                            source={
+                                communityInfo.image && communityInfo.image != ''
+                                    ? {
+                                          uri: `data:image/jpg;base64,${communityInfo.image}`,
+                                      }
+                                    : sampleIcon
+                            }
                             className="h-40 w-40 rounded-full "
                         />
                     </View>
@@ -400,24 +428,6 @@ const CommunityView = ({ nav }) => {
                     </View>
                 </ImageBackground>
 
-                <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
-                    <Text className="mb-2 text-2xl font-bold text-orchid-900">
-                        Description
-                    </Text>
-                    <Text className="text-base text-orchid-800">
-                        {communityInfo.description}
-                    </Text>
-                </View>
-
-                <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
-                    <Text className="mb-2 text-2xl font-bold text-orchid-900">
-                        Rules
-                    </Text>
-                    <Text className="text-base text-orchid-900">
-                        {communityInfo.rules}
-                    </Text>
-                </View>
-
                 {isHost && !isPublicCommunity && (
                     <View>
                         <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
@@ -462,6 +472,44 @@ const CommunityView = ({ nav }) => {
                         </View>
                     </View>
                 )}
+
+                {(isHost || isModerator) && (
+                    <View>
+                        <View className="mb-5 flex h-fit w-full flex-col items-center justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
+                            <View className="flex w-full flex-row items-center justify-between">
+                                <Text className="text-2xl font-bold text-orchid-900">
+                                    {STRINGS.review_reports}
+                                </Text>
+                                <TouchableOpacity
+                                    onPress={() => viewAllReports()}
+                                    className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-gold-900 px-3 py-2 "
+                                >
+                                    <Text className="text-md text-orchid-900">
+                                        View All
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                )}
+
+                <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
+                    <Text className="mb-2 text-2xl font-bold text-orchid-900">
+                        Description
+                    </Text>
+                    <Text className="text-base text-orchid-800">
+                        {communityInfo.description}
+                    </Text>
+                </View>
+
+                <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
+                    <Text className="mb-2 text-2xl font-bold text-orchid-900">
+                        Rules
+                    </Text>
+                    <Text className="text-base text-orchid-900">
+                        {communityInfo.rules}
+                    </Text>
+                </View>
             </ScrollView>
         </View>
     )
