@@ -33,7 +33,7 @@ const Community = () => {
     const [refreshing, setRefreshing] = React.useState(false)
     const [verify, setVerify] = useState(false)
     const [searchResultList, setSearchResultList] = useState([])
-
+    const [communityListInfo, setCommunityListInfo] = useState([])
 
     useEffect(() => {
         getVerified()
@@ -99,6 +99,45 @@ const Community = () => {
             })
     }
 
+    useEffect(() => {
+        setCommunityListInfo([])
+        Object.keys(communityList).map((key, index) => {
+            getCommunityInfo(key)
+                .then((info) => {
+                    setCommunityListInfo((prev) => [...prev, {
+                        id: key,
+                        name: info.name,
+                        description: info.description,
+                        rules: info.rules,
+                        visibility: info.visibility,
+                        ownerId: info.ownerId,
+                        image: info.image,
+                    
+                    }])
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        })
+    },[communityList])
+
+
+    const getCommunityInfo = async (id) => {
+        try {
+            const res = await axios({
+                method: 'GET',
+                url: `${BASE_URL}/community/getInfo?id=${id}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            return res.data
+        } catch (err) {
+            console.log(err)
+            throw err // re-throw the error to be caught in the calling function
+        }
+    }
+
     const newCommunity = () => {
         navigation.navigate('SetupCommunity')
     }
@@ -118,6 +157,7 @@ const Community = () => {
     const searchFunction = (text) => {
         setSearchValue(text)
     }
+
     return (
         <View className="flex justify-center bg-white align-middle">
             <SearchBar
@@ -194,20 +234,18 @@ const Community = () => {
                     </View>
 
                     <View className="flex flex-row flex-wrap overflow-auto">
-                        {Object.keys(communityList).map((key, index) => (
+
+                        {communityListInfo.map((info, index) => (
                             <CommunityViewImageButton
-                                key={key}
-                                onPress={() => communityClick(key)}
+                                key={index}
+                                onPress={() => communityClick(info.id)}
                             >
-                                <View className="h-24 w-24 rounded-3xl bg-white shadow shadow-orchid-200">
-                                    <Image
-                                        source={sampleIcon}
-                                        className="h-24 w-24 rounded-3xl"
-                                    />
-                                </View>
-                                <Text className="mt-1 text-sm text-orchid-900 shadow shadow-orchid-200">
-                                    {communityList[key].substring(0, 12) +
-                                        '...'}
+                                <Image
+                                    source={(info.image != null && info.image !== "") ? { uri: `data:image/jpg;base64,${info.image}` } : sampleIcon}
+                                    className="h-24 w-24 rounded-3xl"
+                                />
+                                <Text className="mt-1 text-sm text-orchid-900">
+                                    {info.name.length > 12 ? info.name.substring(0, 10) + "..." : info.name}
                                 </Text>
                             </CommunityViewImageButton>
                         ))}

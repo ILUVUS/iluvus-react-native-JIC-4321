@@ -114,6 +114,7 @@ const CommunityView = ({ nav }) => {
                     followers: res.data.followers,
                     members: res.data.members.length,
                     owner: res.data.owner,
+                    image: res.data.image,
                     // fake moderator
                     moderator: ['65b7fed89cb7885873ade787'], //res.data.moderator,
                 })
@@ -342,7 +343,13 @@ const CommunityView = ({ nav }) => {
                 >
                     <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-orchid-600">
                         <Image
-                            source={sampleIcon}
+                            source={
+                                communityInfo.image && communityInfo.image != ''
+                                    ? {
+                                          uri: `data:image/jpg;base64,${communityInfo.image}`,
+                                      }
+                                    : sampleIcon
+                            }
                             className="h-40 w-40 rounded-full "
                         />
                     </View>

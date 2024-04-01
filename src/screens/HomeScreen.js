@@ -8,6 +8,7 @@ import STRINGS from '../constants/strings'
 import Community from './community/Community'
 import Profile from './Profile/Profile'
 import Home from './Home/Home.js'
+import Notification from './Notification/Notification'
 
 function HomeScreenNav() {
     return <Home />
