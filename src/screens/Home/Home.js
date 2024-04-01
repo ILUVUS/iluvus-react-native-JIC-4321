@@ -35,8 +35,10 @@ const Home = (nav) => {
     }, [])
 
     useEffect(() => {
-        getPosts()
-    }, [userId !== ''])
+        if (userId !== '') {
+            getPosts()
+        }
+    }, [userId])
 
     const getPosts = async () => {
         axios({
@@ -73,12 +75,13 @@ const Home = (nav) => {
                                 />
                             }
                         >
-                            {postData.map((post, index) => {
+                            {postData && postData.map((post, index) => {
                                 return (
                                     <PostItem
                                         key={index}
                                         post={post}
                                         userId={userId}
+                                        displayCommunityName={true}
                                     />
                                 )
                             })}

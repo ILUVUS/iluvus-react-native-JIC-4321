@@ -52,7 +52,7 @@ const Settings = () => {
     }, [isFocused])
 
     useEffect(() => {
-        console.log(userId)
+        // console.log(userId)
         axios({
             method: 'GET',
             url: `${BASE_URL}/user/get?userId=${userId}`,
@@ -61,7 +61,7 @@ const Settings = () => {
             },
         })
             .then((res) => {
-                console.log(res.data)
+                // console.log(res.data)
                 setUserInfo(res.data)
             })
             .catch((err) => {
@@ -70,20 +70,20 @@ const Settings = () => {
     }, [userId, isFocused])
 
     return (
-        <View className="flex h-screen w-screen items-center bg-white p-2">
-            <View className="flex flex-col">
-                <Text>{userInfo.fname}</Text>
-                <Text>{userInfo.lname}</Text>
-                <Text>{userInfo.username}</Text>
-                <Text>{userInfo.email}</Text>
-                <Text>{userId}</Text>
-            </View>
-            <TouchableOpacity
-                className="inline-block w-fit items-center justify-center rounded-3xl bg-gold-900 px-5 py-4 shadow-md shadow-slate-200"
-                onPress={handleLogout}
-            >
-                <Text className="text-sm text-orchid-900">Logout</Text>
-            </TouchableOpacity>
+        <View className="flex h-full w-full items-center bg-white p-2">
+            {/*<View className="flex flex-col">*/}
+            {/*    <Text>{userInfo.fname}</Text>*/}
+            {/*    <Text>{userInfo.lname}</Text>*/}
+            {/*    <Text>{userInfo.username}</Text>*/}
+            {/*    <Text>{userInfo.email}</Text>*/}
+            {/*    <Text>{userId}</Text>*/}
+            {/*</View>*/}
+                <TouchableOpacity
+                    className="inline-block w-fit items-center justify-center rounded-3xl bg-gold-900 px-5 py-4 shadow-md shadow-slate-200"
+                    onPress={handleLogout}
+                >
+                    <Text className="text-sm text-orchid-900">Logout</Text>
+                </TouchableOpacity>
         </View>
     )
 }

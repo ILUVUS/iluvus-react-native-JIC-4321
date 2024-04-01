@@ -143,7 +143,7 @@ const Post = (nav) => {
             quality: 0.8,
         })
 
-        console.log(result)
+        // console.log(result)
 
         if (!result.canceled) {
             const resultImage = result.assets[0]
@@ -180,7 +180,7 @@ const Post = (nav) => {
         })
             .then((res) => {
                 // reverse the array to show the latest post first
-                console.log('Posts:', res.data)
+                // console.log('Posts:', res.data)
                 setPostData(res.data.reverse())
             })
             .catch((err) => {
@@ -323,7 +323,7 @@ const Post = (nav) => {
             },
         })
             .then((res) => {
-                console.log('Search user:', res.data)
+                // console.log('Search user:', res.data)
                 const filteredUsers = res.data.filter(
                     (user) =>
                         !taggedUsers.some(
@@ -380,6 +380,7 @@ const Post = (nav) => {
                                         key={index}
                                         post={post}
                                         userId={userId}
+                                        displayCommunityName={false}
                                     />
                                 )
                             })}
