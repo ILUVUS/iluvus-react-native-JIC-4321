@@ -56,6 +56,8 @@ export default {
     TagUsers: 'Find Community Users...',
     postDescription: 'Description',
     postContentPlaceholder: 'Please input the content of the post...',
+    InterestTopics: 'Find a Interest Topic...',
+    ChooseModerators: 'Find Community Moderators...',
 
     // Comment
     Comment: 'Comment',
@@ -140,6 +142,18 @@ export default {
 
     // upload
     uploadSuccess: 'Upload Successful',
-
     notificationtab: 'Notification',
+
+    // settings
+    settings: 'Settings',
+
+    // report
+    reportscreen: 'Report',
+    review_reports: 'Review Reports',
+
+    keep_post_title: 'Keep Post',
+    keep_post_confirmation: 'Are you sure you want to keep this post?',
+
+    remove_post_title: 'Remove Post',
+    remove_post_confirmation: 'Are you sure you want to remove this post?',
 }

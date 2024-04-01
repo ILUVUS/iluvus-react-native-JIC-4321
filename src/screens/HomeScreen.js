@@ -1,4 +1,4 @@
-import { Alert, Text, View } from 'react-native'
+import { Alert, Settings, Text, View } from 'react-native'
 
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -6,55 +6,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import COLORS from '../constants/colors'
 import STRINGS from '../constants/strings'
 import Community from './community/Community'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import Profile from './Profile/Profile'
+import Home from './Home/Home.js'
 import Notification from './Notification/Notification'
+import Setting from './Settings/Settings'
 
-import { useEffect, useState } from 'react'
-import axios from 'axios'
-import { BASE_URL } from '@env'
 
 function HomeScreenNav() {
-    const [userId, setUserId] = useState('')
-    const [userInfo, setUserInfo] = useState({})
-
-    useEffect(() => {
-        const getUserId = async () => {
-            try {
-                const value = await AsyncStorage.getItem('userId')
-                if (value !== null) {
-                    setUserId(value)
-                }
-            } catch (e) {
-                console.log(e)
-            }
-        }
-        getUserId()
-    }, [])
-
-    useEffect(() => {
-        axios({
-            method: 'GET',
-            url: `${BASE_URL}/user/get?userId=${userId}`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                setUserInfo(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }, [userId])
-
-    return (
-        <View className="flex h-screen justify-center bg-white p-2 align-middle">
-            <Text>
-                Welcome {userInfo.lname}, {userInfo.fname}
-            </Text>
-        </View>
-    )
+    return <Home />
 }
 
 function CommunityScreenNav() {
@@ -74,11 +33,7 @@ function MessageScreenNav() {
 }
 
 function SettingsScreenNav() {
-    return (
-        <View className="flex h-screen justify-center bg-white p-2 align-middle">
-            <Text>Settings!</Text>
-        </View>
-    )
+    return <Setting/>
 }
 
 const Tab = createBottomTabNavigator()
@@ -86,9 +41,6 @@ const Tab = createBottomTabNavigator()
 export default function HomeScreen() {
     return (
         <Tab.Navigator
-            // unmount the screen when switching to another screen
-            unmountOnBlur={true}
-
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                     let iconName

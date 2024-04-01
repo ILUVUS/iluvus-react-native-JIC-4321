@@ -15,4 +15,5 @@ export default {
 
     postImageIconSize: 26,
     xMarkIconSizeTag: 20,
+    smallIconSize: 16,
 }
