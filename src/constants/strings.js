@@ -57,6 +57,7 @@ export default {
     postDescription: 'Description',
     postContentPlaceholder: 'Please input the content of the post...',
     InterestTopics: 'Find a Interest Topic...',
+    ChooseModerators: 'Find Community Moderators...',
 
     // Comment
     Comment: 'Comment',
@@ -155,7 +156,4 @@ export default {
 
     remove_post_title: 'Remove Post',
     remove_post_confirmation: 'Are you sure you want to remove this post?',
-
-    // settings
-    settings: 'Settings',
 }

@@ -133,17 +133,19 @@ const CommunityView = ({ nav }) => {
 
     useEffect(() => {
         getUserInfo(communityInfo.owner)
-        console.log('Owner: ', communityInfo.owner)
+        // console.log('Owner: ', communityInfo.owner)
         getUser().then((userId) => {
             setIsHost(communityInfo.owner === userId)
         })
     }, [communityInfo.owner])
 
     useEffect(() => {
-        getUser().then((userId) => {
-            setIsHost(communityInfo.moderator.includes(userId))
-        })
-    }, [communityInfo.moderator])
+        if (communityInfo.moderator) {
+            getUser().then((userId) => {
+                setIsModerator(communityInfo.moderator.includes(userId))
+            })
+        }
+    }, [communityInfo])
 
     const getUserInfo = async (id) => {
         axios({
@@ -274,7 +276,7 @@ const CommunityView = ({ nav }) => {
             },
         })
             .then((res) => {
-                console.log(res.data)
+                // console.log(res.data)
                 // setIsHost(true)
             })
             .catch((err) => {
@@ -337,9 +339,9 @@ const CommunityView = ({ nav }) => {
                         opacity: 0.8,
                     }}
                     blurRadius={5}
-                    className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl  py-12 shadow-md shadow-orchid-300"
+                    className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl bg-white py-12 shadow-md shadow-orchid-300"
                 >
-                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full shadow shadow-orchid-600">
+                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-orchid-600">
                         <Image
                             source={
                                 communityInfo.image && communityInfo.image != ''
@@ -471,7 +473,7 @@ const CommunityView = ({ nav }) => {
                     </View>
                 )}
 
-                {(isHost || isModerator) && !isPublicCommunity && (
+                {(isHost || isModerator) && (
                     <View>
                         <View className="mb-5 flex h-fit w-full flex-col items-center justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
                             <View className="flex w-full flex-row items-center justify-between">
