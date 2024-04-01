@@ -19,6 +19,7 @@ import { faAward } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { Modal } from 'react-native'
 import InterestSelector from './InterestSelector'
+import SIZES from '../../constants/sizes'
 
 const Profile = () => {
     const isFocused = useIsFocused()
@@ -175,10 +176,10 @@ const Profile = () => {
                         borderRadius: 24,
                         opacity: 0.8,
                     }}
-                    blurRadius={3}
-                    className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl  py-12 shadow-md shadow-orchid-300"
+                    blurRadius={7}
+                    className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl  py-12 shadow-md shadow-slate-300"
                 >
-                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full shadow shadow-orchid-600">
+                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
                         <Image
                             source={profile_icon}
                             className="h-40 w-40 rounded-full "
@@ -211,15 +212,8 @@ const Profile = () => {
                         <Text className="mb-2 text-2xl font-bold text-orchid-900">
                             Details
                         </Text>
-                        <TouchableOpacity onPress={editProfile}>
-                            <Ionicons
-                                name="create-outline"
-                                size={26}
-                                color={COLORS['orchid'][900]}
-                            />
-                        </TouchableOpacity>
                     </View>
-                    <View className="mb-1 flex flex-row items-center justify-center gap-2">
+                    <View className="mb-1 flex flex-row items-center justify-center gap-2 mb-2">
                         {verify && (
                             <Text className="text-base italic text-orchid-900">
                                 Profesional Account
@@ -227,10 +221,19 @@ const Profile = () => {
                         )}
                     </View>
 
-                    <Text className="text-base font-semibold text-orchid-800 ">
-                        Interests:
-                    </Text>
-                    <View className="flex flex-grow flex-row flex-wrap gap-2">
+                    <View className="flex flex-row gap-2 items-center">
+                        <Text className="text-base font-semibold text-orchid-800 ">
+                            Interests:
+                        </Text>
+                        <TouchableOpacity onPress={editProfile}>
+                            <Ionicons
+                                name="create-outline"
+                                size={SIZES.mediumIconSize}
+                                color={COLORS['orchid'][900]}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    <View className="flex flex-grow flex-row flex-wrap gap-2 my-1">
                         {selectedTopic &&
                             Object.keys(selectedTopic).map((key) => {
                                 return (
