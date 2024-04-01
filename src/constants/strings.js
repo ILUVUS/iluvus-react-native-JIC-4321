@@ -43,7 +43,7 @@ export default {
     myFriends: 'My Friends',
 
     // view community
-    communityView: 'CommunityView',
+    communityView: 'Community View',
     requestToJoin: 'Request to Join',
     requestJoin: 'REQUEST JOIN',
     joinUs: 'JOIN US',
