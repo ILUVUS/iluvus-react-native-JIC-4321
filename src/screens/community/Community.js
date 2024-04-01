@@ -212,17 +212,6 @@ const Community = () => {
                                 {STRINGS.myCommunity}
                             </Text>
                         </CommunityViewMainButton>
-
-                        <CommunityViewMainButton onPress={() => myFriend()}>
-                            <Icon
-                                name="child"
-                                size={SIZES.communityIconSize}
-                                color={COLORS['orchid'][900]}
-                            />
-                            <Text className="mt-1 text-base text-orchid-900">
-                                {STRINGS.myFriends}
-                            </Text>
-                        </CommunityViewMainButton>
                     </View>
 
                     <View className="mb-2 ml-5 flex w-screen items-start">

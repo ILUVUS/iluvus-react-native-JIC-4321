@@ -62,7 +62,7 @@ const Notitem = ({ data }) => {
 
     return (
         <View
-            className={`flex h-fit w-full flex-row items-start justify-start space-x-4 rounded-3xl px-5 py-4 shadow-sm shadow-slate-300 ${comp.bgColor}`}
+            className={`flex h-fit w-full flex-row items-center justify-start space-x-4 rounded-3xl px-5 py-4 shadow shadow-slate-200 ${comp.bgColor}`}
         >
             <View>
                 <FontAwesomeIcon

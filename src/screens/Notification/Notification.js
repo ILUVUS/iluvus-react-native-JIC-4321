@@ -76,8 +76,8 @@ const Notification = () => {
                 >
                     {notifications.length > 0 &&
                         notifications.map((data, index) => (
-                            <View>
-                                <Notitem key={index} data={data} />
+                            <View key={index}>
+                                <Notitem data={data} />
                             </View>
                         ))}
 

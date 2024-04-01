@@ -26,7 +26,7 @@ import ImageView from 'react-native-image-viewing'
 
 import { displayDatetime, getDatetime } from '../../../utils/Utils'
 
-const PostItem = ({ post, userId }) => {
+const PostItem = ({ post, userId, displayCommunityName }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false)
     const [upliftNumber, setUpliftNumber] = useState(0)
     const [commentsNumber, setCommentsNumber] = useState(0)
@@ -35,8 +35,8 @@ const PostItem = ({ post, userId }) => {
     const [taggedUsers, setTaggedUsers] = useState([])
 
     const [taggedUsernames, setTaggedUsernames] = useState([])
-
     const [topic, setTopic] = useState({})
+    const [community, setCommunity] = useState({})
 
     useEffect(() => {
         setTaggedUsernames([])
@@ -52,7 +52,7 @@ const PostItem = ({ post, userId }) => {
     }, [post.tagged])
 
     useEffect(() => {
-        console.log('topic id', post.topicId)
+        // console.log('topic id', post.topicId)
         getPostTopicById(post.topicId)
     }, [post.topicId])
 
@@ -75,7 +75,7 @@ const PostItem = ({ post, userId }) => {
             },
         })
             .then((res) => {
-                console.log('Post liked', res.data)
+                // console.log('Post liked', res.data)
                 setUpliftNumber(res.data)
             })
             .catch((err) => {
@@ -95,7 +95,7 @@ const PostItem = ({ post, userId }) => {
             },
         })
             .then((res) => {
-                console.log('Comments', res.data)
+                // console.log('Comments', res.data)
                 setComments(res.data)
                 setCommentsNumber(res.data.length)
             })
@@ -134,7 +134,7 @@ const PostItem = ({ post, userId }) => {
         })
             .then((res) => {
                 Alert.alert('Post Reported')
-                console.log(res.data)
+                // console.log(res.data)
             })
             .catch((err) => {
                 console.log('Cannot like the post', err)
@@ -179,7 +179,7 @@ const PostItem = ({ post, userId }) => {
                     id: 200,
                     name: 'Other',
                 })
-                console.log('Cannot get topic', err)
+                // console.log('Cannot get topic', err)
             })
     }
 
@@ -212,6 +212,9 @@ const PostItem = ({ post, userId }) => {
         if (post['likedBy']) {
             setUpliftNumber(post['likedBy'].length)
         }
+        if (displayCommunityName && post.community_id) {
+            getCommunityInfo()
+        }
     }, [post])
 
     useEffect(() => {
@@ -233,6 +236,23 @@ const PostItem = ({ post, userId }) => {
         setMediaUrls([])
         setImageViewerIndex(0)
         setImageViewerVisible(false)
+    }
+
+    const getCommunityInfo = () => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/community/getInfo?id=${post.community_id}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                // console.log('Community info', res.data)
+                setCommunity(res.data)
+            })
+            .catch((err) => {
+                console.log('Cannot get community info', err)
+            })
     }
 
     return (
@@ -257,7 +277,7 @@ const PostItem = ({ post, userId }) => {
                             </Text>
                         </View>
                     </View>
-                    <Text className="my-1 text-base text-orchid-700">
+                    <Text className="mt-1 mb-2 text-base text-orchid-700">
                         {post.text}
                     </Text>
                     {/* horizontal scroll view for media */}
@@ -271,7 +291,7 @@ const PostItem = ({ post, userId }) => {
                             className="my-2 h-fit w-full"
                         >
                             {post.medias && (
-                                <View className="flex h-fit w-full flex-row justify-start space-x-2">
+                                <View className="mb-2 flex h-fit w-full flex-row justify-start space-x-2">
                                     {post.medias.map((url, index) => (
                                         <TouchableOpacity
                                             key={index}
@@ -293,8 +313,8 @@ const PostItem = ({ post, userId }) => {
                             )}
                         </ScrollView>
                     )}
-
-                    <View className="mt-2 flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
+                    { taggedUsernames.length > 0 && (
+                    <View className="mb-3 flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
                         {taggedUsernames.map((username, index) => (
                             <View
                                 key={index}
@@ -306,6 +326,14 @@ const PostItem = ({ post, userId }) => {
                             </View>
                         ))}
                     </View>
+                        )}
+                    {displayCommunityName && community.name && (
+                        <View className="flex h-fit w-full flex-row items-start justify-between">
+                            <Text className="text-xs text-orchid-600">
+                                From {community.name}
+                            </Text>
+                        </View>
+                    )}
                 </View>
                 <View className="h-fit w-full flex-row justify-evenly space-x-10 rounded-b-3xl bg-orchid-200 p-2 ">
                     <View className="flex flex-row items-center justify-center space-x-2">

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
-import { Alert, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Text, TouchableOpacity, View, Switch } from 'react-native'
 import { SelectList } from 'react-native-dropdown-select-list'
 
 import SIZES from '../../constants/sizes'
@@ -32,7 +32,8 @@ const RegistrationScreen = ({}) => {
     const [gender, setGender] = useState('')
     const [proEmail, setProfEmail] = useState('')
 
-    const [emailMode, setEmailMode] = useState(false)
+    const [isProfessionalUser, setIsProfessionalUser] = useState(false)
+    const toggleSwitch = () => setIsProfessionalUser(previousState => !previousState);
 
     const navigation = useNavigation()
 
@@ -57,7 +58,7 @@ const RegistrationScreen = ({}) => {
             groups: '',
         }
 
-        if (emailMode) {
+        if (!isProfessionalUser) {
             console.log("user")
             axios({
                 method: 'POST',
@@ -171,16 +172,20 @@ const RegistrationScreen = ({}) => {
                 placeholder={STRINGS.gender}
             />
 
-            <TouchableOpacity
-                onPress={toggleEmailMode}
-                className="mt-4 flex w-fit items-center rounded-3xl bg-gold-900 px-5 py-2 align-middle shadow-md shadow-slate-200"
-            >
-                <Text className="py-1 text-base text-orchid-900 shadow-md shadow-slate-400">
-                    {emailMode ? 'I am Professional User' : 'I am Regular User'}
+            <View className="py-2 mt-3 flex flex-row justify-between">
+                <Text className="text-base text-orchid-900 shadow-md shadow-slate-400">
+                    Are you a professional user?
                 </Text>
-            </TouchableOpacity>
+                <Switch
+                    trackColor={{false: COLORS['gold'][900], true: COLORS['orchid'][300]}}
+                    thumbColor={isProfessionalUser ? COLORS['gold'][900] : COLORS['gold'][100]}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={toggleSwitch}
+                    value={isProfessionalUser}
+                />
+            </View>
 
-            {emailMode && (
+            {!isProfessionalUser && (
                 <>
                     <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
                         Email
@@ -196,7 +201,7 @@ const RegistrationScreen = ({}) => {
                     />
                 </>
             )}
-            {!emailMode && (
+            {isProfessionalUser && (
                 <>
                     <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
                         Professional Email
@@ -212,6 +217,9 @@ const RegistrationScreen = ({}) => {
                     />
                 </>
             )}
+
+
+
             <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
                 Username
             </Text>
