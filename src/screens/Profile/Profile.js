@@ -42,7 +42,7 @@ const Profile = () => {
                     setUserId(value)
                 }
             } catch (e) {
-                console.log(e)
+                console.log("cannot get verify" + e)
             }
         }
         findUserInfoById()
@@ -67,7 +67,7 @@ const Profile = () => {
                 setVerify(true)
             })
             .catch((err) => {
-                console.log(err)
+                console.log("cannot verify" + err)
                 setVerify(false)
             })
     }
@@ -114,16 +114,25 @@ const Profile = () => {
                 })
             })
             .catch((err) => {
-                console.log(err)
+                console.log("cannot save in" + err)
             })
     }
 
     useEffect(() => {
-        saveInterests()
+        // check if the selected topic is empty
+        if (selectedTopic !== undefined
+            && Object.keys(selectedTopic).length !== 0) {
+            saveInterests()
+        }
     }, [selectedTopic])
 
     useEffect(() => {
-        // console.log(userId)
+        if (userId !== "") {
+            getUserInfo()
+        }
+    }, [userId, isFocused])
+
+    const getUserInfo = async () => {
         axios({
             method: 'GET',
             url: `${BASE_URL}/user/get?userId=${userId}`,
@@ -132,13 +141,12 @@ const Profile = () => {
             },
         })
             .then((res) => {
-                // console.log(res.data)
                 setUserInfo(res.data)
             })
             .catch((err) => {
-                console.log(err)
+                console.log("Cannot get user info" + err)
             })
-    }, [userId, isFocused])
+    }
 
     useEffect(() => {
         setSelectedTopic(userInfo.interest)
@@ -177,7 +185,7 @@ const Profile = () => {
                         opacity: 0.8,
                     }}
                     blurRadius={7}
-                    className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl  py-12 shadow-md shadow-slate-300"
+                    className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl bg-white py-12 shadow-md shadow-slate-300"
                 >
                     <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
                         <Image
