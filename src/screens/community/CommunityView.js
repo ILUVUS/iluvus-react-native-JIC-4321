@@ -473,7 +473,7 @@ const CommunityView = ({ nav }) => {
                     </View>
                 )}
 
-                {(isHost || isModerator) && !isPublicCommunity && (
+                {(isHost || isModerator) && (
                     <View>
                         <View className="mb-5 flex h-fit w-full flex-col items-center justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
                             <View className="flex w-full flex-row items-center justify-between">

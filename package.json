@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "main": "node_modules/expo/AppEntry.js",
     "scripts": {
-        "start": "expo start --reset-cache",
+        "start": "expo start --reset-cache --clear",
         "start-quick": "expo start",
         "android": "expo run:android",
         "ios": "expo run:ios",
@@ -40,7 +40,7 @@
         "prettier-plugin-tailwindcss": "^0.5.11",
         "react": "18.2.0",
         "react-dom": "18.2.0",
-        "react-native": "0.72.6",
+        "react-native": "0.72.10",
         "react-native-compressor": "^1.8.24",
         "react-native-dotenv": "^3.4.9",
         "react-native-dropdown-select-list": "^2.0.5",
