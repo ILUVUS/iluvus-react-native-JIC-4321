@@ -13,13 +13,14 @@ const Home = (nav) => {
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
-        getPosts()
+        findUserId()
         setTimeout(() => {
             setRefreshing(false)
         }, 1000)
     }, [])
 
     const findUserId = async () => {
+        setUserId("")
         try {
             const value = await AsyncStorage.getItem('userId')
             if (value !== null) {
@@ -41,6 +42,7 @@ const Home = (nav) => {
     }, [userId])
 
     const getPosts = async () => {
+        console.log("Run getPosts")
         axios({
             method: 'GET',
             url: `${BASE_URL}/post/getPostForHomePage?userId=${userId}`,
