@@ -144,6 +144,9 @@ export default {
     uploadSuccess: 'Upload Successful',
     notificationtab: 'Notification',
 
+    // settings
+    settings: 'Settings',
+
     // report
     reportscreen: 'Report',
     review_reports: 'Review Reports',

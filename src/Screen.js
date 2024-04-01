@@ -14,6 +14,7 @@ import AuthScreen from './screens/login/Auth'
 import Post from './screens/community/Post'
 import Comments from './screens/community/Comments'
 import Verification from './screens/login/Verification'
+import Settings from './screens/Settings/Settings'
 import Notification from './screens/Notification/Notification'
 import ReportView from './screens/Report/ReportView'
 
@@ -110,6 +111,15 @@ export default function Screen() {
                     component={Notification}
                     options={{
                         title: STRINGS.notificationtab,
+                        headerShown: true,
+                    }}
+                />
+
+                <Stack.Screen
+                    name={STRINGS.settings}
+                    component={Settings}
+                    options={{
+                        title: STRINGS.settings,
                         headerShown: true,
                     }}
                 />
