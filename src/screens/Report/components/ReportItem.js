@@ -212,7 +212,7 @@ const ReportItem = ({ post, userId, onChange }) => {
                         ))}
                     </View>
 
-                    <View className="flex h-fit w-fit flex-row justify-center space-x-2 rounded-full mt-2">
+                    <View className="mt-2 flex h-fit w-fit flex-row justify-center space-x-2 rounded-full">
                         <TouchableOpacity
                             className="flex h-fit w-1/2 items-center rounded-xl bg-green-300 px-10 py-2 shadow"
                             onPress={() => keepPostConfirmation()}

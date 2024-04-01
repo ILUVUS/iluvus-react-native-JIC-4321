@@ -56,6 +56,7 @@ export default {
     TagUsers: 'Find Community Users...',
     postDescription: 'Description',
     postContentPlaceholder: 'Please input the content of the post...',
+    InterestTopics: 'Find a Interest Topic...',
     ChooseModerators: 'Find Community Moderators...',
 
     // Comment
@@ -142,6 +143,9 @@ export default {
     // upload
     uploadSuccess: 'Upload Successful',
     notificationtab: 'Notification',
+
+    // settings
+    settings: 'Settings',
 
     // report
     reportscreen: 'Report',
