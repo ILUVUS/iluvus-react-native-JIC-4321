@@ -19,7 +19,7 @@ const Notification = () => {
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
         setUserIdFromStorage()
-        getNotifications()
+        // getNotifications()
         setTimeout(() => {
             setRefreshing(false)
         }, 1000)
@@ -33,7 +33,7 @@ const Notification = () => {
             },
         })
             .then((res) => {
-                console.log(res.data)
+                // console.log(res.data)
                 setNotifications(res.data.reverse())
             })
             .catch((err) => {
@@ -53,7 +53,9 @@ const Notification = () => {
     }, [])
 
     useEffect(() => {
-        getNotifications()
+        if (userId !== '') {
+            getNotifications()
+        }
     }, [userId])
 
     return (

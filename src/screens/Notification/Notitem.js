@@ -10,7 +10,7 @@ import {
     faFlag,
     faStar,
     faComment,
-    faSquareInfo,
+    faCircleInfo,
 } from '@fortawesome/free-solid-svg-icons'
 import COLORS from '../../constants/colors'
 import axios from 'axios'
@@ -47,14 +47,12 @@ const NotItemIdentify = ({ data }) => {
             bgColor = 'bg-blue-100'
             break
 
-        case 'OTHER':
+        default:
             msg = data.message
-            tag = faSquareInfo
+            tag = faCircleInfo
             bgColor = 'bg-gray-100'
             break
     }
-
-    // })
 
     return { msg, tag, bgColor }
 }
