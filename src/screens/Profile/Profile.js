@@ -122,7 +122,7 @@ const Profile = () => {
     }, [selectedTopic])
 
     useEffect(() => {
-        console.log(userId)
+        // console.log(userId)
         axios({
             method: 'GET',
             url: `${BASE_URL}/user/get?userId=${userId}`,
