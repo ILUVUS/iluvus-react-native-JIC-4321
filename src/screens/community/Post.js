@@ -317,14 +317,13 @@ const Post = (nav) => {
     useEffect(() => {
         axios({
             method: 'GET',
-            url: `${BASE_URL}/user/search?filter=${searchUsername}`,
+            url: `${BASE_URL}/user/searchUsersInCommunity?filter=${searchUsername}&communityId=${community_id}`,
             headers: {
                 'Content-Type': 'application/json',
             },
         })
             .then((res) => {
-                // console.log('Search result:', res.data)
-                // remove the tagged users from the search result
+                console.log('Search user:', res.data)
                 const filteredUsers = res.data.filter(
                     (user) =>
                         !taggedUsers.some(
