@@ -65,20 +65,26 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 
 ### New Features
 
--   Users can receive notifications for uplifts, comments, tags and report from communities.
--   Users can view the posts that relevant to their interests in the newsfeed.
--   Users can select the interest topic when create posts.
+-   Users can receive notifications for uplifts, comments, tags, reports, and other types from communities.
+-   Users can view the posts that are relevant to their interests in the newsfeed.
+-   Users can select the interest topic when creating posts.
 -   Added the profile page to display user information.
--   Users can select and edit their interests in profile page.
--   Added moderator users for manage user-generated content reporting and moderation queues.
--   Moderator users can view and accept/reject the content reporting posts.
+-   Users can select and edit their interests on the profile page.
+-   Added users as moderators at the creating community view to manage reporting posts (keep or remove from the community).
+-   Moderator users can view and accept or reject reporting posts.
+-   Community owner can set profile pictures for their community at the creating point.
 
 ### Bug Fixes
 
--   Fixed the problem where notification disappear.
--   Fixed the images display on the posts in the communities.
+-   Fixed the problem where notifications disappear.
+-   Fixed the image display on the posts in the communities.
+-   Change to switch button when asking for the professional or regular user at the registration screen.
+-   The community list is displayed in order.
 
 ### Known Issues
+
+-   The algorithm to sort the posts by interests sometimes goes wrong.
+-   The post page is frozen if no images are selected.
 
 ## Version 0.3.0
 
@@ -92,6 +98,7 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 -   Added a "Request Join" button for private communities.
 -   Owners of private communities can now accept/decline join requests.
 -   All login passwords are now hashed to increase security.
+-
 
 ### Bug Fixes
 
@@ -114,7 +121,7 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 -   Display the number of uplift(like) on the community posts.
 -   Display the comment view on the community posts.
 
-### Bug Fixes
+### Bug Fix
 
 ### Known Issues
 
@@ -123,15 +130,18 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 
 ## Version 0.1.0
 
-### New Features
+### Features
 
--   Community View Screen for every community.
--   Search community in search tab.
--   Join button for community
+-   Search community by the community’s name
+-   View, and join community
+-   Register inputs indicator
+-   Date picker for Date of Birth input on Register screen
 
 ### Bug Fixes
 
--   Display Create Community properly
+-   Register new user with empty username and password
+-   Create new community button did not show up
+-   Verify does not work with userId
 
 ### Known Issues
 

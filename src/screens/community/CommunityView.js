@@ -99,7 +99,7 @@ const CommunityView = ({ nav }) => {
             },
         })
             .then((res) => {
-                // console.log(res.data.members)
+                // // console.log(res.data.members)
 
                 // split and strip the string
                 // const membersListAsArray = getListFromString(res.data.members)
@@ -116,11 +116,11 @@ const CommunityView = ({ nav }) => {
                     owner: res.data.owner,
                     image: res.data.image,
                     // fake moderator
-                    moderator: ['65b7fed89cb7885873ade787'], //res.data.moderator,
+                    moderators: res.data.moderators,
                 })
             })
             .catch((err) => {
-                console.log(err)
+                // // console.log(err)
             })
 
         return () => {}
@@ -133,16 +133,18 @@ const CommunityView = ({ nav }) => {
 
     useEffect(() => {
         getUserInfo(communityInfo.owner)
-        // console.log('Owner: ', communityInfo.owner)
+
         getUser().then((userId) => {
             setIsHost(communityInfo.owner === userId)
         })
     }, [communityInfo.owner])
 
     useEffect(() => {
-        if (communityInfo.moderator) {
+        getUserInfo(communityInfo.owner)
+
+        if (communityInfo.moderators) {
             getUser().then((userId) => {
-                setIsModerator(communityInfo.moderator.includes(userId))
+                setIsModerator(communityInfo.moderators.includes(userId))
             })
         }
     }, [communityInfo])
@@ -159,7 +161,7 @@ const CommunityView = ({ nav }) => {
                 setOwner(res.data)
             })
             .catch((err) => {
-                console.log(err)
+                // console.log(err)
             })
     }
 
@@ -177,7 +179,7 @@ const CommunityView = ({ nav }) => {
                 setRefreshingPendingRequests(true)
             })
             .catch((err) => {
-                console.log(err)
+                // console.log(err)
             })
     }
 
@@ -240,7 +242,7 @@ const CommunityView = ({ nav }) => {
                 setIsPublicCommunity(Boolean(res.data))
             })
             .catch((err) => {
-                console.log(err)
+                // console.log(err)
             })
     }
 
@@ -260,7 +262,7 @@ const CommunityView = ({ nav }) => {
                 getCommunityInfo()
             })
             .catch((err) => {
-                console.log(err)
+                // console.log(err)
             })
     }
 
@@ -276,11 +278,11 @@ const CommunityView = ({ nav }) => {
             },
         })
             .then((res) => {
-                // console.log(res.data)
+                // // console.log(res.data)
                 // setIsHost(true)
             })
             .catch((err) => {
-                console.log(err)
+                // console.log(err)
                 // setIsHost(false)
             })
     }

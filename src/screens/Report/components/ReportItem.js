@@ -94,7 +94,7 @@ const ReportItem = ({ post, userId, onChange }) => {
     const keepPostHandler = () => {
         axios({
             method: 'POST',
-            url: `${BASE_URL}/post/keepPost`,
+            url: `${BASE_URL}/post/keep`,
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -133,7 +133,7 @@ const ReportItem = ({ post, userId, onChange }) => {
     const removePostHandler = () => {
         axios({
             method: 'POST',
-            url: `${BASE_URL}/post/removePost`,
+            url: `${BASE_URL}/post/delete`,
             headers: {
                 'Content-Type': 'application/json',
             },
