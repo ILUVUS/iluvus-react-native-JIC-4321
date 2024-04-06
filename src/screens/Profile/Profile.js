@@ -223,7 +223,7 @@ const Profile = () => {
                             Details
                         </Text>
                     </View>
-                    <View className="mb-1 mb-2 flex flex-row items-center justify-center gap-2">
+                    <View className="mb-2 flex flex-row items-center justify-center gap-2">
                         {verify && (
                             <Text className="text-base italic text-orchid-900">
                                 Profesional Account
