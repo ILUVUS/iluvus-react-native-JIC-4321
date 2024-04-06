@@ -66,6 +66,28 @@ const NewPost = ({
 
     const [resultPostData, setResultPostData] = useState([])
 
+    const [signal, setSignal] = useState()
+
+    const getSignal = async () => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/community/getInfo?id=${community_id}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                setSignal(true)
+            })
+            .catch((err) => {
+                console.log(err)
+                setSignal(false)
+                Alert.alert(
+                    'Cannot publish post at this time. Please try again later.'
+                )
+            })
+    }
+
     useEffect(() => {
         axios({
             method: 'GET',
@@ -153,26 +175,32 @@ const NewPost = ({
             return
         }
 
-        setImageURLs([])
-
-        for (let i = 0; i < pickedImages.length; i++) {
-            try {
-                const uploadedImage = await uploadImage(
-                    community_id,
-                    userId,
-                    pickedImages[i],
-                    i,
-                    setEachImageProgress,
-                    setImageURLs
-                )
-            } catch (e) {
-                setIsPosting(false)
-                console.log(e)
-                return
-            }
-        }
-        setIsPosting(false)
+        await getSignal()
     }
+
+    useEffect(() => {
+        if (signal) {
+            setImageURLs([])
+
+            for (let i = 0; i < pickedImages.length; i++) {
+                try {
+                    const uploadedImage = uploadImage(
+                        community_id,
+                        userId,
+                        pickedImages[i],
+                        i,
+                        setEachImageProgress,
+                        setImageURLs
+                    )
+                } catch (e) {
+                    setIsPosting(false)
+                    console.log(e)
+                    return
+                }
+            }
+            setIsPosting(false)
+        }
+    }, [signal])
 
     useEffect(() => {
         if (
