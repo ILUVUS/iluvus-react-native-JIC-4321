@@ -37,8 +37,7 @@ export default TopicSelector = ({
         getTopics('')
     }, [])
 
-    useEffect(() => {
-    }, [topicList])
+    useEffect(() => {}, [topicList])
 
     return (
         <View className="mb-2 flex w-full flex-1">

@@ -162,9 +162,7 @@ const Community = () => {
                 placeholder={STRINGS.communitySearchBar}
                 onChangeText={(text) => searchFunction(text)}
                 value={searchValue}
-                containerStyle={[
-                    searchBarStyle.containerSearchBar,
-                ]}
+                containerStyle={[searchBarStyle.containerSearchBar]}
                 inputContainerStyle={searchBarStyle.inputSearchBar}
                 inputStyle={searchBarStyle.input}
                 placeholderTextColor={COLORS['orchid'][400]}

@@ -99,7 +99,6 @@ const CommunityView = ({ nav }) => {
             },
         })
             .then((res) => {
-
                 // split and strip the string
                 // const membersListAsArray = getListFromString(res.data.members)
                 setMembers(res.data.members)

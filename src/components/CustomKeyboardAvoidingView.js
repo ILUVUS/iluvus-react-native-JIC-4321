@@ -8,7 +8,7 @@ const CustomKeyboardAvoidingView = ({
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            className="flex flex-1 h-screen w-screen flex-col items-center justify-center bg-white align-top"
+            className="flex h-screen w-screen flex-1 flex-col items-center justify-center bg-white align-top"
             keyboardVerticalOffset={
                 Platform.OS === 'ios' ? `${keyboardPadding}` : '100'
             }
@@ -17,9 +17,7 @@ const CustomKeyboardAvoidingView = ({
                 className="flex h-screen w-screen px-6 py-4"
                 contentContainerStyle={{ flexGrow: 1 }}
             >
-                <View className="flex-1 h-screen">
-                    {children}
-                </View>
+                <View className="h-screen flex-1">{children}</View>
             </ScrollView>
         </KeyboardAvoidingView>
     )
