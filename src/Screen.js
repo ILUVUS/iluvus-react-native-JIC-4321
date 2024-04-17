@@ -17,6 +17,7 @@ import Verification from './screens/login/Verification'
 import Settings from './screens/Settings/Settings'
 import Notification from './screens/Notification/Notification'
 import ReportView from './screens/Report/ReportView'
+import MediaViewer from './screens/community/components/MediaViewer'
 
 LogBox.ignoreAllLogs(true)
 
@@ -25,7 +26,7 @@ const Stack = createStackNavigator()
 export default function Screen() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName={STRINGS.authscreen}>
+            <Stack.Navigator initialRouteName={STRINGS.InitialRoute}>
                 <Stack.Screen
                     name={STRINGS.authscreen}
                     component={AuthScreen}
@@ -130,6 +131,15 @@ export default function Screen() {
                     options={{
                         title: STRINGS.reportscreen,
                         headerShown: true,
+                    }}
+                />
+
+                <Stack.Screen
+                    name={STRINGS.imageviewerscreen}
+                    component={MediaViewer}
+                    options={{
+                        title: STRINGS.imageviewerscreen,
+                        headerShown: false,
                     }}
                 />
             </Stack.Navigator>

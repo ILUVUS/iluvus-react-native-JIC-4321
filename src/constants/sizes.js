@@ -17,4 +17,8 @@ export default {
     xMarkIconSizeTag: 20,
     smallIconSize: 16,
     mediumIconSize: 20,
+    largeIconSize: 24,
+    xlargeIconSize: 28,
+    xxlargeIconSize: 32,
+    xxxlargeIconSize: 36,
 }
