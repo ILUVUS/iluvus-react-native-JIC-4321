@@ -186,7 +186,7 @@ const Community = () => {
                         />
                     }
                 >
-                    <View className="my-3 flex w-screen flex-row justify-evenly">
+                    <View className="flex flex-row flex-wrap overflow-auto justify-evenly my-3">
                         {verify && (
                             <CommunityViewMainButton
                                 onPress={() => newCommunity()}
@@ -212,6 +212,7 @@ const Community = () => {
                                 {STRINGS.myCommunity}
                             </Text>
                         </CommunityViewMainButton>
+
                     </View>
 
                     <View className="mb-2 ml-5 flex w-screen items-start">
