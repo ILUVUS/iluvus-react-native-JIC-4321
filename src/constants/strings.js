@@ -39,6 +39,7 @@ export default {
     setupCommunity: 'SetupCommunity',
     // community buttons
     newCommunity: 'New Group',
+    myGroup: 'MyGroup',
     myCommunity: 'My Groups',
     myFriends: 'My Friends',
 

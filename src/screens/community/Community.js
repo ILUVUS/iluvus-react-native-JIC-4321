@@ -141,7 +141,7 @@ const Community = () => {
     }
 
     const myCommunity = () => {
-        // navigation.navigate('SetupCommunity')
+        navigation.navigate('MyGroup')
     }
 
     const myFriend = () => {
