@@ -22,7 +22,7 @@ import {
 
 import { useIsFocused } from '@react-navigation/native'
 
-const MyGroup = () => {
+const MyCreatedGroup = () => {
     const navigation = useNavigation()
     const isFocused = useIsFocused()
 
@@ -131,8 +131,8 @@ const MyGroup = () => {
             >
 
                 <View className="mb-2 ml-5 flex w-screen items-start my-3">
-                    {/* <Text className="text-3xl font-bold text-orchid-900 shadow-md shadow-slate-200 items-center">
-                        My Following 
+                    {/* <Text className="text-3xl font-bold text-orchid-900 shadow-md shadow-slate-200">
+                        My Communities 
                     </Text> */}
                 </View>
 
@@ -164,4 +164,4 @@ const MyGroup = () => {
         </View>
     )
 }
-export default MyGroup
+export default MyCreatedGroup

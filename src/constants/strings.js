@@ -41,6 +41,8 @@ export default {
     newCommunity: 'New Group',
     myGroup: 'MyGroup',
     myCommunity: 'Following',
+    MyCreatedGroup: 'MyCreatedGroup',
+    myGroups: 'My Groups',
     myFriends: 'My Friends',
 
     // view community
