@@ -61,7 +61,7 @@ const MyGroup = () => {
     const fetchCommunityList = async () => {
         axios({
             method: 'GET',
-            url: `${BASE_URL}/user/getMyGroups?userId=${userId}`,
+            url: `${BASE_URL}/user/getMyFollowingGroups?userId=${userId}`,
             headers: {
                 'Content-Type': 'application/json',
             },
