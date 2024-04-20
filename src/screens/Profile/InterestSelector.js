@@ -36,7 +36,6 @@ export default InterestSelector = ({
         getTopics('')
     }, [])
 
-
     const toggleInterestSelection = (interestId, interestName) => {
         setSelectedInterests((prevSelectedInterests) => {
             const interestIndex = Object.keys(prevSelectedInterests).includes(
@@ -61,8 +60,7 @@ export default InterestSelector = ({
         })
     }
 
-    useEffect(() => {
-    }, [selectedInterests])
+    useEffect(() => {}, [selectedInterests])
 
     return (
         <View className="mb-2 flex w-full flex-1 p-5">
@@ -89,8 +87,7 @@ export default InterestSelector = ({
                     return (
                         <TouchableOpacity
                             className={
-                                'rounded-lg bg-orchid-100 px-6 py-4 shadow-sm'
-                                +
+                                'rounded-lg bg-orchid-100 px-6 py-4 shadow-sm' +
                                 (isSelected ? ' bg-gold-900' : '')
                             }
                             key={key}

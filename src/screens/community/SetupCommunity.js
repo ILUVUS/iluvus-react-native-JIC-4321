@@ -14,7 +14,11 @@ import COLORS from '../../constants/colors'
 import STRINGS from '../../constants/strings'
 import { SetupCommunityInput } from '../../components/input'
 import { NewCommunityButton } from '../../components/button'
-import { dropDownStyle, inputStyle, searchBarStyle } from '../../../styles/style'
+import {
+    dropDownStyle,
+    inputStyle,
+    searchBarStyle,
+} from '../../../styles/style'
 import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingView'
 
 import { Image } from 'react-native'
@@ -50,8 +54,12 @@ export default function SetupCommunity() {
         const removedUser = chosenModerators.slice(index)
         const removeUserId = chosenModeratorsId.slice(index)
 
-        setChosenModerators(chosenModerators.filter((user) => user.id !== removedUser[0].id))
-        setChosenModeratorsId(chosenModeratorsId.filter((id) => id !== removeUserId[0]))
+        setChosenModerators(
+            chosenModerators.filter((user) => user.id !== removedUser[0].id)
+        )
+        setChosenModeratorsId(
+            chosenModeratorsId.filter((id) => id !== removeUserId[0])
+        )
 
         if (removedUser[0].username.includes(searchUsername.toLowerCase())) {
             setSearchUserList([...searchUserList, removedUser[0]])
@@ -133,7 +141,7 @@ export default function SetupCommunity() {
     }
 
     useEffect(() => {
-    console.log(chosenModeratorsId)
+        console.log(chosenModeratorsId)
     }, [chosenModeratorsId])
 
     const publishCommunity = async () => {
@@ -222,15 +230,15 @@ export default function SetupCommunity() {
                 placeholder={STRINGS.setupCommunityVisibilityPlaceholder}
             />
 
-            <Text className="mt-5 mb-2 text-base text-orchid-900 shadow-md shadow-slate-400">
+            <Text className="mb-2 mt-5 text-base text-orchid-900 shadow-md shadow-slate-400">
                 Choose Moderators
             </Text>
             {chosenModerators.length > 0 && (
                 <View className="w-full">
                     {/*<View className="my-3 flex w-full flex-col items-start justify-start">*/}
-                        {/*<Text className="text-base font-bold text-orchid-900">*/}
-                        {/*    Chosen Moderators*/}
-                        {/*</Text>*/}
+                    {/*<Text className="text-base font-bold text-orchid-900">*/}
+                    {/*    Chosen Moderators*/}
+                    {/*</Text>*/}
                     {/*</View>*/}
 
                     <ScrollView
@@ -252,24 +260,12 @@ export default function SetupCommunity() {
                                 </View>
                                 <TouchableOpacity
                                     key={index}
-                                    onPress={() =>
-                                        removeModerator(
-                                            index
-                                        )
-                                    }
+                                    onPress={() => removeModerator(index)}
                                 >
                                     <FontAwesomeIcon
                                         icon={faCircleXmark}
-                                        color={
-                                            COLORS[
-                                                'orchid'
-                                            ][800]
-                                        }
-                                        size={
-                                            SIZES[
-                                                'xMarkIconSizeTag'
-                                            ]
-                                        }
+                                        color={COLORS['orchid'][800]}
+                                        size={SIZES['xMarkIconSizeTag']}
                                     />
                                 </TouchableOpacity>
                             </View>
@@ -281,24 +277,16 @@ export default function SetupCommunity() {
                 <View className="my-3 w-fit flex-col items-center justify-start">
                     <SearchBar
                         placeholder={STRINGS.ChooseModerators}
-                        onChangeText={(text) =>
-                            searchUser(text)
-                        }
+                        onChangeText={(text) => searchUser(text)}
                         value={searchUsername}
                         containerStyle={[
                             searchBarStyle.containerSearchBar,
                             inputStyle.inputShadow,
                         ]}
-                        inputContainerStyle={
-                            searchBarStyle.inputSearchBar
-                        }
+                        inputContainerStyle={searchBarStyle.inputSearchBar}
                         inputStyle={searchBarStyle.input}
-                        placeholderTextColor={
-                            COLORS['orchid'][400]
-                        }
-                        searchIcon={
-                            searchBarStyle.seachIcon
-                        }
+                        placeholderTextColor={COLORS['orchid'][400]}
+                        searchIcon={searchBarStyle.seachIcon}
                         clearIcon={searchBarStyle.clearIcon}
                     />
 
@@ -311,25 +299,17 @@ export default function SetupCommunity() {
                             }}
                         >
                             <View className="flex h-full w-full flex-row flex-wrap items-start justify-start overflow-auto">
-                                {searchUserList.map(
-                                    (user, index) => (
-                                        <TouchableOpacity
-                                            key={index}
-                                            className="mx-1 my-2 rounded-full bg-orchid-100 px-3 py-2 shadow-sm"
-                                            onPress={() =>
-                                                addModerator(
-                                                    index
-                                                )
-                                            }
-                                        >
-                                            <Text className="text-base text-orchid-900">
-                                                {
-                                                    user.username
-                                                }
-                                            </Text>
-                                        </TouchableOpacity>
-                                    )
-                                )}
+                                {searchUserList.map((user, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        className="mx-1 my-2 rounded-full bg-orchid-100 px-3 py-2 shadow-sm"
+                                        onPress={() => addModerator(index)}
+                                    >
+                                        <Text className="text-base text-orchid-900">
+                                            {user.username}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
                             </View>
                         </ScrollView>
                     )}

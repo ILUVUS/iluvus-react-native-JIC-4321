@@ -60,7 +60,6 @@ const uploadImage = async (
                         newURLs.push(imageUrl)
                         return newURLs
                     })
-
                 } catch (error) {
                     console.error('Error getting download URL:', error)
                 }

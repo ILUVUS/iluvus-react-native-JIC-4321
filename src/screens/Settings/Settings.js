@@ -7,8 +7,6 @@ import axios from 'axios'
 import { BASE_URL } from '@env'
 import { useIsFocused } from '@react-navigation/native'
 
-
-
 const Settings = () => {
     const [userId, setUserId] = useState('')
 
@@ -78,12 +76,12 @@ const Settings = () => {
             {/*    <Text>{userInfo.email}</Text>*/}
             {/*    <Text>{userId}</Text>*/}
             {/*</View>*/}
-                <TouchableOpacity
-                    className="inline-block w-fit items-center justify-center rounded-3xl bg-gold-900 px-5 py-4 shadow-md shadow-slate-200"
-                    onPress={handleLogout}
-                >
-                    <Text className="text-sm text-orchid-900">Logout</Text>
-                </TouchableOpacity>
+            <TouchableOpacity
+                className="inline-block w-fit items-center justify-center rounded-3xl bg-gold-900 px-5 py-4 shadow-md shadow-slate-200"
+                onPress={handleLogout}
+            >
+                <Text className="text-sm text-orchid-900">Logout</Text>
+            </TouchableOpacity>
         </View>
     )
 }
