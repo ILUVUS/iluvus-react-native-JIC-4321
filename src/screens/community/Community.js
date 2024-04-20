@@ -29,6 +29,9 @@ import {
 
 import { useIsFocused } from '@react-navigation/native'
 import Constants from 'expo-constants'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faCheckToSlot } from '@fortawesome/free-solid-svg-icons'
+
 const Community = () => {
     const navigation = useNavigation()
     const isFocused = useIsFocused()
@@ -155,6 +158,10 @@ const Community = () => {
         // navigation.navigate('SetupCommunity')
     }
 
+    const myCreatedGroup = () => {
+        navigation.navigate('MyCreatedGroup')
+    }
+
     const communityClick = (id) => {
         navigation.navigate(STRINGS.communityView, { communityId: id })
     }
@@ -215,20 +222,34 @@ const Community = () => {
                         )}
 
                         <CommunityViewMainButton onPress={() => myCommunity()}>
+                            <FontAwesomeIcon
+                                icon={faCheckToSlot}
+                                color={COLORS.orchid[900]}
+                                size={SIZES.communityIconSize}
+                            />
+
+                            <Text className="mt-1 text-base text-orchid-900">
+                                {STRINGS.myCommunity}
+                            </Text>
+                        </CommunityViewMainButton>
+
+                        <CommunityViewMainButton
+                            onPress={() => myCreatedGroup()}
+                        >
                             <Icon
                                 name="users"
                                 size={SIZES.communityIconSize}
                                 color={COLORS['orchid'][900]}
                             />
                             <Text className="mt-1 text-base text-orchid-900">
-                                {STRINGS.myCommunity}
+                                {STRINGS.myGroups}
                             </Text>
                         </CommunityViewMainButton>
                     </View>
 
                     <View className="mb-2 ml-5 flex w-screen items-start">
                         <Text className="text-3xl font-bold text-orchid-900 shadow-md shadow-slate-200">
-                            Developing
+                            Communities
                         </Text>
                     </View>
 

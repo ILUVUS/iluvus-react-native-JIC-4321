@@ -18,6 +18,7 @@ import Settings from './screens/Settings/Settings'
 import Notification from './screens/Notification/Notification'
 import ReportView from './screens/Report/ReportView'
 import MyGroup from './screens/community/MyGroup'
+import MyCreatedGroup from './screens/community/MyCreatedGroup'
 import MediaViewer from './screens/community/components/MediaViewer'
 
 LogBox.ignoreAllLogs(true)
@@ -140,6 +141,14 @@ export default function Screen() {
                     component={ReportView}
                     options={{
                         title: STRINGS.reportscreen,
+                        headerShown: true,
+                    }}
+                />
+                <Stack.Screen
+                    name={STRINGS.MyCreatedGroup}
+                    component={MyCreatedGroup}
+                    options={{
+                        title: STRINGS.myGroups,
                         headerShown: true,
                     }}
                 />
