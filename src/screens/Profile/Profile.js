@@ -158,6 +158,11 @@ const Profile = () => {
         setIsTopicSelectorModalVisible(true)
     }
 
+    const formatDob = (dob) => {
+        const date = new Date(dob)
+        return date.toLocaleDateString()
+    }
+
     return (
         <View className="flex h-screen w-screen">
             <ScrollView
@@ -223,12 +228,21 @@ const Profile = () => {
                             Details
                         </Text>
                     </View>
-                    <View className="mb-2 flex flex-row items-center justify-center gap-2">
+
+                    <View className="mb-2 flex flex-col items-start justify-center gap-2">
                         {verify && (
                             <Text className="text-base italic text-orchid-900">
                                 Profesional Account
                             </Text>
                         )}
+                        <View className="flex flex-row items-start justify-start">
+                            <Text className="text-base font-semibold text-orchid-800 ">
+                                Date of Birth:
+                            </Text>
+                            <Text className="ml-5 text-base text-orchid-800">
+                                {formatDob(userInfo.dob)}
+                            </Text>
+                        </View>
                     </View>
 
                     <View className="flex flex-row items-center gap-2">
