@@ -14,6 +14,8 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { useRoute } from '@react-navigation/native'
 import { useNavigation } from '@react-navigation/native'
 
+import Constants from 'expo-constants'
+
 export default function MediaViewer() {
     const [medias, setMedias] = useState(useRoute().params.medias)
     const [readyMedias, setReadyMedias] = useState([])
@@ -112,7 +114,8 @@ export default function MediaViewer() {
                             renderItem={renderItem}
                         />
                         <TouchableOpacity
-                            className="absolute right-3 top-10 opacity-70"
+                            className="absolute right-3 opacity-70"
+                            style={{ top: Constants.statusBarHeight }}
                             onPress={() => {
                                 navigate.goBack()
                             }}
