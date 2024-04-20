@@ -28,6 +28,9 @@ export default {
     publish: 'Publish',
     picture: 'Picture',
 
+    // imageviewer screen
+    imageviewerscreen: 'MediaViewer',
+
     // navigation
     hometab: 'Home',
     communitytab: 'Community',

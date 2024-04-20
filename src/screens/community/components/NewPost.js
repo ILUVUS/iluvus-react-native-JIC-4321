@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
     Text,
     View,
@@ -24,6 +24,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 import * as ImagePicker from 'expo-image-picker'
+
 import { SearchBar } from 'react-native-elements'
 import { inputStyle, searchBarStyle } from '../../../../styles/style'
 
@@ -31,7 +32,7 @@ import { PostButton } from '../../../components/button'
 
 import { uploadImage } from '../../../utils/fbHelper'
 import * as Progress from 'react-native-progress'
-import { getDatetime } from '../../../utils/Utils'
+import { getDatetime, randomSymbol } from '../../../utils/Utils'
 
 const NewPost = ({
     userId,
@@ -132,7 +133,7 @@ const NewPost = ({
 
     const pickingImageHandler = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
             allowsEditing: false,
             quality: 0.8,
         })
@@ -450,7 +451,7 @@ const NewPost = ({
                                 size={SIZES.postImageIconSize}
                             />
                             <Text className="text-xs text-orchid-900">
-                                Images
+                                Medias
                             </Text>
                         </TouchableOpacity>
                     )}
@@ -459,14 +460,22 @@ const NewPost = ({
                             return (
                                 <TouchableOpacity
                                     onPress={() => setImageViewerVisible(true)}
+                                    key={index}
                                 >
                                     <View className="relative h-16 w-16 bg-transparent">
-                                        <Image
-                                            source={{
-                                                uri: imageInfo.uri,
-                                            }}
-                                            className="h-16 w-16 rounded-lg"
-                                        />
+                                        {imageInfo.type === 'image' ? (
+                                            <Image
+                                                source={{
+                                                    uri: imageInfo.uri,
+                                                }}
+                                                className="h-16 w-16 rounded-lg"
+                                            />
+                                        ) : (
+                                            <Image
+                                                source={randomSymbol(index)}
+                                                className="h-16 w-16 rounded-lg"
+                                            />
+                                        )}
                                         <TouchableOpacity
                                             className="absolute right-1 top-1"
                                             onPress={() =>
@@ -488,7 +497,10 @@ const NewPost = ({
                                 length: 4 - pickedImages.length,
                             },
                             (_, i) => (
-                                <View className="h-16 w-16 rounded-lg bg-slate-100"></View>
+                                <View
+                                    className="h-16 w-16 rounded-lg bg-slate-100"
+                                    key={i}
+                                ></View>
                             )
                         )}
                 </View>
@@ -520,7 +532,7 @@ const NewPost = ({
                 {uploadProgress === 0 && (
                     <View className="flex h-fit w-4/5 flex-col items-center justify-center space-y-1">
                         <Text className="text-orchid-900">
-                            {pickedImages?.length}/5 images selected
+                            {pickedImages?.length}/5 medias selected
                         </Text>
                     </View>
                 )}

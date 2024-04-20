@@ -24,7 +24,12 @@ import axios from 'axios'
 
 import ImageView from 'react-native-image-viewing'
 
-import { displayDatetime, getDatetime } from '../../../utils/Utils'
+import {
+    displayDatetime,
+    getDatetime,
+    randomSymbol,
+} from '../../../utils/Utils'
+import { useNavigation } from '@react-navigation/native'
 
 const PostItem = ({ post, userId, displayCommunityName }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false)
@@ -37,6 +42,8 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
     const [taggedUsernames, setTaggedUsernames] = useState([])
     const [topic, setTopic] = useState({})
     const [community, setCommunity] = useState({})
+
+    const navigate = useNavigation()
 
     useEffect(() => {
         setTaggedUsernames([])
@@ -227,9 +234,12 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
     const [media_urls, setMediaUrls] = useState([])
 
     const openImageViewer = (medias, index) => {
-        setMediaUrls(medias.map((url) => ({ uri: url })))
-        setImageViewerIndex(index)
-        setImageViewerVisible(true)
+        // setMediaUrls(medias.map((url) => ({ uri: url })))
+        // setImageViewerIndex(index)
+        // setImageViewerVisible(true)
+        navigate.navigate('MediaViewer', {
+            medias: medias,
+        })
     }
 
     const closeImageViewer = () => {
@@ -306,6 +316,9 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                                                 key={index}
                                                 source={{ uri: url }}
                                                 className="h-16 w-16 rounded-2xl"
+                                                defaultSource={randomSymbol(
+                                                    index
+                                                )}
                                             />
                                         </TouchableOpacity>
                                     ))}
@@ -440,7 +453,6 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                 </View>
             )}
 
-            {/* image viewer */}
             <ImageView
                 images={media_urls}
                 imageIndex={imageViewerIndex}
