@@ -11,7 +11,6 @@ import Home from './Home/Home.js'
 import Notification from './Notification/Notification'
 import Setting from './Settings/Settings'
 
-
 function HomeScreenNav() {
     return <Home />
 }
@@ -33,7 +32,7 @@ function MessageScreenNav() {
 }
 
 function SettingsScreenNav() {
-    return <Setting/>
+    return <Setting />
 }
 
 const Tab = createBottomTabNavigator()
@@ -83,6 +82,9 @@ export default function HomeScreen() {
             <Tab.Screen
                 name={STRINGS.communitytab}
                 component={CommunityScreenNav}
+                options={{
+                    headerShown: false,
+                }}
             />
             <Tab.Screen
                 name={STRINGS.profiletab}

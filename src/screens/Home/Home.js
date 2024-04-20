@@ -20,7 +20,7 @@ const Home = (nav) => {
     }, [])
 
     const findUserId = async () => {
-        setUserId("")
+        setUserId('')
         try {
             const value = await AsyncStorage.getItem('userId')
             if (value !== null) {
@@ -43,7 +43,7 @@ const Home = (nav) => {
     }, [userId])
 
     const getPosts = async () => {
-        console.log("Run getPosts")
+        console.log('Run getPosts')
         axios({
             method: 'GET',
             url: `${BASE_URL}/post/getPostForHomePage?userId=${userId}`,
@@ -78,16 +78,17 @@ const Home = (nav) => {
                                 />
                             }
                         >
-                            {postData && postData.map((post, index) => {
-                                return (
-                                    <PostItem
-                                        key={index}
-                                        post={post}
-                                        userId={userId}
-                                        displayCommunityName={true}
-                                    />
-                                )
-                            })}
+                            {postData &&
+                                postData.map((post, index) => {
+                                    return (
+                                        <PostItem
+                                            key={index}
+                                            post={post}
+                                            userId={userId}
+                                            displayCommunityName={true}
+                                        />
+                                    )
+                                })}
                         </ScrollView>
                     </View>
                 ) : (

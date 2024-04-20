@@ -24,7 +24,12 @@ import axios from 'axios'
 
 import ImageView from 'react-native-image-viewing'
 
-import { displayDatetime, getDatetime } from '../../../utils/Utils'
+import {
+    displayDatetime,
+    getDatetime,
+    randomSymbol,
+} from '../../../utils/Utils'
+import { useNavigation } from '@react-navigation/native'
 
 const PostItem = ({ post, userId, displayCommunityName }) => {
     const [isCommentVisible, setIsCommentVisible] = useState(false)
@@ -37,6 +42,8 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
     const [taggedUsernames, setTaggedUsernames] = useState([])
     const [topic, setTopic] = useState({})
     const [community, setCommunity] = useState({})
+
+    const navigate = useNavigation()
 
     useEffect(() => {
         setTaggedUsernames([])
@@ -227,9 +234,12 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
     const [media_urls, setMediaUrls] = useState([])
 
     const openImageViewer = (medias, index) => {
-        setMediaUrls(medias.map((url) => ({ uri: url })))
-        setImageViewerIndex(index)
-        setImageViewerVisible(true)
+        // setMediaUrls(medias.map((url) => ({ uri: url })))
+        // setImageViewerIndex(index)
+        // setImageViewerVisible(true)
+        navigate.navigate('MediaViewer', {
+            medias: medias,
+        })
     }
 
     const closeImageViewer = () => {
@@ -277,7 +287,7 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                             </Text>
                         </View>
                     </View>
-                    <Text className="mt-1 mb-2 text-base text-orchid-700">
+                    <Text className="mb-2 mt-1 text-base text-orchid-700">
                         {post.text}
                     </Text>
                     {/* horizontal scroll view for media */}
@@ -306,6 +316,9 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                                                 key={index}
                                                 source={{ uri: url }}
                                                 className="h-16 w-16 rounded-2xl"
+                                                defaultSource={randomSymbol(
+                                                    index
+                                                )}
                                             />
                                         </TouchableOpacity>
                                     ))}
@@ -313,20 +326,20 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                             )}
                         </ScrollView>
                     )}
-                    { taggedUsernames.length > 0 && (
-                    <View className="mb-3 flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
-                        {taggedUsernames.map((username, index) => (
-                            <View
-                                key={index}
-                                className="mx-1 rounded-full bg-orchid-100 px-2 py-1 shadow-sm"
-                            >
-                                <Text className="text-sm text-orchid-900">
-                                    {username}
-                                </Text>
-                            </View>
-                        ))}
-                    </View>
-                        )}
+                    {taggedUsernames.length > 0 && (
+                        <View className="mb-3 flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
+                            {taggedUsernames.map((username, index) => (
+                                <View
+                                    key={index}
+                                    className="mx-1 rounded-full bg-orchid-100 px-2 py-1 shadow-sm"
+                                >
+                                    <Text className="text-sm text-orchid-900">
+                                        {username}
+                                    </Text>
+                                </View>
+                            ))}
+                        </View>
+                    )}
                     {displayCommunityName && community.name && (
                         <View className="flex h-fit w-full flex-row items-start justify-between">
                             <Text className="text-xs text-orchid-600">
@@ -440,7 +453,6 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                 </View>
             )}
 
-            {/* image viewer */}
             <ImageView
                 images={media_urls}
                 imageIndex={imageViewerIndex}

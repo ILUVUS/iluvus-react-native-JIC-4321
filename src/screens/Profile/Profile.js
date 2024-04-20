@@ -42,7 +42,7 @@ const Profile = () => {
                     setUserId(value)
                 }
             } catch (e) {
-                console.log("cannot get verify" + e)
+                console.log('cannot get verify' + e)
             }
         }
         findUserInfoById()
@@ -67,7 +67,7 @@ const Profile = () => {
                 setVerify(true)
             })
             .catch((err) => {
-                console.log("cannot verify" + err)
+                console.log('cannot verify' + err)
                 setVerify(false)
             })
     }
@@ -114,20 +114,22 @@ const Profile = () => {
                 })
             })
             .catch((err) => {
-                console.log("cannot save in" + err)
+                console.log('cannot save in' + err)
             })
     }
 
     useEffect(() => {
         // check if the selected topic is empty
-        if (selectedTopic !== undefined
-            && Object.keys(selectedTopic).length !== 0) {
+        if (
+            selectedTopic !== undefined &&
+            Object.keys(selectedTopic).length !== 0
+        ) {
             saveInterests()
         }
     }, [selectedTopic])
 
     useEffect(() => {
-        if (userId !== "") {
+        if (userId !== '') {
             getUserInfo()
         }
     }, [userId, isFocused])
@@ -144,7 +146,7 @@ const Profile = () => {
                 setUserInfo(res.data)
             })
             .catch((err) => {
-                console.log("Cannot get user info" + err)
+                console.log('Cannot get user info' + err)
             })
     }
 
@@ -154,6 +156,11 @@ const Profile = () => {
 
     const editProfile = () => {
         setIsTopicSelectorModalVisible(true)
+    }
+
+    const formatDob = (dob) => {
+        const date = new Date(dob)
+        return date.toLocaleDateString()
     }
 
     return (
@@ -221,15 +228,24 @@ const Profile = () => {
                             Details
                         </Text>
                     </View>
-                    <View className="mb-1 flex flex-row items-center justify-center gap-2 mb-2">
+
+                    <View className="mb-2 flex flex-col items-start justify-center gap-2">
                         {verify && (
                             <Text className="text-base italic text-orchid-900">
                                 Profesional Account
                             </Text>
                         )}
+                        <View className="flex flex-row items-start justify-start">
+                            <Text className="text-base font-semibold text-orchid-800 ">
+                                Date of Birth:
+                            </Text>
+                            <Text className="ml-5 text-base text-orchid-800">
+                                {formatDob(userInfo.dob)}
+                            </Text>
+                        </View>
                     </View>
 
-                    <View className="flex flex-row gap-2 items-center">
+                    <View className="flex flex-row items-center gap-2">
                         <Text className="text-base font-semibold text-orchid-800 ">
                             Interests:
                         </Text>
@@ -241,7 +257,7 @@ const Profile = () => {
                             />
                         </TouchableOpacity>
                     </View>
-                    <View className="flex flex-grow flex-row flex-wrap gap-2 my-1">
+                    <View className="my-1 flex flex-grow flex-row flex-wrap gap-2">
                         {selectedTopic &&
                             Object.keys(selectedTopic).map((key) => {
                                 return (

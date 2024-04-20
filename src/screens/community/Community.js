@@ -4,7 +4,14 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { BASE_URL } from '@env'
 import { Image, SearchBar } from 'react-native-elements'
-import { RefreshControl, ScrollView, Text, View } from 'react-native'
+import {
+    RefreshControl,
+    ScrollView,
+    Text,
+    View,
+    StatusBar,
+    Dimensions,
+} from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -21,8 +28,9 @@ import {
 } from '../../components/button'
 
 import { useIsFocused } from '@react-navigation/native'
+import Constants from 'expo-constants'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faCheckToSlot} from '@fortawesome/free-solid-svg-icons'
+import { faCheckToSlot } from '@fortawesome/free-solid-svg-icons'
 
 const Community = () => {
     const navigation = useNavigation()
@@ -162,8 +170,15 @@ const Community = () => {
         setSearchValue(text)
     }
 
+    const statusBarHeight = StatusBar.currentHeight
+    const screenHeight = Dimensions.get('screen').height
+    const contentHeight = screenHeight - statusBarHeight
+
     return (
-        <View className="flex justify-center bg-white align-middle">
+        <View
+            className="flex justify-center bg-white align-middle"
+            style={{ paddingTop: Constants.statusBarHeight }}
+        >
             <SearchBar
                 placeholder={STRINGS.communitySearchBar}
                 onChangeText={(text) => searchFunction(text)}

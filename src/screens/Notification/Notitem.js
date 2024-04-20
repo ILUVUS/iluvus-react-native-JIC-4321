@@ -14,7 +14,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import COLORS from '../../constants/colors'
 import axios from 'axios'
-import {displayDatetime} from '../../utils/Utils'
+import { displayDatetime } from '../../utils/Utils'
 
 const NotItemIdentify = ({ data }) => {
     let msg = ''
