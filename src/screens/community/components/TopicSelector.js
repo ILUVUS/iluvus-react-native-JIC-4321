@@ -9,13 +9,13 @@ import { ScrollView } from 'react-native-gesture-handler'
 import STRINGS from '../../../constants/strings'
 
 export default TopicSelector = ({
-    setModalVisibility,
-    setPostModalVisibility,
+    openTopicSelector,
+    setOpenTopicSelector,
     selectedTopic,
     setSelectedTopic,
 }) => {
     const [topicList, setTopicList] = useState({})
-    const [currentTopic, setCurrentTopic] = useState({selectedTopic})
+    const [currentTopic, setCurrentTopic] = useState({ selectedTopic })
 
     const getTopics = async (name) => {
         axios({
@@ -37,9 +37,7 @@ export default TopicSelector = ({
         getTopics('')
     }, [])
 
-    useEffect(() => {
-        // console.log('Topic List:', topicList)
-    }, [topicList])
+    useEffect(() => {}, [topicList])
 
     return (
         <View className="mb-2 flex w-full flex-1">
@@ -73,7 +71,6 @@ export default TopicSelector = ({
                                     name: topicList[key],
                                 })
                             }}
-
                         >
                             <Text className="text-sm text-orchid-900">
                                 {topicList[key]}
@@ -86,8 +83,7 @@ export default TopicSelector = ({
                 <TouchableOpacity
                     className="flex h-fit flex-1 items-center rounded-xl bg-red-300 px-8 py-2 shadow"
                     onPress={() => {
-                        setPostModalVisibility(true)
-                        setModalVisibility(false)
+                        setOpenTopicSelector((prev) => !prev)
                     }}
                 >
                     <Text className="align-middle text-base font-bold text-red-900">
@@ -98,8 +94,7 @@ export default TopicSelector = ({
                     className="flex h-fit w-1/2 items-center rounded-xl bg-green-300 px-10 py-2 shadow"
                     onPress={() => {
                         setSelectedTopic(currentTopic)
-                        setModalVisibility(false)
-                        setPostModalVisibility(true)
+                        setOpenTopicSelector((prev) => !prev)
                     }}
                 >
                     <Text className="align-middle text-base font-bold text-green-900">

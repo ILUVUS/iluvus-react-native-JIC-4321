@@ -277,7 +277,7 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                             </Text>
                         </View>
                     </View>
-                    <Text className="mt-1 mb-2 text-base text-orchid-700">
+                    <Text className="mb-2 mt-1 text-base text-orchid-700">
                         {post.text}
                     </Text>
                     {/* horizontal scroll view for media */}
@@ -313,20 +313,20 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                             )}
                         </ScrollView>
                     )}
-                    { taggedUsernames.length > 0 && (
-                    <View className="mb-3 flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
-                        {taggedUsernames.map((username, index) => (
-                            <View
-                                key={index}
-                                className="mx-1 rounded-full bg-orchid-100 px-2 py-1 shadow-sm"
-                            >
-                                <Text className="text-sm text-orchid-900">
-                                    {username}
-                                </Text>
-                            </View>
-                        ))}
-                    </View>
-                        )}
+                    {taggedUsernames.length > 0 && (
+                        <View className="mb-3 flex h-fit w-full flex-row flex-wrap items-start justify-start overflow-auto">
+                            {taggedUsernames.map((username, index) => (
+                                <View
+                                    key={index}
+                                    className="mx-1 rounded-full bg-orchid-100 px-2 py-1 shadow-sm"
+                                >
+                                    <Text className="text-sm text-orchid-900">
+                                        {username}
+                                    </Text>
+                                </View>
+                            ))}
+                        </View>
+                    )}
                     {displayCommunityName && community.name && (
                         <View className="flex h-fit w-full flex-row items-start justify-between">
                             <Text className="text-xs text-orchid-600">

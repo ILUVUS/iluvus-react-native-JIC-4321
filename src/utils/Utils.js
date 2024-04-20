@@ -15,7 +15,10 @@ const displayDatetime = (postDatetime) => {
 
     if (diffDays < 1) {
         const diffHours = diffTime / (1000 * 60 * 60)
-        if (diffHours < 1) {
+        // if minutes less than 1 minute, show now
+        if (diffHours < 1 / 60) {
+            return 'now'
+        } else if (diffHours < 2) {
             const diffMinutes = diffTime / (1000 * 60)
             return `${Math.round(diffMinutes)} minutes ago`
         } else {

@@ -33,7 +33,8 @@ const RegistrationScreen = ({}) => {
     const [proEmail, setProfEmail] = useState('')
 
     const [isProfessionalUser, setIsProfessionalUser] = useState(false)
-    const toggleSwitch = () => setIsProfessionalUser(previousState => !previousState);
+    const toggleSwitch = () =>
+        setIsProfessionalUser((previousState) => !previousState)
 
     const navigation = useNavigation()
 
@@ -59,7 +60,7 @@ const RegistrationScreen = ({}) => {
         }
 
         if (!isProfessionalUser) {
-            console.log("user")
+            console.log('user')
             axios({
                 method: 'POST',
                 url: `${BASE_URL}/user/create`,
@@ -81,7 +82,7 @@ const RegistrationScreen = ({}) => {
                     Alert.alert(error)
                 })
         } else {
-            console.log("prof")
+            console.log('prof')
             navigation.navigate(STRINGS.verificationscreen, {
                 data: packedData,
             })
@@ -172,13 +173,20 @@ const RegistrationScreen = ({}) => {
                 placeholder={STRINGS.gender}
             />
 
-            <View className="py-2 mt-3 flex flex-row justify-between">
+            <View className="mt-3 flex flex-row justify-between py-2">
                 <Text className="text-base text-orchid-900 shadow-md shadow-slate-400">
                     Are you a professional user?
                 </Text>
                 <Switch
-                    trackColor={{false: COLORS['gold'][900], true: COLORS['orchid'][300]}}
-                    thumbColor={isProfessionalUser ? COLORS['gold'][900] : COLORS['gold'][100]}
+                    trackColor={{
+                        false: COLORS['gold'][900],
+                        true: COLORS['orchid'][300],
+                    }}
+                    thumbColor={
+                        isProfessionalUser
+                            ? COLORS['gold'][900]
+                            : COLORS['gold'][100]
+                    }
                     ios_backgroundColor="#3e3e3e"
                     onValueChange={toggleSwitch}
                     value={isProfessionalUser}
@@ -217,8 +225,6 @@ const RegistrationScreen = ({}) => {
                     />
                 </>
             )}
-
-
 
             <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
                 Username

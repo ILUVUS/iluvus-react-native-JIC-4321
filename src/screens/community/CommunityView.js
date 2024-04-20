@@ -99,8 +99,6 @@ const CommunityView = ({ nav }) => {
             },
         })
             .then((res) => {
-                // // console.log(res.data.members)
-
                 // split and strip the string
                 // const membersListAsArray = getListFromString(res.data.members)
                 setMembers(res.data.members)
@@ -120,7 +118,7 @@ const CommunityView = ({ nav }) => {
                 })
             })
             .catch((err) => {
-                // // console.log(err)
+                console.log(err)
             })
 
         return () => {}
@@ -161,7 +159,7 @@ const CommunityView = ({ nav }) => {
                 setOwner(res.data)
             })
             .catch((err) => {
-                // console.log(err)
+                console.log(err)
             })
     }
 
@@ -179,7 +177,7 @@ const CommunityView = ({ nav }) => {
                 setRefreshingPendingRequests(true)
             })
             .catch((err) => {
-                // console.log(err)
+                console.log(err)
             })
     }
 
@@ -242,7 +240,7 @@ const CommunityView = ({ nav }) => {
                 setIsPublicCommunity(Boolean(res.data))
             })
             .catch((err) => {
-                // console.log(err)
+                console.log(err)
             })
     }
 
@@ -262,7 +260,7 @@ const CommunityView = ({ nav }) => {
                 getCommunityInfo()
             })
             .catch((err) => {
-                // console.log(err)
+                console.log(err)
             })
     }
 
@@ -278,11 +276,10 @@ const CommunityView = ({ nav }) => {
             },
         })
             .then((res) => {
-                // // console.log(res.data)
                 // setIsHost(true)
             })
             .catch((err) => {
-                // console.log(err)
+                console.log(err)
                 // setIsHost(false)
             })
     }
