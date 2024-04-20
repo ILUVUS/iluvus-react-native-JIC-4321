@@ -28,6 +28,9 @@ export default {
     publish: 'Publish',
     picture: 'Picture',
 
+    // imageviewer screen
+    imageviewerscreen: 'MediaViewer',
+
     // navigation
     hometab: 'Home',
     communitytab: 'Community',
@@ -40,7 +43,7 @@ export default {
     // community buttons
     newCommunity: 'New Group',
     myGroup: 'MyGroup',
-    myCommunity: 'Following',
+    myCommunity: ' Following',
     myFriends: 'My Friends',
 
     // view community
@@ -128,18 +131,7 @@ export default {
     //community
     communitySearchBar: 'Explore communities',
 
-    exanple_text:
-        "This is an example of text. \
-    It's used to show how text will look on the screen.\
-    This is an example of text. \
-    It's used to show how text will look on the screen.\
-    This is an example of text. \
-    It's used to show how text will look on the screen.\
-    This is an example of text. \
-    It's used to show how text will look on the screen.\
-    This is an example of text. \
-    It's used to show how text will look on the screen.\
-    ",
+    exanple_text: '',
 
     // upload
     uploadSuccess: 'Upload Successful',

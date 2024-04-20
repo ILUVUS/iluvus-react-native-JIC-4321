@@ -4,7 +4,14 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { BASE_URL } from '@env'
 import { Image, SearchBar } from 'react-native-elements'
-import { RefreshControl, ScrollView, Text, View } from 'react-native'
+import {
+    RefreshControl,
+    ScrollView,
+    Text,
+    View,
+    StatusBar,
+    Dimensions,
+} from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -21,7 +28,7 @@ import {
 } from '../../components/button'
 
 import { useIsFocused } from '@react-navigation/native'
-
+import Constants from 'expo-constants'
 const Community = () => {
     const navigation = useNavigation()
     const isFocused = useIsFocused()
@@ -156,15 +163,20 @@ const Community = () => {
         setSearchValue(text)
     }
 
+    const statusBarHeight = StatusBar.currentHeight
+    const screenHeight = Dimensions.get('screen').height
+    const contentHeight = screenHeight - statusBarHeight
+
     return (
-        <View className="flex justify-center bg-white align-middle">
+        <View
+            className="flex justify-center bg-white align-middle"
+            style={{ paddingTop: Constants.statusBarHeight }}
+        >
             <SearchBar
                 placeholder={STRINGS.communitySearchBar}
                 onChangeText={(text) => searchFunction(text)}
                 value={searchValue}
-                containerStyle={[
-                    searchBarStyle.containerSearchBar,
-                ]}
+                containerStyle={[searchBarStyle.containerSearchBar]}
                 inputContainerStyle={searchBarStyle.inputSearchBar}
                 inputStyle={searchBarStyle.input}
                 placeholderTextColor={COLORS['orchid'][400]}
@@ -186,7 +198,7 @@ const Community = () => {
                         />
                     }
                 >
-                    <View className="flex flex-row flex-wrap overflow-auto justify-evenly my-3">
+                    <View className="my-3 flex flex-row flex-wrap justify-evenly overflow-auto">
                         {verify && (
                             <CommunityViewMainButton
                                 onPress={() => newCommunity()}
@@ -212,7 +224,6 @@ const Community = () => {
                                 {STRINGS.myCommunity}
                             </Text>
                         </CommunityViewMainButton>
-
                     </View>
 
                     <View className="mb-2 ml-5 flex w-screen items-start">
