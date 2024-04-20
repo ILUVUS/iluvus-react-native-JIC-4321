@@ -4,7 +4,14 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { BASE_URL } from '@env'
 import { Image, SearchBar } from 'react-native-elements'
-import { RefreshControl, ScrollView, Text, View } from 'react-native'
+import {
+    RefreshControl,
+    ScrollView,
+    Text,
+    View,
+    StatusBar,
+    Dimensions,
+} from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -21,7 +28,7 @@ import {
 } from '../../components/button'
 
 import { useIsFocused } from '@react-navigation/native'
-
+import Constants from 'expo-constants'
 const Community = () => {
     const navigation = useNavigation()
     const isFocused = useIsFocused()
@@ -141,7 +148,7 @@ const Community = () => {
     }
 
     const myCommunity = () => {
-        // navigation.navigate('SetupCommunity')
+        navigation.navigate('MyGroup')
     }
 
     const myFriend = () => {
@@ -156,8 +163,15 @@ const Community = () => {
         setSearchValue(text)
     }
 
+    const statusBarHeight = StatusBar.currentHeight
+    const screenHeight = Dimensions.get('screen').height
+    const contentHeight = screenHeight - statusBarHeight
+
     return (
-        <View className="flex justify-center bg-white align-middle">
+        <View
+            className="flex justify-center bg-white align-middle"
+            style={{ paddingTop: Constants.statusBarHeight }}
+        >
             <SearchBar
                 placeholder={STRINGS.communitySearchBar}
                 onChangeText={(text) => searchFunction(text)}
@@ -184,7 +198,7 @@ const Community = () => {
                         />
                     }
                 >
-                    <View className="my-3 flex w-screen flex-row justify-evenly">
+                    <View className="my-3 flex flex-row flex-wrap justify-evenly overflow-auto">
                         {verify && (
                             <CommunityViewMainButton
                                 onPress={() => newCommunity()}

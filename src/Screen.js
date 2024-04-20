@@ -17,6 +17,7 @@ import Verification from './screens/login/Verification'
 import Settings from './screens/Settings/Settings'
 import Notification from './screens/Notification/Notification'
 import ReportView from './screens/Report/ReportView'
+import MyGroup from './screens/community/MyGroup'
 import MediaViewer from './screens/community/components/MediaViewer'
 
 LogBox.ignoreAllLogs(true)
@@ -85,6 +86,15 @@ export default function Screen() {
                     component={SetupCommunity}
                     options={{
                         title: STRINGS.newCommunity,
+                        headerShown: true,
+                    }}
+                />
+
+                <Stack.Screen
+                    name={STRINGS.myGroup}
+                    component={MyGroup}
+                    options={{
+                        title: STRINGS.myCommunity,
                         headerShown: true,
                     }}
                 />

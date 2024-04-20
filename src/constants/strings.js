@@ -42,7 +42,8 @@ export default {
     setupCommunity: 'SetupCommunity',
     // community buttons
     newCommunity: 'New Group',
-    myCommunity: 'My Groups',
+    myGroup: 'MyGroup',
+    myCommunity: ' Following',
     myFriends: 'My Friends',
 
     // view community
@@ -130,18 +131,7 @@ export default {
     //community
     communitySearchBar: 'Explore communities',
 
-    exanple_text:
-        "This is an example of text. \
-    It's used to show how text will look on the screen.\
-    This is an example of text. \
-    It's used to show how text will look on the screen.\
-    This is an example of text. \
-    It's used to show how text will look on the screen.\
-    This is an example of text. \
-    It's used to show how text will look on the screen.\
-    This is an example of text. \
-    It's used to show how text will look on the screen.\
-    ",
+    exanple_text: '',
 
     // upload
     uploadSuccess: 'Upload Successful',

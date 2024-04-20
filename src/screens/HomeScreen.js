@@ -82,6 +82,9 @@ export default function HomeScreen() {
             <Tab.Screen
                 name={STRINGS.communitytab}
                 component={CommunityScreenNav}
+                options={{
+                    headerShown: false,
+                }}
             />
             <Tab.Screen
                 name={STRINGS.profiletab}
