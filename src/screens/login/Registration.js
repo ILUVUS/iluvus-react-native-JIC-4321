@@ -47,12 +47,12 @@ const RegistrationScreen = ({}) => {
     })
 
     // default dob in yyyy-mm-dd format
-    const [fName, setFname] = useState('')
-    const [lName, setLname] = useState('')
+    const [fName, setFname] = useState('Thuan')
+    const [lName, setLname] = useState('Vo')
     const [DOB, setDOB] = useState(dateDatePicker.toISOString().split('T')[0])
-    const [email, setEmail] = useState('')
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('hvo41@gatech.edu')
+    const [username, setUsername] = useState('hvo41')
+    const [password, setPassword] = useState('thuan0000')
     const [race, setRace] = useState('')
     const [gender, setGender] = useState('')
     // const [proEmail, setProfEmail] = useState('')
@@ -308,7 +308,7 @@ const RegistrationScreen = ({}) => {
                     <View className="my-5 flex items-center">
                         <TouchableOpacity
                             className="flex w-fit items-center rounded-3xl bg-gold-900 px-5 py-4 align-middle shadow-md shadow-slate-200"
-                            onPress={handleRegister}
+                            onPress={() => handleRegister()}
                         >
                             <Text className="w-fit text-base text-orchid-900">
                                 Register

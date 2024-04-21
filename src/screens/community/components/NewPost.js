@@ -68,7 +68,8 @@ const NewPost = ({
 
     const [resultPostData, setResultPostData] = useState([])
 
-    const [signal, setSignal] = useState()
+    const [signal, setSignal] = useState(false)
+    const [readyToPost, setReadyToPost] = useState(false)
 
     const getSignal = async () => {
         axios({
@@ -175,13 +176,14 @@ const NewPost = ({
         } else if (selectedTopic.id === undefined) {
             Alert.alert('Please select a post topic.')
             return
+        } else {
+            setReadyToPost(true)
+            const thisSignal = getSignal()
         }
-
-        await getSignal()
     }
 
     useEffect(() => {
-        if (signal) {
+        if (signal === true) {
             setImageURLs([])
 
             for (let i = 0; i < pickedImages.length; i++) {
@@ -205,18 +207,12 @@ const NewPost = ({
     }, [signal])
 
     useEffect(() => {
-        if (
-            imageURLs.length != 0 &&
-            pickedImages != 0 &&
-            imageURLs.length === pickedImages.length
-        ) {
-            // console.log('Image URLs:', imageURLs)
+        if (readyToPost === true && imageURLs.length === pickedImages.length) {
+            setReadyToPost(false)
+            setSignal(false)
 
             setPickedImages([])
             setEachImageProgress([])
-
-            // turn array of objects into array of strings
-
             axios({
                 method: 'POST',
                 url: `${BASE_URL}/post/create`,
@@ -226,7 +222,6 @@ const NewPost = ({
                     authorId: userId,
                     dateTime: getDatetime(),
                     medias: JSON.stringify({ urls: imageURLs }),
-                    //join the tagged users id into a string
                     tagged: taggedUsersId.join(','),
                     topicId: selectedTopic.id,
                 },
@@ -235,9 +230,6 @@ const NewPost = ({
                 },
             })
                 .then((res) => {
-                    // console.log('Post published', res.data)
-
-                    // setResultPostData(res.data.reverse())
                     handleClosePopup()
                 })
                 .catch((err) => {
@@ -245,7 +237,7 @@ const NewPost = ({
                     console.log('Cannot publish the post', err)
                 })
         }
-    }, [imageURLs])
+    }, [imageURLs, readyToPost])
 
     const removePickedImage = (index) => {
         pickedImages.splice(index, 1)

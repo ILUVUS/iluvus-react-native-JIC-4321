@@ -22,10 +22,16 @@ const Verification = (nav) => {
     }, [data])
 
     const generateAndSendCode = () => {
+        setVerificationCode('')
         const code = generateRandomCode()
         setVerificationCode(code)
-        sendCodeToBackend(code)
     }
+
+    useEffect(() => {
+        if (verificationCode !== '') {
+            sendCodeToBackend(verificationCode)
+        }
+    }, [verificationCode])
 
     const generateRandomCode = () => {
         const code = Math.floor(100000 + Math.random() * 900000).toString()
@@ -39,7 +45,7 @@ const Verification = (nav) => {
             url: `${BASE_URL}/user/sendEmail`,
             data: {
                 verificationCode: code,
-                email: route.params.data.email,
+                email: data.email,
             },
             headers: {
                 'Content-Type': 'application/json',

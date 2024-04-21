@@ -47,22 +47,22 @@ const ReportView = ({ nav }) => {
     return (
         <>
             <View className="h-screen w-screen flex-1 bg-white">
-                {reportPosts.length > 0 &&
-                Object.keys(reportPosts[0]).length > 0 ? (
-                    <View className="h-full w-full">
-                        <ScrollView
-                            contentContainerStyle={{
-                                paddingBottom: 120,
-                                flexGrow: 1,
-                            }}
-                            className="h-full w-full overflow-auto bg-white p-5"
-                            refreshControl={
-                                <RefreshControl
-                                    refreshing={refreshing}
-                                    onRefresh={onRefresh}
-                                />
-                            }
-                        >
+                <ScrollView
+                    contentContainerStyle={{
+                        paddingBottom: 120,
+                        flexGrow: 1,
+                    }}
+                    className="h-full w-full overflow-auto bg-white p-5"
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                >
+                    {reportPosts.length > 0 &&
+                    Object.keys(reportPosts[0]).length > 0 ? (
+                        <View className="h-full w-full">
                             {reportPosts.map((post, index) => (
                                 <View key={index}>
                                     <ReportItem
@@ -72,13 +72,13 @@ const ReportView = ({ nav }) => {
                                     />
                                 </View>
                             ))}
-                        </ScrollView>
-                    </View>
-                ) : (
-                    <View className="flex h-full w-full items-center justify-start p-5">
-                        <Text>No reports available.</Text>
-                    </View>
-                )}
+                        </View>
+                    ) : (
+                        <View className="flex h-full w-full items-center justify-start p-5">
+                            <Text>No reports available.</Text>
+                        </View>
+                    )}
+                </ScrollView>
             </View>
         </>
     )
