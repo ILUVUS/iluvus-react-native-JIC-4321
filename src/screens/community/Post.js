@@ -85,7 +85,6 @@ const Post = (nav) => {
 
     useEffect(() => {
         if (isNewData) {
-            console.log('new data')
             getPosts()
             setIsNewData(false)
         }

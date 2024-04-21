@@ -308,7 +308,7 @@ const RegistrationScreen = ({}) => {
                     <View className="my-5 flex items-center">
                         <TouchableOpacity
                             className="flex w-fit items-center rounded-3xl bg-gold-900 px-5 py-4 align-middle shadow-md shadow-slate-200"
-                            onPress={handleRegister}
+                            onPress={() => handleRegister()}
                         >
                             <Text className="w-fit text-base text-orchid-900">
                                 Register
