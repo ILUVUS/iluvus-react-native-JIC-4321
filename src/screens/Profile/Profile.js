@@ -197,41 +197,50 @@ const Profile = () => {
                             <ImageBackground
                                 source={profileBg}
                                 resizeMode="cover"
-                                imageStyle={{
-                                    borderRadius: 24,
-                                    opacity: 0.8,
-                                }}
+                                opacity={0.9}
+                                borderRadius={24}
                                 blurRadius={7}
-                                className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl bg-white py-12 shadow-md shadow-slate-300 blur-3xl"
+                                className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl bg-black py-12 shadow-md shadow-slate-300 blur-3xl"
                             >
-                                <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
-                                    {userInfo.gender === 'Female' && (
-                                        <Image
-                                            source={profile_icon_f}
-                                            className="h-40 w-40 rounded-full "
-                                        />
-                                    )}
-                                    {userInfo.gender === 'Male' && (
-                                        <Image
-                                            source={profile_icon_m}
-                                            className="h-40 w-40 rounded-full "
-                                        />
-                                    )}
-                                    {userInfo.gender !== 'Female' &&
-                                        userInfo.gender !== 'Male' && (
+                                <View className="height-fit relative w-fit">
+                                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
+                                        {userInfo.gender === 'Female' && (
                                             <Image
-                                                source={profile_icon_x}
+                                                source={profile_icon_f}
                                                 className="h-40 w-40 rounded-full "
                                             />
                                         )}
+                                        {userInfo.gender === 'Male' && (
+                                            <Image
+                                                source={profile_icon_m}
+                                                className="h-40 w-40 rounded-full "
+                                            />
+                                        )}
+                                        {userInfo.gender !== 'Female' &&
+                                            userInfo.gender !== 'Male' && (
+                                                <Image
+                                                    source={profile_icon_x}
+                                                    className="h-40 w-40 rounded-full "
+                                                />
+                                            )}
+                                    </View>
+                                    {verify && (
+                                        <View className="absolute bottom-3 right-1">
+                                            <FontAwesomeIcon
+                                                icon={faAward}
+                                                size={35}
+                                                color={COLORS['gold'][900]}
+                                            />
+                                        </View>
+                                    )}
                                 </View>
 
                                 <View className="mb-5 flex items-center justify-center">
-                                    <View className="mb-1 flex flex-row gap-2">
+                                    <View className="mb-1 flex flex-row gap-1">
                                         <Text className="text-2xl font-semibold text-white shadow shadow-orchid-600">
                                             {userInfo.lname}, {userInfo.fname}
                                         </Text>
-                                        <Text className="text-base text-orchid-800 ">
+                                        {/* <Text className="text-base text-orchid-800 shadow shadow-orchid-600">
                                             {verify && (
                                                 <FontAwesomeIcon
                                                     icon={faAward}
@@ -239,8 +248,13 @@ const Profile = () => {
                                                     color={COLORS['gold'][900]}
                                                 />
                                             )}
-                                        </Text>
+                                        </Text> */}
                                     </View>
+                                    {verify && (
+                                        <Text className="text-lg italic text-white shadow shadow-orchid-600">
+                                            {STRINGS.profesional_account}
+                                        </Text>
+                                    )}
                                     <Text className="text-base text-orchid-800 ">
                                         {}
                                     </Text>
@@ -257,11 +271,6 @@ const Profile = () => {
                                 </View>
 
                                 <View className="mb-2 flex flex-col items-start justify-center gap-2">
-                                    {verify && (
-                                        <Text className="text-base italic text-orchid-900">
-                                            {STRINGS.profesional_account}
-                                        </Text>
-                                    )}
                                     <View className="flex flex-row items-start justify-start">
                                         <Text className="mr-3 text-base font-semibold text-orchid-800">
                                             {STRINGS.dob_details}

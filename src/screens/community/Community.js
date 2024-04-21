@@ -70,6 +70,7 @@ const Community = () => {
             },
         })
             .then((res) => {
+                // console.log(res.data)
                 setSearchResultList(res.data)
             })
             .catch((err) => {
@@ -315,12 +316,25 @@ const Community = () => {
                                 key={key}
                                 onPress={() => communityClick(key)}
                             >
+                                {/* fetch community info and set image */}
+
                                 <Image
-                                    source={sampleIcon}
+                                    source={
+                                        searchResultList[key].image != null &&
+                                        searchResultList[key].image !== ''
+                                            ? {
+                                                  uri: `data:image/jpg;base64,${searchResultList[key].image}`,
+                                              }
+                                            : communityIcon
+                                    }
                                     className="h-24 w-24 rounded-3xl"
                                 />
                                 <Text className="mt-1 text-base text-orchid-900">
-                                    {searchResultList[key]}
+                                    {searchResultList[key].name.length > 12
+                                        ? searchResultList[key].name
+                                              .substring(0, 10)
+                                              .trim() + '...'
+                                        : searchResultList[key].name}
                                 </Text>
                             </CommunityViewImageButton>
                         ))}

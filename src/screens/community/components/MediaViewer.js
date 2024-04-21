@@ -93,6 +93,7 @@ export default function MediaViewer() {
                             resizeMode="contain"
                             useNativeControls
                             isLooping={false}
+                            volume={1.0}
                         />
                     </View>
                 )

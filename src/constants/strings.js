@@ -156,7 +156,7 @@ export default {
 
     // profile
     details: 'Details',
-    profesional_account: 'Profesional Account',
+    profesional_account: 'Profesional',
     dob_details: 'Date of Birth:',
     interests_details: 'Interests:',
 
