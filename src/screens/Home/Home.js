@@ -4,10 +4,21 @@ import axios from 'axios'
 import { BASE_URL } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import PostItem from '../community/components/PostItem'
-import { View, Text, ScrollView, RefreshControl } from 'react-native'
+import {
+    View,
+    Text,
+    ScrollView,
+    RefreshControl,
+    KeyboardAvoidingView,
+    ActivityIndicator,
+} from 'react-native'
+import { useHeaderHeight } from '@react-navigation/elements'
+import Constants from 'expo-constants'
+
+import STRINGS from '../../constants/strings'
 
 const Home = (nav) => {
-    const [postData, setPostData] = useState([{}])
+    const [postData, setPostData] = useState([])
     const [userId, setUserId] = useState('')
     const [refreshing, setRefreshing] = React.useState(false)
 
@@ -36,14 +47,12 @@ const Home = (nav) => {
     }, [])
 
     useEffect(() => {
-        console.log(userId)
         if (userId !== '') {
             getPosts()
         }
     }, [userId])
 
     const getPosts = async () => {
-        console.log('Run getPosts')
         axios({
             method: 'GET',
             url: `${BASE_URL}/post/getPostForHomePage?userId=${userId}`,
@@ -56,18 +65,24 @@ const Home = (nav) => {
                 setPostData(res.data.reverse())
             })
             .catch((err) => {
+                setPostData([])
                 console.log('Cannot get posts', err)
             })
     }
 
     return (
         <>
-            <View className="h-screen w-screen flex-1 bg-white">
-                {postData.length > 0 ? (
+            <KeyboardAvoidingView
+                behavior="padding"
+                style={{ flex: 1 }}
+                keyboardVerticalOffset={useHeaderHeight()}
+            >
+                <View className="h-screen w-screen flex-1 bg-white">
                     <View className="h-full w-full">
                         <ScrollView
                             contentContainerStyle={{
-                                paddingBottom: 120,
+                                paddingBottom: Constants.statusBarHeight,
+                                minHeight: '100%',
                                 flexGrow: 1,
                             }}
                             className="h-full w-full overflow-auto bg-white p-5"
@@ -78,7 +93,7 @@ const Home = (nav) => {
                                 />
                             }
                         >
-                            {postData &&
+                            {postData.length > 0 ? (
                                 postData.map((post, index) => {
                                     return (
                                         <PostItem
@@ -88,15 +103,22 @@ const Home = (nav) => {
                                             displayCommunityName={true}
                                         />
                                     )
-                                })}
+                                })
+                            ) : (
+                                <View className="flex h-full w-full items-center justify-center gap-2">
+                                    <ActivityIndicator />
+                                    <Text className="text-center text-orchid-900">
+                                        {STRINGS.no_post_alert}
+                                    </Text>
+                                    <Text className="text-center text-orchid-900">
+                                        {STRINGS.no_post_message}
+                                    </Text>
+                                </View>
+                            )}
                         </ScrollView>
                     </View>
-                ) : (
-                    <View className="flex h-full w-full items-center justify-center">
-                        <Text className="text-orchid-900">Make First Post</Text>
-                    </View>
-                )}
-            </View>
+                </View>
+            </KeyboardAvoidingView>
         </>
     )
 }

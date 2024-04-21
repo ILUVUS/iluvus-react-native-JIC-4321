@@ -105,17 +105,23 @@ const LoginScreen = () => {
                 />
                 <TouchableOpacity
                     className="mb-32 mt-5 flex items-center justify-center rounded-3xl bg-gold-900 px-5 py-4 align-middle shadow-md shadow-slate-200"
-                    onPress={handleSignin}
+                    onPress={() => {
+                        handleSignin()
+                    }}
                 >
                     <Text className="text-sm text-orchid-900">Sign in</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={handleRegistration}>
+                <TouchableOpacity
+                    onPress={() => {
+                        handleRegistration()
+                    }}
+                >
                     <Text className="mb-1 justify-center align-middle text-base text-orchid-900 shadow-md shadow-slate-400">
                         {STRINGS.createAnAccount}
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleSignin}>
+                <TouchableOpacity onPress={() => {}}>
                     <Text className="mb-1 justify-center align-middle text-sm text-orchid-800 shadow-md shadow-slate-400">
                         {STRINGS.forgotPassword}
                     </Text>

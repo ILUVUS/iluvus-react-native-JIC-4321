@@ -10,12 +10,14 @@ import { BASE_URL } from '@env'
 
 const Verification = (nav) => {
     const navigation = useNavigation()
+    const route = useRoute()
 
     const [verificationCode, setVerificationCode] = useState('')
     const [enteredCode, setEnteredCode] = useState('')
 
+    const [data, setData] = useState(route.params.data)
+
     useEffect(() => {
-        console.log('send email')
         generateAndSendCode()
     }, [data])
 
@@ -27,7 +29,6 @@ const Verification = (nav) => {
 
     const generateRandomCode = () => {
         const code = Math.floor(100000 + Math.random() * 900000).toString()
-
         return code
     }
 
@@ -38,7 +39,7 @@ const Verification = (nav) => {
             url: `${BASE_URL}/user/sendEmail`,
             data: {
                 verificationCode: code,
-                email: useRoute().params.data.proEmail,
+                email: route.params.data.email,
             },
             headers: {
                 'Content-Type': 'application/json',
@@ -69,7 +70,7 @@ const Verification = (nav) => {
             axios({
                 method: 'POST',
                 url: `${BASE_URL}/user/create`,
-                data: useRoute().params.data,
+                data: route.params.data,
                 headers: {
                     'Content-Type': 'application/json',
                 },

@@ -10,6 +10,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import Modal from 'react-native-modal'
 import COLORS from '../../constants/colors'
+import STRINGS from '../../constants/strings'
+
 import PostItem from './components/PostItem'
 import { useRoute } from '@react-navigation/native'
 import ImageView from 'react-native-image-viewing'
@@ -22,9 +24,14 @@ import {
     TouchableOpacity,
     ScrollView,
     RefreshControl,
+    KeyboardAvoidingView,
+    ActivityIndicator,
 } from 'react-native'
 
 import NewPost from './components/NewPost'
+
+import { useHeaderHeight } from '@react-navigation/elements'
+import Constants from 'expo-constants'
 
 const Post = (nav) => {
     const [postContent, setPostContent] = useState('')
@@ -135,8 +142,11 @@ const Post = (nav) => {
                         </ScrollView>
                     </View>
                 ) : (
-                    <View className="flex h-full w-full items-center justify-center">
-                        <Text className="text-orchid-900">Make First Post</Text>
+                    <View className="flex h-full w-full items-center justify-center gap-3">
+                        <ActivityIndicator />
+                        <Text className="text-orchid-900">
+                            {STRINGS.no_post_alert}
+                        </Text>
                     </View>
                 )}
 
@@ -169,29 +179,39 @@ const Post = (nav) => {
                                 setSelectedTopic={setSelectedTopic}
                             />
                         ) : (
-                            <ScrollView
-                                className="flex-1"
-                                showsVerticalScrollIndicator={false}
+                            <KeyboardAvoidingView
+                                behavior="padding"
+                                style={{ flex: 1 }}
+                                keyboardVerticalOffset={useHeaderHeight()}
                             >
-                                <NewPost
-                                    userId={userId}
-                                    community_id={community_id}
-                                    isPostModalVisible={IsModalVisible}
-                                    setIsPostModalVisible={setIsModalVisible}
-                                    openTopicSelector={openTopicSelector}
-                                    setOpenTopicSelector={setOpenTopicSelector}
-                                    selectedTopic={selectedTopic}
-                                    setSelectedTopic={setSelectedTopic}
-                                    postContent={postContent}
-                                    setPostContent={setPostContent}
-                                    taggedUsers={taggedUsers}
-                                    setTaggedUsers={setTaggedUsers}
-                                    pImages={pickedImages}
-                                    setPImages={setPickedImages}
-                                    isNewData={isNewData}
-                                    setIsNewData={setIsNewData}
-                                />
-                            </ScrollView>
+                                <ScrollView
+                                    className="flex-1"
+                                    showsVerticalScrollIndicator={false}
+                                >
+                                    <NewPost
+                                        userId={userId}
+                                        community_id={community_id}
+                                        isPostModalVisible={IsModalVisible}
+                                        setIsPostModalVisible={
+                                            setIsModalVisible
+                                        }
+                                        openTopicSelector={openTopicSelector}
+                                        setOpenTopicSelector={
+                                            setOpenTopicSelector
+                                        }
+                                        selectedTopic={selectedTopic}
+                                        setSelectedTopic={setSelectedTopic}
+                                        postContent={postContent}
+                                        setPostContent={setPostContent}
+                                        taggedUsers={taggedUsers}
+                                        setTaggedUsers={setTaggedUsers}
+                                        pImages={pickedImages}
+                                        setPImages={setPickedImages}
+                                        isNewData={isNewData}
+                                        setIsNewData={setIsNewData}
+                                    />
+                                </ScrollView>
+                            </KeyboardAvoidingView>
                         )}
                     </Modal>
                 </View>
@@ -200,7 +220,10 @@ const Post = (nav) => {
             {isJoined && (
                 <TouchableOpacity
                     onPress={() => handleOpenPopup()}
-                    className="absolute bottom-6 right-6 h-16 w-16 items-center justify-center rounded-full bg-orchid-500 px-5 py-2 shadow shadow-slate-500"
+                    style={{
+                        bottom: Constants.statusBarHeight,
+                    }}
+                    className="absolute right-8 h-16 w-16 items-center justify-center rounded-full bg-orchid-500 px-5 py-2 shadow shadow-slate-500"
                 >
                     <Ionicons
                         name="create-outline"

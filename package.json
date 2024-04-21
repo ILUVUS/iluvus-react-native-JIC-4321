@@ -1,6 +1,6 @@
 {
   "name": "iluvus-react-native",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start --reset-cache --clear",
@@ -30,12 +30,14 @@
     "@rneui/themed": "^4.0.0-rc.8",
     "@types/react-native-dotenv": "^0.2.2",
     "axios": "^1.6.2",
+    "email-validator": "^2.0.4",
     "expo": "^49.0.0",
     "expo-av": "~13.4.1",
     "expo-image-loader": "^4.6.0",
     "expo-image-picker": "^14.7.1",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
+    "expo-updates": "~0.18.19",
     "firebase": "^10.8.0",
     "multer": "^1.4.5-lts.1",
     "nativewind": "^2.0.11",
@@ -65,8 +67,7 @@
     "react-navigation": "^5.0.0",
     "react-router-dom": "^6.22.2",
     "start": "^5.1.0",
-    "tailwindcss": "3.3.2",
-    "expo-updates": "~0.18.19"
+    "tailwindcss": "3.3.2"
   },
   "private": true,
   "devDependencies": {

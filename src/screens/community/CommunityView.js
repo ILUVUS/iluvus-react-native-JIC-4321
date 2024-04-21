@@ -21,6 +21,8 @@ import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingV
 
 import sampleIcon from '../../../assets/images/sampleicon.jpg'
 import communityBg from '../../../assets/images/communitybg.jpg'
+import communityIcon from '../../../assets/images/communitybg4.png'
+
 import STRINGS from '../../constants/strings'
 
 import RequestItem from './components/RequestItem'
@@ -331,31 +333,42 @@ const CommunityView = ({ nav }) => {
                 onTouchStart={Keyboard.dismiss}
             >
                 <ImageBackground
-                    source={communityBg}
+                    source={
+                        communityInfo.image && communityInfo.image != ''
+                            ? {
+                                  uri: `data:image/jpg;base64,${communityInfo.image}`,
+                              }
+                            : communityBg
+                    }
                     resizeMode="cover"
+                    borderRadius={24}
+                    blurRadius={
+                        communityInfo.image && communityInfo.image != ''
+                            ? 20
+                            : 10
+                    }
                     imageStyle={{
-                        borderRadius: 24,
-                        opacity: 0.8,
+                        opacity: 0.75,
                     }}
-                    blurRadius={5}
-                    className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl bg-white py-12 shadow-md shadow-orchid-300"
+                    className="mb-5 flex h-fit w-full flex-col items-center
+                    justify-center rounded-3xl bg-black py-12 shadow-md
+                    shadow-slate-300 brightness-0"
                 >
-                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-orchid-600">
+                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
                         <Image
                             source={
                                 communityInfo.image && communityInfo.image != ''
                                     ? {
                                           uri: `data:image/jpg;base64,${communityInfo.image}`,
                                       }
-                                    : sampleIcon
+                                    : communityIcon
                             }
-                            className="h-40 w-40 rounded-full "
+                            className="h-40 w-40 rounded-full"
                         />
                     </View>
-
                     <View className="mb-5 flex items-center justify-center">
                         <View className="mb-1 flex flex-row gap-2">
-                            <Text className="text-2xl font-semibold text-white shadow shadow-orchid-600">
+                            <Text className="text-2xl font-semibold text-white shadow shadow-slate-600">
                                 {communityInfo.name}
                             </Text>
                             {isHost && (
@@ -368,61 +381,59 @@ const CommunityView = ({ nav }) => {
                                 </TouchableOpacity>
                             )}
                         </View>
-                        <Text className="mb-1 text-base text-white shadow shadow-orchid-600">
+                        <Text className="mb-1 text-base text-white shadow shadow-slate-600">
                             Host by {owner.lname}, {owner.fname}
                         </Text>
                         <View className="flex flex-row items-center justify-center gap-5">
-                            <Text className="text-base text-white shadow shadow-orchid-600">
+                            <Text className="text-base text-white shadow shadow-slate-600">
                                 {communityInfo.members} Followers
                             </Text>
                         </View>
                     </View>
-
                     <View className="flex flex-row items-center justify-center gap-5">
-                        {!isJoined && !isHost && isPublicCommunity && (
+                        {!isJoined && !isHost && isPublicCommunity ? (
                             <TouchableOpacity
                                 onPress={() => joinCommunity()}
-                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
+                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-slate-600"
                             >
                                 <Text className="text-md text-orchid-900">
                                     {STRINGS.joinUs}
                                 </Text>
                             </TouchableOpacity>
-                        )}
-                        {!isJoined &&
-                            !isWaiting &&
-                            !isPublicCommunity &&
-                            !isHost && (
-                                <TouchableOpacity
-                                    onPress={() => joinCommunity()}
-                                    className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
-                                >
-                                    <Text className="text-md text-orchid-900">
-                                        {STRINGS.requestJoin}
-                                    </Text>
-                                </TouchableOpacity>
-                            )}
-                        {(isPublicCommunity || isJoined || isHost) &&
-                            !isWaiting && (
-                                <TouchableOpacity
-                                    onPress={viewPosts}
-                                    className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-orchid-600"
-                                >
-                                    <Text className="text-md text-orchid-900">
-                                        {STRINGS.viewPosts}
-                                    </Text>
-                                </TouchableOpacity>
-                            )}
-                        {isWaiting && (
+                        ) : !isJoined &&
+                          !isWaiting &&
+                          !isPublicCommunity &&
+                          !isHost ? (
+                            <TouchableOpacity
+                                onPress={() => joinCommunity()}
+                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-slate-600"
+                            >
+                                <Text className="text-md text-orchid-900">
+                                    {STRINGS.requestJoin}
+                                </Text>
+                            </TouchableOpacity>
+                        ) : (isPublicCommunity || isJoined || isHost) &&
+                          !isWaiting ? (
+                            <TouchableOpacity
+                                onPress={viewPosts}
+                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-slate-600"
+                            >
+                                <Text className="text-md text-orchid-900">
+                                    {STRINGS.viewPosts}
+                                </Text>
+                            </TouchableOpacity>
+                        ) : isWaiting ? (
                             <View
                                 className="flex h-fit w-fit flex-row flex-wrap
                                 items-center justify-center rounded-full
-                                bg-white px-5 py-2 shadow shadow-orchid-600"
+                                bg-white px-5 py-2 shadow shadow-slate-600"
                             >
                                 <Text className="text-md text-orchid-900">
                                     Waiting for Approval
                                 </Text>
                             </View>
+                        ) : (
+                            <></>
                         )}
                     </View>
                 </ImageBackground>

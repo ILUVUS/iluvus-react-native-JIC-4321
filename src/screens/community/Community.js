@@ -11,6 +11,7 @@ import {
     View,
     StatusBar,
     Dimensions,
+    ActivityIndicator,
 } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
@@ -21,20 +22,19 @@ import SIZES from '../../constants/sizes'
 import COLORS from '../../constants/colors'
 import STRINGS from '../../constants/strings'
 import sampleIcon from '../../../assets/images/sampleicon.jpg'
+import communityIcon from '../../../assets/images/communitybg4.png'
 import { inputStyle, searchBarStyle } from '../../../styles/style'
 import {
     CommunityViewImageButton,
     CommunityViewMainButton,
 } from '../../components/button'
 
-import { useIsFocused } from '@react-navigation/native'
 import Constants from 'expo-constants'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCheckToSlot } from '@fortawesome/free-solid-svg-icons'
 
 const Community = () => {
     const navigation = useNavigation()
-    const isFocused = useIsFocused()
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -48,7 +48,7 @@ const Community = () => {
     useEffect(() => {
         getVerified()
         fetchCommunityList()
-    }, [isFocused])
+    }, [])
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
@@ -68,6 +68,7 @@ const Community = () => {
             },
         })
             .then((res) => {
+                // console.log(res.data)
                 setSearchResultList(res.data)
             })
             .catch((err) => {
@@ -254,28 +255,40 @@ const Community = () => {
                     </View>
 
                     <View className="flex flex-row flex-wrap overflow-auto">
-                        {communityListInfo.map((info, index) => (
-                            <CommunityViewImageButton
-                                key={index}
-                                onPress={() => communityClick(info.id)}
-                            >
-                                <Image
-                                    source={
-                                        info.image != null && info.image !== ''
-                                            ? {
-                                                  uri: `data:image/jpg;base64,${info.image}`,
-                                              }
-                                            : sampleIcon
-                                    }
-                                    className="h-24 w-24 rounded-3xl"
-                                />
-                                <Text className="mt-1 text-sm text-orchid-900">
-                                    {info.name.length > 12
-                                        ? info.name.substring(0, 10) + '...'
-                                        : info.name}
-                                </Text>
-                            </CommunityViewImageButton>
-                        ))}
+                        {communityListInfo.length > 0 ? (
+                            <>
+                                {communityListInfo.map((info, index) => (
+                                    <CommunityViewImageButton
+                                        key={index}
+                                        onPress={() => communityClick(info.id)}
+                                    >
+                                        <Image
+                                            source={
+                                                info.image != null &&
+                                                info.image !== ''
+                                                    ? {
+                                                          uri: `data:image/jpg;base64,${info.image}`,
+                                                      }
+                                                    : communityIcon
+                                            }
+                                            className="h-24 w-24 rounded-3xl"
+                                        />
+                                        <Text className="mt-1 text-sm text-orchid-900">
+                                            {info.name.length > 12
+                                                ? info.name
+                                                      .substring(0, 10)
+                                                      .trim() + '...'
+                                                : info.name}
+                                        </Text>
+                                    </CommunityViewImageButton>
+                                ))}
+                            </>
+                        ) : (
+                            <View className="flex w-full items-center justify-center gap-2 pt-14">
+                                <ActivityIndicator />
+                                <Text>{STRINGS.loading_indicator}</Text>
+                            </View>
+                        )}
                     </View>
                 </ScrollView>
             )}
@@ -301,12 +314,25 @@ const Community = () => {
                                 key={key}
                                 onPress={() => communityClick(key)}
                             >
+                                {/* fetch community info and set image */}
+
                                 <Image
-                                    source={sampleIcon}
+                                    source={
+                                        searchResultList[key].image != null &&
+                                        searchResultList[key].image !== ''
+                                            ? {
+                                                  uri: `data:image/jpg;base64,${searchResultList[key].image}`,
+                                              }
+                                            : communityIcon
+                                    }
                                     className="h-24 w-24 rounded-3xl"
                                 />
                                 <Text className="mt-1 text-base text-orchid-900">
-                                    {searchResultList[key]}
+                                    {searchResultList[key].name.length > 12
+                                        ? searchResultList[key].name
+                                              .substring(0, 10)
+                                              .trim() + '...'
+                                        : searchResultList[key].name}
                                 </Text>
                             </CommunityViewImageButton>
                         ))}

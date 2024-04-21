@@ -20,6 +20,7 @@ import {
     faPencil,
     faMagnifyingGlass,
     faCircleXmark,
+    faXmark,
     faPlus,
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -337,14 +338,29 @@ const NewPost = ({
                             onPress={() => setSearchBarDisplay((prev) => !prev)}
                             className="flex-row items-center justify-center space-x-2 rounded-full bg-gold-900 px-5 py-2"
                         >
-                            <Text className="text-sm text-orchid-900">
-                                Find Users
-                            </Text>
-                            <FontAwesomeIcon
-                                icon={faMagnifyingGlass}
-                                color={COLORS.orchid[900]}
-                                size={SIZES.smallIconSize}
-                            />
+                            {!searchBarDisplay ? (
+                                <>
+                                    <Text className="text-sm text-orchid-900">
+                                        Find Users
+                                    </Text>
+                                    <FontAwesomeIcon
+                                        icon={faMagnifyingGlass}
+                                        color={COLORS.orchid[900]}
+                                        size={SIZES.smallIconSize}
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <Text className="text-sm text-orchid-900">
+                                        Close Search
+                                    </Text>
+                                    <FontAwesomeIcon
+                                        icon={faXmark}
+                                        color={COLORS.orchid[900]}
+                                        size={SIZES.smallIconSize}
+                                    />
+                                </>
+                            )}
                         </TouchableOpacity>
                     </View>
                     {searchBarDisplay && (
