@@ -14,6 +14,7 @@ import SIZES from '../../constants/sizes'
 import COLORS from '../../constants/colors'
 import STRINGS from '../../constants/strings'
 import sampleIcon from '../../../assets/images/sampleicon.jpg'
+import communityIcon from '../../../assets/images/communitybg4.png'
 
 import {
     CommunityViewImageButton,
@@ -129,8 +130,7 @@ const MyGroup = () => {
                     />
                 }
             >
-
-                <View className="mb-2 ml-5 flex w-screen items-start my-3">
+                <View className="my-3 mb-2 ml-5 flex w-screen items-start">
                     {/* <Text className="text-3xl font-bold text-orchid-900 shadow-md shadow-slate-200 items-center">
                         My Following 
                     </Text> */}
@@ -146,9 +146,9 @@ const MyGroup = () => {
                                 source={
                                     info.image != null && info.image !== ''
                                         ? {
-                                                uri: `data:image/jpg;base64,${info.image}`,
-                                            }
-                                        : sampleIcon
+                                              uri: `data:image/jpg;base64,${info.image}`,
+                                          }
+                                        : communityIcon
                                 }
                                 className="h-24 w-24 rounded-3xl"
                             />

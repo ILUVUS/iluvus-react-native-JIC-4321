@@ -391,7 +391,7 @@ const CommunityView = ({ nav }) => {
                         </View>
                     </View>
                     <View className="flex flex-row items-center justify-center gap-5">
-                        {!isJoined && !isHost && isPublicCommunity && (
+                        {!isJoined && !isHost && isPublicCommunity ? (
                             <TouchableOpacity
                                 onPress={() => joinCommunity()}
                                 className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-slate-600"
@@ -400,32 +400,29 @@ const CommunityView = ({ nav }) => {
                                     {STRINGS.joinUs}
                                 </Text>
                             </TouchableOpacity>
-                        )}
-                        {!isJoined &&
-                            !isWaiting &&
-                            !isPublicCommunity &&
-                            !isHost && (
-                                <TouchableOpacity
-                                    onPress={() => joinCommunity()}
-                                    className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-slate-600"
-                                >
-                                    <Text className="text-md text-orchid-900">
-                                        {STRINGS.requestJoin}
-                                    </Text>
-                                </TouchableOpacity>
-                            )}
-                        {(isPublicCommunity || isJoined || isHost) &&
-                            !isWaiting && (
-                                <TouchableOpacity
-                                    onPress={viewPosts}
-                                    className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-slate-600"
-                                >
-                                    <Text className="text-md text-orchid-900">
-                                        {STRINGS.viewPosts}
-                                    </Text>
-                                </TouchableOpacity>
-                            )}
-                        {isWaiting && (
+                        ) : !isJoined &&
+                          !isWaiting &&
+                          !isPublicCommunity &&
+                          !isHost ? (
+                            <TouchableOpacity
+                                onPress={() => joinCommunity()}
+                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-slate-600"
+                            >
+                                <Text className="text-md text-orchid-900">
+                                    {STRINGS.requestJoin}
+                                </Text>
+                            </TouchableOpacity>
+                        ) : (isPublicCommunity || isJoined || isHost) &&
+                          !isWaiting ? (
+                            <TouchableOpacity
+                                onPress={viewPosts}
+                                className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-white px-5 py-2 shadow shadow-slate-600"
+                            >
+                                <Text className="text-md text-orchid-900">
+                                    {STRINGS.viewPosts}
+                                </Text>
+                            </TouchableOpacity>
+                        ) : isWaiting ? (
                             <View
                                 className="flex h-fit w-fit flex-row flex-wrap
                                 items-center justify-center rounded-full
@@ -435,6 +432,8 @@ const CommunityView = ({ nav }) => {
                                     Waiting for Approval
                                 </Text>
                             </View>
+                        ) : (
+                            <></>
                         )}
                     </View>
                 </ImageBackground>
