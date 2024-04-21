@@ -75,6 +75,8 @@ const dobValidator = (dob) => {
 
 const passwordValidator = (password) => {
     if (!password || password.length < 8) return false
+    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+    if (!regex.test(password)) return false
     return true
 }
 

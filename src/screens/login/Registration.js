@@ -47,12 +47,12 @@ const RegistrationScreen = ({}) => {
     })
 
     // default dob in yyyy-mm-dd format
-    const [fName, setFname] = useState('Thuan')
-    const [lName, setLname] = useState('Vo')
+    const [fName, setFname] = useState('')
+    const [lName, setLname] = useState('')
     const [DOB, setDOB] = useState(dateDatePicker.toISOString().split('T')[0])
-    const [email, setEmail] = useState('hvo41@gatech.edu')
-    const [username, setUsername] = useState('hvo41')
-    const [password, setPassword] = useState('thuan0000')
+    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
     const [race, setRace] = useState('')
     const [gender, setGender] = useState('')
     // const [proEmail, setProfEmail] = useState('')
@@ -224,7 +224,7 @@ const RegistrationScreen = ({}) => {
                     </Text>
                 )}
 
-                <View className="mt-3 flex flex-row justify-between py-2">
+                <View className="mt-3 flex flex-row items-center justify-between py-2">
                     <Text className="text-base text-orchid-900 shadow-md shadow-slate-400">
                         {STRINGS.pro_user_question}
                     </Text>
@@ -316,9 +316,11 @@ const RegistrationScreen = ({}) => {
                         </TouchableOpacity>
                     </View>
                 ) : (
-                    <Text className="text-base text-red-600">
-                        {STRINGS.registration_button_alert}
-                    </Text>
+                    <View className="mt-3 rounded-xl bg-orchid-100 p-3 shadow shadow-slate-200">
+                        <Text className="text-base text-red-500">
+                            {STRINGS.registration_button_alert}
+                        </Text>
+                    </View>
                 )}
             </ScrollView>
         </KeyboardAvoidingView>
