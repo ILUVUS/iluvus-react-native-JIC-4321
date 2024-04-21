@@ -3,6 +3,8 @@ import VideoSymbol1 from '../../assets/symbols/video_symbol_1.png'
 import VideoSymbol2 from '../../assets/symbols/video_symbol_2.png'
 import VideoSymbol3 from '../../assets/symbols/video_symbol_3.png'
 import VideoSymbol4 from '../../assets/symbols/video_symbol_4.png'
+import VideoSymbol5 from '../../assets/symbols/video_symbol_5.png'
+import VideoSymbol6 from '../../assets/symbols/video_symbol_6.png'
 
 import { validate } from 'email-validator'
 
@@ -38,14 +40,15 @@ const displayDatetime = (postDatetime) => {
 }
 
 const randomSymbol = (index) => {
-    const symbols = [
-        VideoSymbol,
-        VideoSymbol1,
-        VideoSymbol2,
-        VideoSymbol3,
-        VideoSymbol4,
-    ]
-    return symbols[index]
+    // const symbols = [
+    //     VideoSymbol,
+    //     VideoSymbol1,
+    //     VideoSymbol2,
+    //     VideoSymbol3,
+    //     VideoSymbol4,
+    // ]
+    // return symbols[index]
+    return VideoSymbol5
 }
 
 const nameValidator = (name) => {
