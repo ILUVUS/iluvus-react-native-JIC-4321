@@ -11,6 +11,7 @@ import {
     View,
     StatusBar,
     Dimensions,
+    ActivityIndicator,
 } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
@@ -21,6 +22,7 @@ import SIZES from '../../constants/sizes'
 import COLORS from '../../constants/colors'
 import STRINGS from '../../constants/strings'
 import sampleIcon from '../../../assets/images/sampleicon.jpg'
+import communityIcon from '../../../assets/images/communitybg4.png'
 import { inputStyle, searchBarStyle } from '../../../styles/style'
 import {
     CommunityViewImageButton,
@@ -254,28 +256,40 @@ const Community = () => {
                     </View>
 
                     <View className="flex flex-row flex-wrap overflow-auto">
-                        {communityListInfo.map((info, index) => (
-                            <CommunityViewImageButton
-                                key={index}
-                                onPress={() => communityClick(info.id)}
-                            >
-                                <Image
-                                    source={
-                                        info.image != null && info.image !== ''
-                                            ? {
-                                                  uri: `data:image/jpg;base64,${info.image}`,
-                                              }
-                                            : sampleIcon
-                                    }
-                                    className="h-24 w-24 rounded-3xl"
-                                />
-                                <Text className="mt-1 text-sm text-orchid-900">
-                                    {info.name.length > 12
-                                        ? info.name.substring(0, 10) + '...'
-                                        : info.name}
-                                </Text>
-                            </CommunityViewImageButton>
-                        ))}
+                        {communityListInfo.length > 0 ? (
+                            <>
+                                {communityListInfo.map((info, index) => (
+                                    <CommunityViewImageButton
+                                        key={index}
+                                        onPress={() => communityClick(info.id)}
+                                    >
+                                        <Image
+                                            source={
+                                                info.image != null &&
+                                                info.image !== ''
+                                                    ? {
+                                                          uri: `data:image/jpg;base64,${info.image}`,
+                                                      }
+                                                    : communityIcon
+                                            }
+                                            className="h-24 w-24 rounded-3xl"
+                                        />
+                                        <Text className="mt-1 text-sm text-orchid-900">
+                                            {info.name.length > 12
+                                                ? info.name
+                                                      .substring(0, 10)
+                                                      .trim() + '...'
+                                                : info.name}
+                                        </Text>
+                                    </CommunityViewImageButton>
+                                ))}
+                            </>
+                        ) : (
+                            <View className="flex w-full items-center justify-center gap-2 pt-14">
+                                <ActivityIndicator />
+                                <Text>Loading...</Text>
+                            </View>
+                        )}
                     </View>
                 </ScrollView>
             )}

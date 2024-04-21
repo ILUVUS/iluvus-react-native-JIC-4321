@@ -14,7 +14,7 @@ const CustomKeyboardAvoidingView = ({
             }
         >
             <ScrollView
-                className="flex h-screen w-screen px-6 py-4"
+                className="flex h-screen w-screen overflow-auto px-6 py-4"
                 contentContainerStyle={{ flexGrow: 1 }}
             >
                 <View className="h-screen flex-1">{children}</View>

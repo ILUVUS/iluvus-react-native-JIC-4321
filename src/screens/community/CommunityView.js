@@ -21,6 +21,8 @@ import CustomKeyboardAvoidingView from '../../components/CustomKeyboardAvoidingV
 
 import sampleIcon from '../../../assets/images/sampleicon.jpg'
 import communityBg from '../../../assets/images/communitybg.jpg'
+import communityIcon from '../../../assets/images/communitybg4.png'
+
 import STRINGS from '../../constants/strings'
 
 import RequestItem from './components/RequestItem'
@@ -347,7 +349,7 @@ const CommunityView = ({ nav }) => {
                                     ? {
                                           uri: `data:image/jpg;base64,${communityInfo.image}`,
                                       }
-                                    : sampleIcon
+                                    : communityIcon
                             }
                             className="h-40 w-40 rounded-full "
                         />

@@ -1,4 +1,4 @@
-import { TouchableOpacity, View, Text } from 'react-native'
+import { TouchableOpacity, View, Text, Image } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import STRINGS from '../../constants/strings'
 import { useState, useEffect } from 'react'
@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { BASE_URL } from '@env'
 import { useIsFocused } from '@react-navigation/native'
+import appIcon from '../../../assets/icon.png'
 
 const Settings = () => {
     const [userId, setUserId] = useState('')
@@ -68,20 +69,16 @@ const Settings = () => {
     }, [userId, isFocused])
 
     return (
-        <View className="flex h-full w-full items-center bg-white p-2">
-            {/*<View className="flex flex-col">*/}
-            {/*    <Text>{userInfo.fname}</Text>*/}
-            {/*    <Text>{userInfo.lname}</Text>*/}
-            {/*    <Text>{userInfo.username}</Text>*/}
-            {/*    <Text>{userInfo.email}</Text>*/}
-            {/*    <Text>{userId}</Text>*/}
-            {/*</View>*/}
-            <TouchableOpacity
-                className="inline-block w-fit items-center justify-center rounded-3xl bg-gold-900 px-5 py-4 shadow-md shadow-slate-200"
-                onPress={handleLogout}
-            >
-                <Text className="text-sm text-orchid-900">Logout</Text>
-            </TouchableOpacity>
+        <View className="flex h-full w-full flex-col items-center bg-white p-2">
+            <View className="gap-5">
+                <Image source={appIcon} className="h-28 w-28" />
+                <TouchableOpacity
+                    className="w-fit items-center justify-center rounded-3xl bg-gold-900 px-5 py-4 shadow-md shadow-slate-200"
+                    onPress={handleLogout}
+                >
+                    <Text className="text-sm text-orchid-900">Logout</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
