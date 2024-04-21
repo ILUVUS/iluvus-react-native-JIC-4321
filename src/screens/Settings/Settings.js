@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import { BASE_URL } from '@env'
-import { useIsFocused } from '@react-navigation/native'
 import appIcon from '../../../assets/icon.png'
 
 const Settings = () => {
@@ -14,7 +13,6 @@ const Settings = () => {
     const [userInfo, setUserInfo] = useState({})
 
     const navigation = useNavigation()
-    const isFocused = useIsFocused()
 
     const handleLogout = () => {
         removeUserId()
@@ -48,7 +46,7 @@ const Settings = () => {
             }
         }
         findUserInfoById()
-    }, [isFocused])
+    }, [])
 
     useEffect(() => {
         // console.log(userId)
@@ -66,7 +64,7 @@ const Settings = () => {
             .catch((err) => {
                 console.log(err)
             })
-    }, [userId, isFocused])
+    }, [userId])
 
     return (
         <View className="flex h-full w-full flex-col items-center bg-white p-2">

@@ -21,11 +21,9 @@ import {
     CommunityViewMainButton,
 } from '../../components/button'
 
-import { useIsFocused } from '@react-navigation/native'
 
 const MyCreatedGroup = () => {
     const navigation = useNavigation()
-    const isFocused = useIsFocused()
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -49,7 +47,7 @@ const MyCreatedGroup = () => {
         if (userId !== '') {
             fetchCommunityList()
         }
-    }, [isFocused, userId])
+    }, [userId])
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)

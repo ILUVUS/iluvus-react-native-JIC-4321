@@ -29,14 +29,12 @@ import {
     CommunityViewMainButton,
 } from '../../components/button'
 
-import { useIsFocused } from '@react-navigation/native'
 import Constants from 'expo-constants'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCheckToSlot } from '@fortawesome/free-solid-svg-icons'
 
 const Community = () => {
     const navigation = useNavigation()
-    const isFocused = useIsFocused()
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -50,7 +48,7 @@ const Community = () => {
     useEffect(() => {
         getVerified()
         fetchCommunityList()
-    }, [isFocused])
+    }, [])
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
