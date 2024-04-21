@@ -15,6 +15,8 @@ import {
 import { useHeaderHeight } from '@react-navigation/elements'
 import Constants from 'expo-constants'
 
+import STRINGS from '../../constants/strings'
+
 const Home = (nav) => {
     const [postData, setPostData] = useState([])
     const [userId, setUserId] = useState('')
@@ -106,11 +108,10 @@ const Home = (nav) => {
                                 <View className="flex h-full w-full items-center justify-center gap-2">
                                     <ActivityIndicator />
                                     <Text className="text-center text-orchid-900">
-                                        No post available.
+                                        {STRINGS.no_post_alert}
                                     </Text>
                                     <Text className="text-center text-orchid-900">
-                                        Please select Interests in Profile tab,
-                                        and follow communities to view posts.
+                                        {STRINGS.no_post_message}
                                     </Text>
                                 </View>
                             )}

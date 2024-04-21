@@ -83,7 +83,7 @@ const Notification = () => {
 
                     {notifications.length <= 0 && (
                         <View className="flex h-full w-full items-center justify-start p-5">
-                            <Text>You don't have any notifications.</Text>
+                            <Text>{STRINGS.no_notification_alert}</Text>
                         </View>
                     )}
                 </ScrollView>

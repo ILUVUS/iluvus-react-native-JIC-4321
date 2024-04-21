@@ -287,7 +287,7 @@ const Community = () => {
                         ) : (
                             <View className="flex w-full items-center justify-center gap-2 pt-14">
                                 <ActivityIndicator />
-                                <Text>Loading...</Text>
+                                <Text>{STRINGS.loading_indicator}</Text>
                             </View>
                         )}
                     </View>

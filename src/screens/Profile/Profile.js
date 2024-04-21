@@ -1,4 +1,10 @@
-import { TouchableOpacity, View, Text, ActivityIndicator } from 'react-native'
+import {
+    TouchableOpacity,
+    View,
+    Text,
+    ActivityIndicator,
+    KeyboardAvoidingView,
+} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
@@ -20,6 +26,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { Modal } from 'react-native'
 import InterestSelector from './InterestSelector'
 import SIZES from '../../constants/sizes'
+import STRINGS from '../../constants/strings'
+import Constants from 'expo-constants'
+import { useHeaderHeight } from '@react-navigation/elements'
 
 const Profile = () => {
     const [userId, setUserId] = useState('')
@@ -162,156 +171,161 @@ const Profile = () => {
 
     return (
         <View className="flex h-screen w-screen">
-            <ScrollView
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-                horizontal={false}
-                contentContainerStyle={{
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    flexGrow: 1,
-                    paddingTop: 24,
-                    paddingHorizontal: 24,
-                    paddingBottom: 150,
-                }}
-                className="h-screen w-screen overflow-auto bg-white"
-                onTouchStart={Keyboard.dismiss}
+            <KeyboardAvoidingView
+                behavior="padding"
+                style={{ flex: 1 }}
+                keyboardVerticalOffset={useHeaderHeight()}
             >
-                {Object.keys(userInfo).length > 0 ? (
-                    <>
-                        <ImageBackground
-                            source={profileBg}
-                            resizeMode="cover"
-                            imageStyle={{
-                                borderRadius: 24,
-                                opacity: 0.8,
-                            }}
-                            blurRadius={7}
-                            className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl bg-white py-12 shadow-md shadow-slate-300 blur-3xl"
-                        >
-                            <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
-                                {userInfo.gender === 'Female' && (
-                                    <Image
-                                        source={profile_icon_f}
-                                        className="h-40 w-40 rounded-full "
-                                    />
-                                )}
-                                {userInfo.gender === 'Male' && (
-                                    <Image
-                                        source={profile_icon_m}
-                                        className="h-40 w-40 rounded-full "
-                                    />
-                                )}
-                                {userInfo.gender !== 'Female' &&
-                                    userInfo.gender !== 'Male' && (
+                <ScrollView
+                    style={{ flex: 1 }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                    horizontal={false}
+                    contentContainerStyle={{
+                        paddingBottom: Constants.statusBarHeight,
+                        minHeight: '100%',
+                    }}
+                    className="flex h-screen w-screen overflow-auto bg-white px-6 py-4"
+                    onTouchStart={Keyboard.dismiss}
+                >
+                    {Object.keys(userInfo).length > 0 ? (
+                        <>
+                            <ImageBackground
+                                source={profileBg}
+                                resizeMode="cover"
+                                imageStyle={{
+                                    borderRadius: 24,
+                                    opacity: 0.8,
+                                }}
+                                blurRadius={7}
+                                className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl bg-white py-12 shadow-md shadow-slate-300 blur-3xl"
+                            >
+                                <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
+                                    {userInfo.gender === 'Female' && (
                                         <Image
-                                            source={profile_icon_x}
+                                            source={profile_icon_f}
                                             className="h-40 w-40 rounded-full "
                                         />
                                     )}
-                            </View>
-
-                            <View className="mb-5 flex items-center justify-center">
-                                <View className="mb-1 flex flex-row gap-2">
-                                    <Text className="text-2xl font-semibold text-white shadow shadow-orchid-600">
-                                        {userInfo.lname}, {userInfo.fname}
-                                    </Text>
-                                    <Text className="text-base text-orchid-800 ">
-                                        {verify && (
-                                            <FontAwesomeIcon
-                                                icon={faAward}
-                                                size={30}
-                                                color={COLORS['gold'][900]}
+                                    {userInfo.gender === 'Male' && (
+                                        <Image
+                                            source={profile_icon_m}
+                                            className="h-40 w-40 rounded-full "
+                                        />
+                                    )}
+                                    {userInfo.gender !== 'Female' &&
+                                        userInfo.gender !== 'Male' && (
+                                            <Image
+                                                source={profile_icon_x}
+                                                className="h-40 w-40 rounded-full "
                                             />
                                         )}
+                                </View>
+
+                                <View className="mb-5 flex items-center justify-center">
+                                    <View className="mb-1 flex flex-row gap-2">
+                                        <Text className="text-2xl font-semibold text-white shadow shadow-orchid-600">
+                                            {userInfo.lname}, {userInfo.fname}
+                                        </Text>
+                                        <Text className="text-base text-orchid-800 ">
+                                            {verify && (
+                                                <FontAwesomeIcon
+                                                    icon={faAward}
+                                                    size={30}
+                                                    color={COLORS['gold'][900]}
+                                                />
+                                            )}
+                                        </Text>
+                                    </View>
+                                    <Text className="text-base text-orchid-800 ">
+                                        {}
                                     </Text>
                                 </View>
-                                <Text className="text-base text-orchid-800 ">
-                                    {}
-                                </Text>
-                            </View>
 
-                            <View className="flex flex-row items-center justify-center gap-5"></View>
-                        </ImageBackground>
+                                <View className="flex flex-row items-center justify-center gap-5"></View>
+                            </ImageBackground>
 
-                        <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
-                            <View className="mb-1 flex flex-row gap-2">
-                                <Text className="mb-2 text-2xl font-bold text-orchid-900">
-                                    Details
-                                </Text>
-                            </View>
+                            <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
+                                <View className="mb-1 flex flex-row gap-2">
+                                    <Text className="mb-2 text-2xl font-bold text-orchid-900">
+                                        {STRINGS.details}
+                                    </Text>
+                                </View>
 
-                            <View className="mb-2 flex flex-col items-start justify-center gap-2">
-                                {verify && (
-                                    <Text className="text-base italic text-orchid-900">
-                                        Profesional Account
+                                <View className="mb-2 flex flex-col items-start justify-center gap-2">
+                                    {verify && (
+                                        <Text className="text-base italic text-orchid-900">
+                                            {STRINGS.profesional_account}
+                                        </Text>
+                                    )}
+                                    <View className="flex flex-row items-start justify-start">
+                                        <Text className="mr-3 text-base font-semibold text-orchid-800">
+                                            {STRINGS.dob_details}
+                                        </Text>
+                                        <Text className="text-base text-orchid-800">
+                                            {formatDob(userInfo.dob)}
+                                        </Text>
+                                    </View>
+                                </View>
+
+                                <View className="mb-3 flex flex-row items-center gap-2">
+                                    <Text className="text-base font-semibold text-orchid-800">
+                                        {STRINGS.interests_details}
                                     </Text>
-                                )}
-                                <View className="flex flex-row items-start justify-start">
-                                    <Text className="mr-3 text-base font-semibold text-orchid-800">
-                                        Date of Birth:
-                                    </Text>
-                                    <Text className="text-base text-orchid-800">
-                                        {formatDob(userInfo.dob)}
-                                    </Text>
+                                    <TouchableOpacity onPress={editProfile}>
+                                        <Ionicons
+                                            name="create-outline"
+                                            size={SIZES.mediumIconSize}
+                                            color={COLORS['orchid'][900]}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                <View className="my-1 flex flex-grow flex-row flex-wrap gap-2">
+                                    {selectedTopic &&
+                                        Object.keys(selectedTopic).map(
+                                            (key) => {
+                                                return (
+                                                    <View
+                                                        key={key}
+                                                        className="rounded-full bg-orchid-100 px-3 py-1 "
+                                                    >
+                                                        <Text className="text-base text-orchid-900">
+                                                            {selectedTopic[key]}
+                                                        </Text>
+                                                    </View>
+                                                )
+                                            }
+                                        )}
                                 </View>
                             </View>
 
-                            <View className="mb-3 flex flex-row items-center gap-2">
-                                <Text className="text-base font-semibold text-orchid-800">
-                                    Interests:
-                                </Text>
-                                <TouchableOpacity onPress={editProfile}>
-                                    <Ionicons
-                                        name="create-outline"
-                                        size={SIZES.mediumIconSize}
-                                        color={COLORS['orchid'][900]}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View className="my-1 flex flex-grow flex-row flex-wrap gap-2">
-                                {selectedTopic &&
-                                    Object.keys(selectedTopic).map((key) => {
-                                        return (
-                                            <View
-                                                key={key}
-                                                className="rounded-full bg-orchid-100 px-3 py-1 "
-                                            >
-                                                <Text className="text-base text-orchid-900">
-                                                    {selectedTopic[key]}
-                                                </Text>
-                                            </View>
-                                        )
-                                    })}
-                            </View>
-                        </View>
+                            <Modal
+                                presentationStyle="pageSheet"
+                                visible={isTopicSelectorModalVisible}
+                                transparent={false}
+                                animationType="slide"
+                            >
+                                {/* safe area? */}
 
-                        <Modal
-                            presentationStyle="pageSheet"
-                            visible={isTopicSelectorModalVisible}
-                            transparent={false}
-                            animationType="slide"
-                        >
-                            {/* safe area? */}
-
-                            <InterestSelector
-                                key={Math.random()}
-                                setModalVisibility={
-                                    setIsTopicSelectorModalVisible
-                                }
-                                selectedTopic={selectedTopic}
-                                setSelectedTopic={setSelectedTopic}
-                            />
-                        </Modal>
-                    </>
-                ) : (
-                    <ActivityIndicator />
-                )}
-            </ScrollView>
+                                <InterestSelector
+                                    key={Math.random()}
+                                    setModalVisibility={
+                                        setIsTopicSelectorModalVisible
+                                    }
+                                    selectedTopic={selectedTopic}
+                                    setSelectedTopic={setSelectedTopic}
+                                />
+                            </Modal>
+                        </>
+                    ) : (
+                        <ActivityIndicator />
+                    )}
+                </ScrollView>
+            </KeyboardAvoidingView>
         </View>
     )
 }

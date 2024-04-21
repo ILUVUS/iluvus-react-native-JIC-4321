@@ -47,6 +47,7 @@ export default {
     MyCreatedGroup: 'MyCreatedGroup',
     myGroups: 'My Groups',
     myFriends: 'My Friends',
+    loading_indicator: 'Loading...',
 
     // view community
     communityView: 'Community View',
@@ -64,6 +65,7 @@ export default {
     postContentPlaceholder: 'Please input the content of the post...',
     InterestTopics: 'Find a Interest Topic...',
     ChooseModerators: 'Find Community Moderators...',
+    no_post_alert: 'No post available.',
 
     // Comment
     Comment: 'Comment',
@@ -151,4 +153,29 @@ export default {
 
     remove_post_title: 'Remove Post',
     remove_post_confirmation: 'Are you sure you want to remove this post?',
+
+    // profile
+    details: 'Details',
+    profesional_account: 'Profesional Account',
+    dob_details: 'Date of Birth:',
+    interests_details: 'Interests:',
+
+    // homepage
+    no_post_alert: 'No post available.',
+    no_post_message:
+        'Please select Interests in Profile tab, and follow communities to view posts.',
+
+    // registration
+    fname_alert: 'First Name must have 2 or more characters',
+    lname_alert: 'Last Name must have 2 or more characters',
+    dob_alert: 'Must be 18 years or older',
+    invalid_value_alert: 'Please select a value',
+    pro_user_question: 'Are you a professional user?',
+    email_alert: 'Please enter a valid email address',
+    username_alert: 'Username must have 2 or more characters',
+    password_alert: 'Password must have 8 or more characters',
+    registration_button_alert: 'Please fill out all fields to register',
+
+    // notification
+    no_notification_alert: "You don't have any notifications.",
 }

@@ -146,7 +146,7 @@ const RegistrationScreen = ({}) => {
                 />
                 {!nameValidator(fName) && (
                     <Text className="py-2 text-xs text-red-600">
-                        First Name must have 2 or more characters
+                        {STRINGS.fname_alert}
                     </Text>
                 )}
                 <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
@@ -162,7 +162,7 @@ const RegistrationScreen = ({}) => {
                 />
                 {!nameValidator(lName) && (
                     <Text className="py-2 text-xs text-red-600">
-                        Last Name must have 2 or more characters.
+                        {STRINGS.lname_alert}
                     </Text>
                 )}
                 <View className="flex flex-row items-center justify-start pb-2 pt-5">
@@ -179,7 +179,7 @@ const RegistrationScreen = ({}) => {
 
                 {!dobValidator(DOB) && (
                     <Text className="py-2 text-xs text-red-600">
-                        Must be 18 years or older
+                        {STRINGS.dob_alert}
                     </Text>
                 )}
 
@@ -200,7 +200,7 @@ const RegistrationScreen = ({}) => {
 
                 {race === '' && (
                     <Text className="py-2 text-xs text-red-600">
-                        Please select a value
+                        {STRINGS.invalid_value_alert}
                     </Text>
                 )}
 
@@ -220,13 +220,13 @@ const RegistrationScreen = ({}) => {
                 />
                 {gender === '' && (
                     <Text className="py-2 text-xs text-red-600">
-                        Please select a value
+                        {STRINGS.invalid_value_alert}
                     </Text>
                 )}
 
                 <View className="mt-3 flex flex-row justify-between py-2">
                     <Text className="text-base text-orchid-900 shadow-md shadow-slate-400">
-                        Are you a professional user?
+                        {STRINGS.pro_user_question}
                     </Text>
                     <Switch
                         trackColor={{
@@ -259,42 +259,9 @@ const RegistrationScreen = ({}) => {
 
                 {!emailValidator(email) && (
                     <Text className="py-2 text-xs text-red-600">
-                        Please enter a valid email address
+                        {STRINGS.email_alert}
                     </Text>
                 )}
-
-                {/* {!isProfessionalUser && (
-                <>
-                    <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
-                        Email
-                    </Text>
-                    <RegisterInput
-                        autoCapitalize="none"
-                        className="text-base text-orchid-900"
-                        placeholderTextColor={COLORS['orchid'][400]}
-                        placeholder={STRINGS.emailExample}
-                        value={email}
-                        onChangeText={(text) => setEmail(text)}
-                        keyboardType="email-address"
-                    />
-                </>
-            )}
-            {isProfessionalUser && (
-                <>
-                    <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
-                        Professional Email
-                    </Text>
-                    <RegisterInput
-                        autoCapitalize="none"
-                        className="text-base text-orchid-900"
-                        placeholderTextColor={COLORS['orchid'][400]}
-                        placeholder="Only Required for Professional user"
-                        value={proEmail}
-                        onChangeText={(text) => setProfEmail(text)}
-                        keyboardType="email-address"
-                    />
-                </>
-            )} */}
 
                 <Text className="py-2 text-base text-orchid-900 shadow-md shadow-slate-400">
                     Username
@@ -309,7 +276,7 @@ const RegistrationScreen = ({}) => {
                 />
                 {!nameValidator(username) && (
                     <Text className="py-2 text-xs text-red-600">
-                        Username must have 2 or more characters
+                        {STRINGS.username_alert}
                     </Text>
                 )}
 
@@ -328,27 +295,31 @@ const RegistrationScreen = ({}) => {
 
                 {!passwordValidator(password) && (
                     <Text className="py-2 text-xs text-red-600">
-                        Password must have 8 or more characters
+                        {STRINGS.password_alert}
                     </Text>
                 )}
 
                 {nameValidator(fName) &&
-                    nameValidator(lName) &&
-                    dobValidator(DOB) &&
-                    emailValidator(email) &&
-                    nameValidator(username) &&
-                    passwordValidator(password) && (
-                        <View className="my-5 flex items-center">
-                            <TouchableOpacity
-                                className="flex w-fit items-center rounded-3xl bg-gold-900 px-5 py-4 align-middle shadow-md shadow-slate-200"
-                                onPress={handleRegister}
-                            >
-                                <Text className="w-fit text-base text-orchid-900">
-                                    Register
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
+                nameValidator(lName) &&
+                dobValidator(DOB) &&
+                emailValidator(email) &&
+                nameValidator(username) &&
+                passwordValidator(password) ? (
+                    <View className="my-5 flex items-center">
+                        <TouchableOpacity
+                            className="flex w-fit items-center rounded-3xl bg-gold-900 px-5 py-4 align-middle shadow-md shadow-slate-200"
+                            onPress={handleRegister}
+                        >
+                            <Text className="w-fit text-base text-orchid-900">
+                                Register
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : (
+                    <Text className="text-base text-red-600">
+                        {STRINGS.registration_button_alert}
+                    </Text>
+                )}
             </ScrollView>
         </KeyboardAvoidingView>
     )

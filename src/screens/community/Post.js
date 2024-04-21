@@ -10,6 +10,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import Modal from 'react-native-modal'
 import COLORS from '../../constants/colors'
+import STRINGS from '../../constants/strings'
+
 import PostItem from './components/PostItem'
 import { useRoute } from '@react-navigation/native'
 import ImageView from 'react-native-image-viewing'
@@ -140,9 +142,11 @@ const Post = (nav) => {
                         </ScrollView>
                     </View>
                 ) : (
-                    <View className="flex h-full w-full items-center justify-center">
+                    <View className="flex h-full w-full items-center justify-center gap-3">
                         <ActivityIndicator />
-                        <Text className="text-orchid-900">Make First Post</Text>
+                        <Text className="text-orchid-900">
+                            {STRINGS.no_post_alert}
+                        </Text>
                     </View>
                 )}
 
@@ -216,7 +220,10 @@ const Post = (nav) => {
             {isJoined && (
                 <TouchableOpacity
                     onPress={() => handleOpenPopup()}
-                    className="absolute bottom-6 right-6 h-16 w-16 items-center justify-center rounded-full bg-orchid-500 px-5 py-2 shadow shadow-slate-500"
+                    style={{
+                        bottom: Constants.statusBarHeight,
+                    }}
+                    className="absolute right-8 h-16 w-16 items-center justify-center rounded-full bg-orchid-500 px-5 py-2 shadow shadow-slate-500"
                 >
                     <Ionicons
                         name="create-outline"
