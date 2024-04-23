@@ -61,6 +61,32 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 
 # Release Notes
 
+## Version 0.5.0
+
+### New Features
+
+-   Community Users can view videos in Media Viewer.
+-   Community Users can create new post with videos.
+-   Professional Users can view their Created Groups in its own view.
+-   All Users can view their Following Groups in its own view.
+-   Users can view their birthday on Profile page.
+-   Live error indicators in Registration Form.
+-   Communities are removed if a user account is removed from ILUVUS.
+
+### Bug Fixes
+
+-   Users could not get the relevant post properly on Home Screen after re-selecting interests.
+-   User could not post Text only post.
+-   Professional Users could not receive verification code.
+-   Users must be 18 or older to sign up an account.
+-   Community View buttons were flickery.
+-   Reported post automatically removed once there is more than 5 reports.
+
+### Known Issues
+
+-   Login Form Scrollview does not scroll down properly.
+-   Status bar text blends with background color.
+
 ## Version 0.4.0
 
 ### New Features
