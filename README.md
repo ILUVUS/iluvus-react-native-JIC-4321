@@ -23,6 +23,7 @@ We're developing our own platform instead of using existing ones because they do
 
 -   NodeJS
 -   NPM
+-   Firebase
 
 #### To run:
 
@@ -30,7 +31,69 @@ We're developing our own platform instead of using existing ones because they do
 -   iOS Simulator on Mac OS only
 -   Android Studio Android Simulator or any Android Studio on Mac OS, Windows, or Linux
 
+### Connect with Firebase
+
+#### Creating a Firebase project
+
+Sign in with your Google Account. Once you’re in, you should see the Firebase console - click on the Add project button.
+
+<img src="./img/firebase/1.png" width=400 />
+
+Give your project a name (whatever you’d like!):
+
+<img src="./img/firebase/2.png" width=500 />
+
+Next you’ll be asked if you want to enable analytics - at the time of writing the Firebase SDK’s implementation of analytics does not work with React Native, however you can configure this separately using Expo’s FirebaseAnalytics - Expo Documentation package.
+
+<img src="./img/firebase/3.png" width=500 />
+
+You’ll then have to wait a few seconds for Firebase to provision your new project…
+
+### Add a Firebase web application
+
+<img src="./img/firebase/6.png" width=500 />
+
+Give your app a nickname (whatever you’d like) and click Register app:
+
+<img src="./img/firebase/7.png" width=500 />
+
+You’ll then see your Firebase credentials open up - copy the highlighted part into your clipboard and we’ll use this to create your Firebase configuration file.
+
+<img src="./img/firebase/8.png" width=700 />
+
+Locate to the root directory, go to `src/utils`, create a file named `iluvus_bucket_credential.js`.
+
+Replace the following `firebaseConfig = {}` with the highlighted part you copied above:
+
+```javascript
+import { initializeApp } from 'firebase/app'
+import { getStorage } from 'firebase/storage'
+
+const firebaseConfig = {
+    apiKey: '',
+    authDomain: '',
+    projectId: '',
+    storageBucket: '',
+    messagingSenderId: '',
+    appId: '',
+    measurementId: '',
+}
+
+const app = initializeApp(firebaseConfig)
+export const storage = getStorage(app)
+```
+
+### Connect to the backend
+
+In the project root, create a file named `.env`, replace `BASE_URL` with the backend url:
+
+```
+BASE_URL=https://127.0.0.1:8080
+```
+
 ### Installing & Execute
+
+With the Firebase connection and connection to backend, the application is ready to build.
 
 1. Use this link [https://nodejs.org/en/download](https://nodejs.org/en/download) to download and install NodeJS LTS version that is compatible with your Operation System.
 
