@@ -10,7 +10,6 @@ module.exports = function (api) {
             },
         ],
         ['nativewind/babel'],
-        ['module:@preact/signals-react-transform'],
         ["react-native-reanimated/plugin"]
     ]
 
