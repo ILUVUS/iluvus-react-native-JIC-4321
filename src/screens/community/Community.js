@@ -207,10 +207,8 @@ const Community = () => {
                     }
                 >
                     <View className="my-3 flex flex-row flex-wrap justify-evenly overflow-auto">
-                        {verify && (
-                            <CommunityViewMainButton
-                                onPress={() => newCommunity()}
-                            >
+
+                        <CommunityViewMainButton onPress={() => newCommunity()}>
                                 <Icon
                                     name="plus"
                                     size={SIZES.communityIconSize}
@@ -219,19 +217,6 @@ const Community = () => {
                                 <Text className="mt-1 text-base text-orchid-900">
                                     {STRINGS.newCommunity}
                                 </Text>
-                            </CommunityViewMainButton>
-                        )}
-
-                        <CommunityViewMainButton onPress={() => myCommunity()}>
-                            <FontAwesomeIcon
-                                icon={faCheckToSlot}
-                                color={COLORS.orchid[900]}
-                                size={SIZES.communityIconSize}
-                            />
-
-                            <Text className="mt-1 text-base text-orchid-900">
-                                {STRINGS.myCommunity}
-                            </Text>
                         </CommunityViewMainButton>
 
                         <CommunityViewMainButton

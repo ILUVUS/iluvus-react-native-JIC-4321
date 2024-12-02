@@ -35,7 +35,7 @@ export default function SetupCommunity() {
     const [communityRule, setCommunityRule] = useState('')
     const [visibility, setVisibility] = useState('')
     const [ownerId, setOwnerId] = useState('')
-
+    const [communityType, setCommunityType] = useState('')
     const [searchUsername, setSearchUsername] = useState('')
     const [searchUserList, setSearchUserList] = useState([])
     const [chosenModerators, setChosenModerators] = useState([])
@@ -149,7 +149,8 @@ export default function SetupCommunity() {
             communityName.trim() !== '' &&
             communityDescription.trim() !== '' &&
             communityRule.trim() !== '' &&
-            visibility.trim() !== ''
+            visibility.trim() !== '' &&
+            communityType.trim() !== ''
         ) {
             axios({
                 method: 'POST',
@@ -158,7 +159,7 @@ export default function SetupCommunity() {
                     name: String(communityName),
                     description: String(communityDescription),
                     rules: String(communityRule),
-                    visibility: String(visibility),
+                    visibility: String(visibility), 
                     ownerId: String(ownerId),
                     image: communityImage,
                     moderators: chosenModeratorsId.join(','),
@@ -204,6 +205,24 @@ export default function SetupCommunity() {
                 onChangeText={(text) => setCommunityDescription(text)}
                 multiline={true}
                 numberOfLines={4}
+            />
+            <Text className="my-2 text-base text-orchid-900 shadow-md shadow-slate-400">
+            Community Type
+            </Text>
+            <SelectList
+                data={[
+                { key: 'general', value: 'General' },
+                { key: 'professional', value: 'Professional' },
+            ]}
+                data={STRINGS.CommunityTypeOptions}
+                setSelected={setCommunityType}
+                value={communityType}
+                boxStyles={[inputStyle.input, inputStyle.inputShadow]}
+                dropdownStyles={dropDownStyle.dropDownActive}
+                dropdownItemStyles={dropDownStyle.dropDownItem}
+                maxHeight={SIZES.dropDownMaxHeight}
+                search={false}
+                placeholder={STRINGS.setupCommunityTypePlaceholder}
             />
             <Text className="my-2 text-base text-orchid-900 shadow-md shadow-slate-400">
                 {STRINGS.setupCommunityRules}
