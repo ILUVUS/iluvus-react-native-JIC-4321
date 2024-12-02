@@ -225,6 +225,25 @@ const CommunityView = ({ nav }) => {
         })
     }
 
+    const leaveCommunity = async () => {
+        try {
+            const userId = await AsyncStorage.getItem('userId')
+            await axios.post(
+                `${BASE_URL}/community/leave`,
+                {
+                    userId,
+                    communityId: globalCommunityId,
+                },
+                { headers: { 'Content-Type': 'application/json' } }
+            )
+            Alert.alert('Success', 'You have left the community.')
+            getCommunityInfo()
+        } catch (err) {
+            console.error(err)
+            Alert.alert('Error', 'Unable to leave the community.')
+        }
+    }
+
     useEffect(() => {
         checkIfJoined()
         isWaitingForApproval()
@@ -265,6 +284,8 @@ const CommunityView = ({ nav }) => {
                 console.log(err)
             })
     }
+
+    
 
     const getVerified = async () => {
         axios({
@@ -365,6 +386,34 @@ const CommunityView = ({ nav }) => {
                             }
                             className="h-40 w-40 rounded-full"
                         />
+                    </View>
+                    <View className="mb-5 flex items-center justify-center">
+                        <Text className="text-2xl font-semibold text-white shadow shadow-slate-600">
+                            {communityInfo.name}
+                        </Text>
+                        {isJoined && !isHost && (
+                            <TouchableOpacity
+                                onPress={() =>
+                                    Alert.alert(
+                                        'Leave Community',
+                                        'Are you sure you want to leave?',
+                                        [
+                                            { text: 'Cancel', style: 'cancel' },
+                                            {
+                                                text: 'Yes',
+                                                onPress: () =>
+                                                    leaveCommunity(),
+                                            },
+                                        ]
+                                    )
+                                }
+                                className="mt-3 flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-red-500 px-5 py-2 shadow shadow-slate-600"
+                            >
+                                <Text className="text-md text-white">
+                                    {STRINGS.leaveCommunity || 'Leave'}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
                     </View>
                     <View className="mb-5 flex items-center justify-center">
                         <View className="mb-1 flex flex-row gap-2">
