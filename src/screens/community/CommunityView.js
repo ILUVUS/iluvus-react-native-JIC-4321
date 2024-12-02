@@ -237,12 +237,21 @@ const CommunityView = ({ nav }) => {
                 { headers: { 'Content-Type': 'application/json' } }
             )
             Alert.alert('Success', 'You have left the community.')
+            
+         
+            setIsJoined(false) 
+            setCommunityInfo(prev => ({
+                ...prev,
+                members: prev.members - 1 
+            }))
+            
             getCommunityInfo()
         } catch (err) {
             console.error(err)
             Alert.alert('Error', 'Unable to leave the community.')
         }
     }
+    
 
     useEffect(() => {
         checkIfJoined()
