@@ -123,6 +123,26 @@ npm start
 or scan the QR Code on the output with phone camera to run on Expo application.
 
 # Release Notes
+## Version 0.6.0
+
+### New Features
+
+-  Community owners can now designate whether their community is professional or general upon creating a community
+-  Users can now search for both professional and general communities by name
+-  Users can join both professional and general communities (before they could only join general)
+-  Users can now leave both private and public communities that they no longer wish to follow
+
+### Bug Fixes
+
+- Publish post icon was not displaying properly
+- Users were first unable to leave communities and then after adding the feature unable to leave upon request
+- Create community button was not displayed properly
+
+### Known Issues
+
+-   Switching between default icons and user inputed images when entering community page, viewing posts 
+-   Loading time for images and videos too long
+-   Profile not loading properly unless you make a post first
 
 ## Version 0.5.0
 
