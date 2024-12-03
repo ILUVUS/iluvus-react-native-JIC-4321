@@ -228,24 +228,30 @@ const CommunityView = ({ nav }) => {
     const leaveCommunity = async () => {
         try {
             const userId = await AsyncStorage.getItem('userId')
-            await axios.post(
-                `${BASE_URL}/community/leave`,
-                {
-                    userId,
+            axios({
+                method: 'POST',
+                url: `${BASE_URL}/community/leave`,
+                data: {
+                    userId: await AsyncStorage.getItem('userId'),
                     communityId: globalCommunityId,
                 },
-                { headers: { 'Content-Type': 'application/json' } }
+                headers: {
+                    'Content-Type': 'application/json',
+                } }
             )
             Alert.alert('Success', 'You have left the community.')
-            
+          
          
             setIsJoined(false) 
-            setCommunityInfo(prev => ({
-                ...prev,
-                members: prev.members - 1 
-            }))
+            setCommunityInfo(prev => {
+                return {
+                    ...prev,
+                    members: prev.members > 0 ? prev.members - 1 : 0, 
+                };
+            });
             
-            getCommunityInfo()
+            
+            //getCommunityInfo()
         } catch (err) {
             console.error(err)
             Alert.alert('Error', 'Unable to leave the community.')
