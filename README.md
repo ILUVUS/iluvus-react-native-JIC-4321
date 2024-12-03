@@ -144,6 +144,13 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 -   Loading time for images and videos too long
 -   Profile not loading properly unless you make a post first
 
+### Rationale for v.0.6.0 Feature Choices
+Overall, Communities are integral to providing support and recognition in everyday life – especially for marginalized individuals
+
+-   Searching For Professiona & General Communities:  Allows users the essential option of finding communities that cater to their personal interests - this typically falls into general and professional - and provides the essential foundation for target users to personalize their experience.
+-   Joining Communities: The first action that a user will want to do upon finding an interesting community - users can feel they are part of a chosen community and connect with people who share similar experiences, and interests. This and the leave feature create the backbone for the next core features we will be focusing on building - applications to speak, advanced moderation within communities etc.
+-   Leaving Communities: Essential to supporting users freedom of movement - users should be able to leave any community they wish to for whatever reason without any questions as to why, when, or any other barriers and move on with their experience on the app.
+
 ## Version 0.5.0
 
 ### New Features
