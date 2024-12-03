@@ -76,11 +76,13 @@ export default {
     publishbtn: 'Publish',
     setupCommunityName: 'New Community Name',
     setupCommunityNamePlaceholder: 'Please input new community name...',
+    
 
     setupCommunityDescription: 'Description',
     setupCommunityDescriptionPlaceholder:
         'Please input description about the community...',
 
+    
     setupCommunityRules: 'Rules',
     setupCommunityRulesPlaceholder: 'Please input rules for the community...',
 
@@ -89,6 +91,12 @@ export default {
     Visibility: [
         { key: 'Private', value: 'Private' },
         { key: 'Public', value: 'Public' },
+    ],
+    setupCommunityType: 'Community Type', // Add this line
+    setupCommunityTypePlaceholder: 'Select Community Type', // Add this line
+    CommunityTypeOptions: [ // Add this if dropdown options are needed
+    { key: 'general', value: 'General' },
+    { key: 'professional', value: 'Professional' },
     ],
 
     //register
