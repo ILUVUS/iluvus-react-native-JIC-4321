@@ -163,6 +163,7 @@ export default {
     remove_post_confirmation: 'Are you sure you want to remove this post?',
 
     // profile
+    bio: 'Personal Bio ✏️',
     details: 'Details',
     profesional_account: 'Profesional',
     dob_details: 'Date of Birth:',

@@ -30,6 +30,7 @@ import STRINGS from '../../constants/strings'
 import Constants from 'expo-constants'
 import { useHeaderHeight } from '@react-navigation/elements'
 import * as ImagePicker from "expo-image-picker";
+import PersonalBioEditor from "./PersonalBioEditor";
 
 const Profile = () => {
     const [userId, setUserId] = useState('')
@@ -42,6 +43,8 @@ const Profile = () => {
     const interestInteger = parseInt(userInfo.interest)
     const [interestList, setInterestList] = useState({})
     const [profileImage, setProfileImage] = useState('')
+    const [profileBio, setProfileBio] = useState('')
+    const [isProfileBioModalVisible, setIsProfileBioModalVisible] = useState(false)
 
     useEffect(() => {
         getVerified()
@@ -170,7 +173,19 @@ const Profile = () => {
         }
     }, [userInfo.image])
 
-    const editProfile = () => {
+    useEffect(() => {
+        if (userInfo.bio != null) {
+            setProfileBio(userInfo.bio)
+        } else {
+            setProfileBio('')
+        }
+    }, [userInfo.bio])
+
+    const editProfileBio = () => {
+        setIsProfileBioModalVisible(true)
+    }
+
+    const editProfileInterest = () => {
         setIsTopicSelectorModalVisible(true)
     }
 
@@ -324,6 +339,28 @@ const Profile = () => {
                                 </View>
                                 <View className="flex flex-row items-center justify-center gap-5"></View>
                             </ImageBackground>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    editProfileBio();
+                                }}
+                                activeOpacity={0.7}
+                            >
+                                <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
+                                    <View className="mb-1 flex flex-row gap-2">
+                                        <Text className="mb-2 text-2xl font-bold text-orchid-900">
+                                            {STRINGS.bio}
+                                        </Text>
+                                    </View>
+
+                                    <View className="mb-2 flex flex-col items-start justify-center gap-2">
+                                        <View className="flex flex-row items-start justify-start">
+                                            <Text className="text-base text-orchid-800">
+                                                {profileBio}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
 
                             <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
                                 <View className="mb-1 flex flex-row gap-2">
@@ -347,7 +384,7 @@ const Profile = () => {
                                     <Text className="text-base font-semibold text-orchid-800">
                                         {STRINGS.interests_details}
                                     </Text>
-                                    <TouchableOpacity onPress={editProfile}>
+                                    <TouchableOpacity onPress={editProfileInterest}>
                                         <Ionicons
                                             name="create-outline"
                                             size={SIZES.mediumIconSize}
@@ -373,6 +410,24 @@ const Profile = () => {
                                         )}
                                 </View>
                             </View>
+
+                            <Modal
+                                presentationStyle="pageSheet"
+                                visible={isProfileBioModalVisible}
+                                transparent={false}
+                                animationType="slide"
+                            >
+                                {/* safe area? */}
+                                <PersonalBioEditor
+                                    key={Math.random()}
+                                    setModalVisibility={
+                                        setIsProfileBioModalVisible
+                                    }
+                                    userId={userId}
+                                    profileBio={profileBio}
+                                    setProfileBio={setProfileBio}
+                                />
+                            </Modal>
 
                             <Modal
                                 presentationStyle="pageSheet"
