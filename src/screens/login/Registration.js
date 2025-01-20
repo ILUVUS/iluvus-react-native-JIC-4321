@@ -77,7 +77,6 @@ const RegistrationScreen = ({}) => {
             interests: '',
             isPro: isProfessionalUser,
         }
-
         if (!isProfessionalUser) {
             axios({
                 method: 'POST',

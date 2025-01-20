@@ -3,7 +3,7 @@ import {
     View,
     Text,
     ActivityIndicator,
-    KeyboardAvoidingView,
+    KeyboardAvoidingView, Alert,
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState, useEffect } from 'react'
@@ -29,6 +29,7 @@ import SIZES from '../../constants/sizes'
 import STRINGS from '../../constants/strings'
 import Constants from 'expo-constants'
 import { useHeaderHeight } from '@react-navigation/elements'
+import * as ImagePicker from "expo-image-picker";
 
 const Profile = () => {
     const [userId, setUserId] = useState('')
@@ -40,6 +41,7 @@ const Profile = () => {
     const [selectedTopic, setSelectedTopic] = useState({})
     const interestInteger = parseInt(userInfo.interest)
     const [interestList, setInterestList] = useState({})
+    const [profileImage, setProfileImage] = useState('')
 
     useEffect(() => {
         getVerified()
@@ -160,6 +162,14 @@ const Profile = () => {
         setSelectedTopic(userInfo.interest)
     }, [userInfo.interest])
 
+    useEffect(() => {
+        if (userInfo.image != null) {
+            setProfileImage(userInfo.image)
+        } else {
+            setProfileImage('')
+        }
+    }, [userInfo.image])
+
     const editProfile = () => {
         setIsTopicSelectorModalVisible(true)
     }
@@ -167,6 +177,41 @@ const Profile = () => {
     const formatDob = (dob) => {
         const date = new Date(dob)
         return date.toLocaleDateString()
+    }
+
+    const pickingImageHandler = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: false,
+            quality: 0.5,
+            aspect: [1, 1],
+            base64: true,
+            allowsEditing: true,
+        })
+        // console.log(result.assets[0].base64)
+        if (!result.canceled) {
+            axios({
+                method: 'POST',
+                url: `${BASE_URL}/user/editProfileImage`,
+                data: {
+                    userId: userId,
+                    image: result.assets[0].base64,
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((res) => {
+                    Alert.alert('Successful', 'Profile image updated')
+                    setProfileImage(result.assets[0].base64) // only change the profile image from the app view if it has already been saved to the database!
+                })
+                .catch((err) => {
+                    Alert.alert('Unsuccessful', 'Profile image not updated')
+                    setProfileImage('') // revert back to the default profile image.
+                })
+        } else {
+            // alert('You did not select any image.')
+        }
     }
 
     return (
@@ -202,39 +247,57 @@ const Profile = () => {
                                 blurRadius={7}
                                 className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl bg-black py-12 shadow-md shadow-slate-300 blur-3xl"
                             >
-                                <View className="height-fit relative w-fit">
-                                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
-                                        {userInfo.gender === 'Female' && (
-                                            <Image
-                                                source={profile_icon_f}
-                                                className="h-40 w-40 rounded-full "
-                                            />
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        pickingImageHandler();
+                                    }}
+                                    activeOpacity={0.7} // adjusts the opacity when pressed.
+                                >
+                                    <View className="height-fit relative w-fit">
+                                        {profileImage === '' && ( // default profile images.
+                                            <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
+                                                {userInfo.gender === 'Female' && (
+                                                    <Image
+                                                        source={profile_icon_f}
+                                                        className="h-40 w-40 rounded-full "
+                                                    />
+                                                )}
+                                                {userInfo.gender === 'Male' && (
+                                                    <Image
+                                                        source={profile_icon_m}
+                                                        className="h-40 w-40 rounded-full "
+                                                    />
+                                                )}
+                                                {userInfo.gender !== 'Female' &&
+                                                    userInfo.gender !== 'Male' && (
+                                                        <Image
+                                                            source={profile_icon_x}
+                                                            className="h-40 w-40 rounded-full "
+                                                        />
+                                                    )}
+                                            </View>
                                         )}
-                                        {userInfo.gender === 'Male' && (
-                                            <Image
-                                                source={profile_icon_m}
-                                                className="h-40 w-40 rounded-full "
-                                            />
-                                        )}
-                                        {userInfo.gender !== 'Female' &&
-                                            userInfo.gender !== 'Male' && (
+                                        {profileImage !== '' && (
+                                            <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
                                                 <Image
-                                                    source={profile_icon_x}
+                                                    source={{
+                                                        uri: `data:image/jpg;base64,${profileImage}`,
+                                                    }}
                                                     className="h-40 w-40 rounded-full "
                                                 />
-                                            )}
+                                            </View>
+                                        )}
+                                        {verify && (
+                                            <View className="absolute bottom-3 right-1">
+                                                <FontAwesomeIcon
+                                                    icon={faAward}
+                                                    size={35}
+                                                    color={COLORS['gold'][900]}
+                                                />
+                                            </View>
+                                        )}
                                     </View>
-                                    {verify && (
-                                        <View className="absolute bottom-3 right-1">
-                                            <FontAwesomeIcon
-                                                icon={faAward}
-                                                size={35}
-                                                color={COLORS['gold'][900]}
-                                            />
-                                        </View>
-                                    )}
-                                </View>
-
+                                </TouchableOpacity>
                                 <View className="mb-5 flex items-center justify-center">
                                     <View className="mb-1 flex flex-row gap-1">
                                         <Text className="text-2xl font-semibold text-white shadow shadow-orchid-600">
@@ -259,7 +322,6 @@ const Profile = () => {
                                         {}
                                     </Text>
                                 </View>
-
                                 <View className="flex flex-row items-center justify-center gap-5"></View>
                             </ImageBackground>
 
