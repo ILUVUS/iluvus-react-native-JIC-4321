@@ -163,6 +163,7 @@ export default function SetupCommunity() {
                     ownerId: String(ownerId),
                     image: communityImage,
                     moderators: chosenModeratorsId.join(','),
+                    tag: String(communityType), // community type.
                 },
                 headers: {
                     'Content-Type': 'application/json',
