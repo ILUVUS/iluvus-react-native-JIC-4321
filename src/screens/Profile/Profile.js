@@ -3,7 +3,7 @@ import {
     View,
     Text,
     ActivityIndicator,
-    KeyboardAvoidingView, Alert,
+    KeyboardAvoidingView,
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState, useEffect } from 'react'
@@ -29,8 +29,7 @@ import SIZES from '../../constants/sizes'
 import STRINGS from '../../constants/strings'
 import Constants from 'expo-constants'
 import { useHeaderHeight } from '@react-navigation/elements'
-import * as ImagePicker from "expo-image-picker";
-import PersonalBioEditor from "./PersonalBioEditor";
+import PersonalBioEditor from './PersonalBioEditor';
 
 const Profile = () => {
     const [userId, setUserId] = useState('')
@@ -42,9 +41,14 @@ const Profile = () => {
     const [selectedTopic, setSelectedTopic] = useState({})
     const interestInteger = parseInt(userInfo.interest)
     const [interestList, setInterestList] = useState({})
-    const [profileImage, setProfileImage] = useState('')
-    const [profileBio, setProfileBio] = useState('')
-    const [isProfileBioModalVisible, setIsProfileBioModalVisible] = useState(false)
+    const [jobStatus, setJobStatus] = useState('');
+const [jobDetails, setJobDetails] = useState('');
+const [profileBio, setProfileBio] = useState('');
+
+const [relationshipStatus, setRelationshipStatus] = useState('');
+const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
+    useState(false);
+
 
     useEffect(() => {
         getVerified()
@@ -153,9 +157,14 @@ const Profile = () => {
                 'Content-Type': 'application/json',
             },
         })
-            .then((res) => {
-                setUserInfo(res.data)
-            })
+        .then((res) => {
+            const data = res.data;
+            setUserInfo(data);
+            setProfileBio(data.bio || ''); 
+            setJobStatus(data.jobStatus || '');
+            setJobDetails(data.jobDetails || '');
+            setRelationshipStatus(data.relationshipStatus || '');
+        })
             .catch((err) => {
                 console.log('Cannot get user info' + err)
             })
@@ -165,68 +174,13 @@ const Profile = () => {
         setSelectedTopic(userInfo.interest)
     }, [userInfo.interest])
 
-    useEffect(() => {
-        if (userInfo.image != null) {
-            setProfileImage(userInfo.image)
-        } else {
-            setProfileImage('')
-        }
-    }, [userInfo.image])
-
-    useEffect(() => {
-        if (userInfo.bio != null) {
-            setProfileBio(userInfo.bio)
-        } else {
-            setProfileBio('')
-        }
-    }, [userInfo.bio])
-
-    const editProfileBio = () => {
-        setIsProfileBioModalVisible(true)
-    }
-
-    const editProfileInterest = () => {
+    const editProfile = () => {
         setIsTopicSelectorModalVisible(true)
     }
 
     const formatDob = (dob) => {
         const date = new Date(dob)
         return date.toLocaleDateString()
-    }
-
-    const pickingImageHandler = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: false,
-            quality: 0.5,
-            aspect: [1, 1],
-            base64: true,
-            allowsEditing: true,
-        })
-        // console.log(result.assets[0].base64)
-        if (!result.canceled) {
-            axios({
-                method: 'POST',
-                url: `${BASE_URL}/user/editProfileImage`,
-                data: {
-                    userId: userId,
-                    image: result.assets[0].base64,
-                },
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-                .then((res) => {
-                    Alert.alert('Successful', 'Profile image updated')
-                    setProfileImage(result.assets[0].base64) // only change the profile image from the app view if it has already been saved to the database!
-                })
-                .catch((err) => {
-                    Alert.alert('Unsuccessful', 'Profile image not updated')
-                    setProfileImage('') // revert back to the default profile image.
-                })
-        } else {
-            // alert('You did not select any image.')
-        }
     }
 
     return (
@@ -262,57 +216,94 @@ const Profile = () => {
                                 blurRadius={7}
                                 className="mb-5 flex h-fit w-full flex-col items-center justify-center rounded-3xl bg-black py-12 shadow-md shadow-slate-300 blur-3xl"
                             >
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        pickingImageHandler();
-                                    }}
-                                    activeOpacity={0.7} // adjusts the opacity when pressed.
-                                >
-                                    <View className="height-fit relative w-fit">
-                                        {profileImage === '' && ( // default profile images.
-                                            <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
-                                                {userInfo.gender === 'Female' && (
-                                                    <Image
-                                                        source={profile_icon_f}
-                                                        className="h-40 w-40 rounded-full "
-                                                    />
-                                                )}
-                                                {userInfo.gender === 'Male' && (
-                                                    <Image
-                                                        source={profile_icon_m}
-                                                        className="h-40 w-40 rounded-full "
-                                                    />
-                                                )}
-                                                {userInfo.gender !== 'Female' &&
-                                                    userInfo.gender !== 'Male' && (
-                                                        <Image
-                                                            source={profile_icon_x}
-                                                            className="h-40 w-40 rounded-full "
-                                                        />
-                                                    )}
-                                            </View>
+                                <View className="height-fit relative w-fit">
+                                    <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
+                                        {userInfo.gender === 'Female' && (
+                                            <Image
+                                                source={profile_icon_f}
+                                                className="h-40 w-40 rounded-full "
+                                            />
                                         )}
-                                        {profileImage !== '' && (
-                                            <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
+                                        {userInfo.gender === 'Male' && (
+                                            <Image
+                                                source={profile_icon_m}
+                                                className="h-40 w-40 rounded-full "
+                                            />
+                                        )}
+                                        {userInfo.gender !== 'Female' &&
+                                            userInfo.gender !== 'Male' && (
                                                 <Image
-                                                    source={{
-                                                        uri: `data:image/jpg;base64,${profileImage}`,
-                                                    }}
+                                                    source={profile_icon_x}
                                                     className="h-40 w-40 rounded-full "
                                                 />
-                                            </View>
-                                        )}
-                                        {verify && (
-                                            <View className="absolute bottom-3 right-1">
-                                                <FontAwesomeIcon
-                                                    icon={faAward}
-                                                    size={35}
-                                                    color={COLORS['gold'][900]}
-                                                />
-                                            </View>
-                                        )}
+                                            )}
                                     </View>
-                                </TouchableOpacity>
+                                    {verify && (
+                                        <View className="absolute bottom-3 right-1">
+                                            <FontAwesomeIcon
+                                                icon={faAward}
+                                                size={35}
+                                                color={COLORS['gold'][900]}
+                                            />
+                                        </View>
+                                    )}
+                                </View>
+
+                                <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
+    <View className="mb-1 flex flex-row gap-2">
+        <Text className="mb-2 text-2xl font-bold text-orchid-900">
+            {STRINGS.job_relationship_details}
+        </Text>
+    </View>
+
+    {/* Job Status */}
+    <View className="mb-2 flex flex-col items-start justify-center gap-2">
+        <View className="flex flex-row items-start justify-start">
+            <Text className="mr-3 text-base font-semibold text-orchid-800">
+                Job Status:
+            </Text>
+            <Text className="text-base text-orchid-800">
+                {jobStatus || 'Not specified'}
+            </Text>
+        </View>
+        {jobStatus !== 'Other' && jobDetails && (
+            <View className="flex flex-row items-start justify-start">
+                <Text className="mr-3 text-base font-semibold text-orchid-800">
+                    {jobStatus === 'Employed'
+                        ? 'Job Details:'
+                        : 'Field of Study:'}
+                </Text>
+                <Text className="text-base text-orchid-800">
+                    {jobDetails}
+                </Text>
+            </View>
+        )}
+    </View>
+
+    {/* Relationship Status */}
+    <View className="mb-2 flex flex-col items-start justify-center gap-2">
+        <View className="flex flex-row items-start justify-start">
+            <Text className="mr-3 text-base font-semibold text-orchid-800">
+                Relationship Status:
+            </Text>
+            <Text className="text-base text-orchid-800">
+                {relationshipStatus || 'Not specified'}
+            </Text>
+        </View>
+    </View>
+
+    <TouchableOpacity onPress={() => setIsJobRelationshipModalVisible(true)}>
+    <Ionicons
+        name="create-outline"
+        size={SIZES.mediumIconSize}
+        color={COLORS['orchid'][900]}
+    />
+</TouchableOpacity>
+
+
+</View>
+
+
                                 <View className="mb-5 flex items-center justify-center">
                                     <View className="mb-1 flex flex-row gap-1">
                                         <Text className="text-2xl font-semibold text-white shadow shadow-orchid-600">
@@ -337,30 +328,9 @@ const Profile = () => {
                                         {}
                                     </Text>
                                 </View>
+
                                 <View className="flex flex-row items-center justify-center gap-5"></View>
                             </ImageBackground>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    editProfileBio();
-                                }}
-                                activeOpacity={0.7}
-                            >
-                                <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
-                                    <View className="mb-1 flex flex-row gap-2">
-                                        <Text className="mb-2 text-2xl font-bold text-orchid-900">
-                                            {STRINGS.bio}
-                                        </Text>
-                                    </View>
-
-                                    <View className="mb-2 flex flex-col items-start justify-center gap-2">
-                                        <View className="flex flex-row items-start justify-start">
-                                            <Text className="text-base text-orchid-800">
-                                                {profileBio}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
 
                             <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
                                 <View className="mb-1 flex flex-row gap-2">
@@ -384,7 +354,7 @@ const Profile = () => {
                                     <Text className="text-base font-semibold text-orchid-800">
                                         {STRINGS.interests_details}
                                     </Text>
-                                    <TouchableOpacity onPress={editProfileInterest}>
+                                    <TouchableOpacity onPress={editProfile}>
                                         <Ionicons
                                             name="create-outline"
                                             size={SIZES.mediumIconSize}
@@ -413,24 +383,6 @@ const Profile = () => {
 
                             <Modal
                                 presentationStyle="pageSheet"
-                                visible={isProfileBioModalVisible}
-                                transparent={false}
-                                animationType="slide"
-                            >
-                                {/* safe area? */}
-                                <PersonalBioEditor
-                                    key={Math.random()}
-                                    setModalVisibility={
-                                        setIsProfileBioModalVisible
-                                    }
-                                    userId={userId}
-                                    profileBio={profileBio}
-                                    setProfileBio={setProfileBio}
-                                />
-                            </Modal>
-
-                            <Modal
-                                presentationStyle="pageSheet"
                                 visible={isTopicSelectorModalVisible}
                                 transparent={false}
                                 animationType="slide"
@@ -446,6 +398,28 @@ const Profile = () => {
                                     setSelectedTopic={setSelectedTopic}
                                 />
                             </Modal>
+
+                            {isJobRelationshipModalVisible && (
+    <Modal
+        presentationStyle="pageSheet"
+        visible={isJobRelationshipModalVisible}
+        transparent={false}
+        animationType="slide"
+    >
+        <PersonalBioEditor
+            setModalVisibility={setIsJobRelationshipModalVisible}
+            userId={userId}
+            profileBio={profileBio}
+            setProfileBio={setProfileBio}
+            jobStatus={jobStatus}
+            setJobStatus={setJobStatus}
+            jobDetails={jobDetails}
+            setJobDetails={setJobDetails}
+            relationshipStatus={relationshipStatus}
+            setRelationshipStatus={setRelationshipStatus}
+        />
+    </Modal>
+)}
                         </>
                     ) : (
                         <ActivityIndicator />
