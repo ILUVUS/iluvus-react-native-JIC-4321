@@ -19,7 +19,7 @@ export default InterestSelector = ({
     const getTopics = async (name) => {
         axios({
             method: 'GET',
-            url: `${BASE_URL}/interest/getByName?name=${name}`,
+            url: `${BASE_URL}/skill/getByName?name=${name}`,
             headers: {
                 'Content-Type': 'application/json',
             },

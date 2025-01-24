@@ -25,6 +25,7 @@ import { faAward } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { Modal } from 'react-native'
 import InterestSelector from './InterestSelector'
+import SkillSelector from './SkillSelector'
 import SIZES from '../../constants/sizes'
 import STRINGS from '../../constants/strings'
 import Constants from 'expo-constants'
@@ -42,6 +43,10 @@ const Profile = () => {
     const [selectedTopic, setSelectedTopic] = useState({})
     const interestInteger = parseInt(userInfo.interest)
     const [interestList, setInterestList] = useState({})
+    const [IsSkillSelectorModalVisible, setIsSkillSelectorModalVisible] = useState(false)
+    const [selectedSkill, setSelectedSkill] = useState({})
+    const skillInteger = parseInt(userInfo.skill)
+    const[skillList, setSkillList] = useState({})
     const [profileImage, setProfileImage] = useState('')
     const [profileBio, setProfileBio] = useState('')
     const [isProfileBioModalVisible, setIsProfileBioModalVisible] = useState(false)
@@ -165,6 +170,63 @@ const Profile = () => {
         setSelectedTopic(userInfo.interest)
     }, [userInfo.interest])
 
+    const getSkills = async (name) => {
+        axios({
+            method: 'GET', 
+            url:`${BASE_URL}/skill/getByName?name=${name}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then((res) => {
+            setSkillList(res.data)
+        })
+        .catch((err) => {
+            console.log('Cannot get the skill list', err)
+        })
+    }
+
+    const saveSkills = async (name) => {
+        const selectedTopicString = Object.keys(selectedSkills).join(',')
+
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/user/editSkills`,
+            data: {
+                userId: userId,
+                selectedTopic: selectedTopicString,
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                Object.keys(selectedSkill).map((key) => {
+                    if (selectedSkill[key] === res.data[key]) {
+                        setSelectedSkill(res.data)
+                    }
+                })
+            })
+            .catch((err) => {
+                console.log('cannot save in' + err)
+            })
+    }
+
+    useEffect(() => {
+        // check if the selected skill is empty
+        if (
+            selectedSkill !== undefined &&
+            Object.keys(selectedSkill).length !== 0
+        ) {
+            saveSkills()
+        }
+    }, [selectedSkill])
+
+    useEffect(() => {
+        setSelectedSkill(userInfo.skill)
+    }, [userInfo.skill])
+
+
     useEffect(() => {
         if (userInfo.image != null) {
             setProfileImage(userInfo.image)
@@ -187,6 +249,10 @@ const Profile = () => {
 
     const editProfileInterest = () => {
         setIsTopicSelectorModalVisible(true)
+    }
+
+    const editProfileSkill = () => {
+        setIsSkillSelectorModalVisible(true);
     }
 
     const formatDob = (dob) => {
@@ -444,6 +510,24 @@ const Profile = () => {
                                     }
                                     selectedTopic={selectedTopic}
                                     setSelectedTopic={setSelectedTopic}
+                                />
+                            </Modal>
+                           
+                            <Modal
+                                presentationStyle="pageSheet"
+                                visible={IsSkillSelectorModalVisible}
+                                transparent={false}
+                                animationType="slide"
+                            >
+                                {/* safe area? */}
+
+                                <SkillSelector
+                                    key={Math.random()}
+                                    setModalVisibility={
+                                        setIsSkillSelectorModalVisible
+                                    }
+                                    selectedSkill={selectedSkill}
+                                    setSelectedSkill ={setSelectedSkill}
                                 />
                             </Modal>
                         </>

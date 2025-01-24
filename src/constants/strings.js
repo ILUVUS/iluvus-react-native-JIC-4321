@@ -168,6 +168,7 @@ export default {
     profesional_account: 'Profesional',
     dob_details: 'Date of Birth:',
     interests_details: 'Interests:',
+    skills_details: 'Skills:',
 
     // homepage
     no_post_alert: 'No post available.',
