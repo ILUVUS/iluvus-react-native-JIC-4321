@@ -15,8 +15,19 @@ export default PersonalBioEditor = ({
                                        userId,
                                        profileBio,
                                        setProfileBio,
+                                       jobStatus,
+                                       setJobStatus,
+                                       jobDetails,
+                                       setJobDetails,
+                                       relationshipStatus,
+                                       setRelationshipStatus,
                                    }) => {
-    const [editedBio, setEditedBio] = useState(profileBio)
+    const [editedBio, setEditedBio] = useState(profileBio);
+    const [editedJobStatus, setEditedJobStatus] = useState(jobStatus);
+    const [editedJobDetails, setEditedJobDetails] = useState(jobDetails);
+    const [editedRelationshipStatus, setEditedRelationshipStatus] = useState(
+        relationshipStatus
+    );
 
     const editProfileBioHandler = async () => {
         if (editedBio != null) {
@@ -26,18 +37,25 @@ export default PersonalBioEditor = ({
                 data: {
                     userId: userId,
                     bio: String(editedBio),
+                    jobStatus: editedJobStatus,
+                    jobDetails: editedJobDetails,
+                    relationshipStatus: editedRelationshipStatus,
                 },
                 headers: {
                     'Content-Type': 'application/json',
                 },
             })
-                .then((res) => {
-                    Alert.alert('Successful', 'Personal Bio updated')
-                    setProfileBio(editedBio)
-                })
-                .catch((err) => {
-                    Alert.alert('Unsuccessful', 'Personal Bio not updated')
-                })
+            .then((res) => {
+                Alert.alert('Successful', 'Profile updated');
+                setProfileBio(editedBio);
+                setJobStatus(editedJobStatus);
+                setJobDetails(editedJobDetails);
+                setRelationshipStatus(editedRelationshipStatus);
+                setModalVisibility(false);
+            })
+            .catch((err) => {
+                Alert.alert('Unsuccessful', 'Profile not updated');
+            });
         }
     }
 
@@ -72,6 +90,109 @@ export default PersonalBioEditor = ({
                 }}
                 value={editedBio}
             />
+
+                {/* Edit Job Status */}
+            <View className="mb-5">
+                <Text className="mb-3 text font-bold text-orchid-900">
+                    Job Status
+                </Text>
+                <View className="flex flex-row gap-3">
+                    <TouchableOpacity
+                        className={`rounded-lg px-3 py-2 ${
+                            editedJobStatus === 'Employed'
+                                ? 'bg-orchid-200'
+                                : 'bg-gray-100'
+                        }`}
+                        onPress={() => setEditedJobStatus('Employed')}
+                    >
+                        <Text>Employed</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        className={`rounded-lg px-3 py-2 ${
+                            editedJobStatus === 'Student'
+                                ? 'bg-orchid-200'
+                                : 'bg-gray-100'
+                        }`}
+                        onPress={() => setEditedJobStatus('Student')}
+                    >
+                        <Text>Student</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        className={`rounded-lg px-3 py-2 ${
+                            editedJobStatus === 'Other'
+                                ? 'bg-orchid-200'
+                                : 'bg-gray-100'
+                        }`}
+                        onPress={() => setEditedJobStatus('Other')}
+                    >
+                        <Text>Other</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            {/* Edit Job Details */}
+            {(editedJobStatus === 'Employed' ||
+                editedJobStatus === 'Student') && (
+                <View className="mb-4">
+                    <Text className="mb-2 text font-bold text-orchid-900">
+                        {editedJobStatus === 'Employed'
+                            ? 'Where do you work?'
+                            : 'What do you study?'}
+                    </Text>
+                    <TextInput
+                        className="rounded-lg border border-gray-300 px-4 py-2"
+                        placeholder={
+                            editedJobStatus === 'Employed'
+                                ? 'Enter your job title and company'
+                                : 'Enter your field of study and school'
+                        }
+                        value={editedJobDetails}
+                        onChangeText={setEditedJobDetails}
+                    />
+                </View>
+            )}
+
+            {/* Edit Relationship Status */}
+            <View className="mb-4">
+                <Text className="mb-3 text font-bold text-orchid-900">
+                    Relationship Status
+                </Text>
+                <View className="flex flex-row gap-3">
+                    <TouchableOpacity
+                        className={`rounded-lg px-3 py-2 ${
+                            editedRelationshipStatus === 'Single'
+                                ? 'bg-orchid-200'
+                                : 'bg-gray-100'
+                        }`}
+                        onPress={() => setEditedRelationshipStatus('Single')}
+                    >
+                        <Text>Single</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        className={`rounded-lg px-3 py-2 ${
+                            editedRelationshipStatus === 'In a Relationship'
+                                ? 'bg-orchid-200'
+                                : 'bg-gray-100'
+                        }`}
+                        onPress={() =>
+                            setEditedRelationshipStatus('In a Relationship')
+                        }
+                    >
+                        <Text>In a Relationship</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        className={`rounded-lg px-3 py-2 ${
+                            editedRelationshipStatus === 'Married'
+                                ? 'bg-orchid-200'
+                                : 'bg-gray-100'
+                        }`}
+                        onPress={() => setEditedRelationshipStatus('Married')}
+                    >
+                        <Text>Married</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
             <View // background filler space.
                 style={{
                     flex: 1 // ensures that the main content expands the rest of the available screen height.
