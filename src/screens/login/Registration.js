@@ -64,7 +64,16 @@ const RegistrationScreen = ({}) => {
 
     const navigation = useNavigation()
 
+    const [acceptedTerms, setAcceptedTerms] = useState(false)
+
+    const [showTermsModal, setShowTermsModal] = useState(false)
+
     const handleRegister = () => {
+
+        if (!acceptedTerms) {
+            Alert.alert('Terms and Conditions', 'Please accept the Terms and Conditions before continuing.')
+            return
+        }
         const packedData = {
             username: String(username),
             email: String(email),
@@ -293,17 +302,103 @@ const RegistrationScreen = ({}) => {
                 />
 
                 {!passwordValidator(password) && (
-                    <Text className="py-2 text-xs text-red-600">
+                    <Text className= "py-2 text-xs text-red-600">
                         {STRINGS.password_alert}
                     </Text>
                 )}
+
+                 <View className="mt-5 flex flex-row items-center">
+                    <Switch
+                        value= {acceptedTerms}
+                        onValueChange= {(val) => setAcceptedTerms(val)}
+                        trackColor= {{ false: '#767577', true: COLORS['orchid'][300] }}
+                        thumbColor = {acceptedTerms ? COLORS['gold'][900] : COLORS['gold'][100]}
+                    />
+                    <Text style= {{ marginLeft: 8, color: COLORS['orchid'][900] }}>
+                        I accept the Terms and Conditions
+                    </Text>
+                </View>
+
+                <TouchableOpacity onPress= {() => setShowTermsModal(true)}>
+                    <Text
+                        style= {{
+                            color: 'blue',
+                            textDecorationLine: 'underline',
+                            marginTop: 6,
+                        }}
+                    >
+                        View Terms and Conditions
+                    </Text>
+                </TouchableOpacity>
+
+                <Modal
+                    visible= {showTermsModal}
+                    transparent
+                    animationType= "slide"
+                    onRequestClose={() => setShowTermsModal(false)}
+                >
+
+                    <View
+                        style={{
+                            flex: 1,
+                             backgroundColor: 'white',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <View
+                            style={{
+                                backgroundColor: 'white',
+                                borderRadius: 10,
+                                borderColor: 'orchid',
+                                padding: 16,
+                                width: '90%',
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: 16,
+                                    fontWeight: 'bold',
+                                    marginBottom: 10,
+                                    color: COLORS['orchid'][900],
+                                }}
+                            >
+                                Terms and Conditions
+                            </Text>
+                            <ScrollView style={{ maxHeight: 250 }}>
+                                <Text
+                                    style={{
+                                        color: COLORS['orchid'][900],
+                                        marginBottom: 20,
+                                    }}
+                                >
+                                    1. You must be at least 18 years old.{'\n'}
+                                    2. By using this app, you agree to treat every one with respect{'\n'}
+                                    3. You also agree to the rest: {'\n'}
+                                </Text>
+                            </ScrollView>
+                            <TouchableOpacity
+                                style={{
+                                    alignSelf: 'flex-end',
+                                    padding: 8,
+                                    backgroundColor: COLORS['orchid'][100],
+                                    borderRadius: 8,
+                                }}
+                                onPress={() => setShowTermsModal(false)}
+                            >
+                                <Text style={{ color: COLORS['orchid'][900] }}>Close</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
 
                 {nameValidator(fName) &&
                 nameValidator(lName) &&
                 dobValidator(DOB) &&
                 emailValidator(email) &&
                 nameValidator(username) &&
-                passwordValidator(password) ? (
+                passwordValidator(password) &&
+                acceptedTerms  ? (
                     <View className="my-5 flex items-center">
                         <TouchableOpacity
                             className="flex w-fit items-center rounded-3xl bg-gold-900 px-5 py-4 align-middle shadow-md shadow-slate-200"
@@ -318,6 +413,7 @@ const RegistrationScreen = ({}) => {
                     <View className="mt-3 rounded-xl bg-orchid-100 p-3 shadow shadow-slate-200">
                         <Text className="text-base text-red-500">
                             {STRINGS.registration_button_alert}
+                            {!acceptedTerms && ' (Must accept T&C)'}
                         </Text>
                     </View>
                 )}
