@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { BASE_URL } from '@env'
+import { Alert } from 'react-native';
+
 import { ScrollView } from 'react-native-gesture-handler'
 import { RefreshControl } from 'react-native'
 import { useCallback } from 'react'
@@ -30,6 +32,7 @@ import STRINGS from '../../constants/strings'
 import Constants from 'expo-constants'
 import { useHeaderHeight } from '@react-navigation/elements'
 import PersonalBioEditor from './PersonalBioEditor';
+import * as ImagePicker from 'expo-image-picker';
 
 const Profile = () => {
     const [userId, setUserId] = useState('')
@@ -44,6 +47,7 @@ const Profile = () => {
     const [jobStatus, setJobStatus] = useState('');
 const [jobDetails, setJobDetails] = useState('');
 const [profileBio, setProfileBio] = useState('');
+const [profileImage, setProfileImage] = useState('');
 
 const [relationshipStatus, setRelationshipStatus] = useState('');
 const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
@@ -89,7 +93,55 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 setVerify(false)
             })
     }
+    const handlePickImage = async () => {
+        // // Request media library permissions
+        // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        // if (status !== 'granted') {
+        //     Alert.alert(
+        //         'Permission Required',
+        //         'We need media library permissions to let you pick an image.'
+        //     );
+        //     return;
+        // }
 
+        // Open media library
+        try {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                base64: true,
+                aspect: [1, 1], // Square image
+                quality: 1,
+            });
+
+            if (!result.canceled) {
+                const base64Image = result.assets[0].base64;
+                handleUploadImage(base64Image);
+            }
+        } catch (error) {
+            console.error('Error picking an image:', error);
+            Alert.alert('Error', 'Unable to pick an image. Please try again.');
+        }
+    };
+
+    const handleUploadImage = async (base64Image) => {
+        try {
+            const response = await axios.post(`${BASE_URL}/user/editProfileImage`, {
+                userId,
+                image: base64Image,
+            });
+            if (response.status === 200) {
+                Alert.alert('Success', 'Profile image updated successfully!');
+                setProfileImage(base64Image); // Update the profile image locally
+                getUserInfo(userId); // Refresh user info
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            Alert.alert('Error', 'Failed to update the profile image. Please try again.');
+        }
+    };
+    
+    
     const getTopics = async (name) => {
         axios({
             method: 'GET',
@@ -218,25 +270,18 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                             >
                                 <View className="height-fit relative w-fit">
                                     <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
-                                        {userInfo.gender === 'Female' && (
-                                            <Image
-                                                source={profile_icon_f}
-                                                className="h-40 w-40 rounded-full "
-                                            />
-                                        )}
-                                        {userInfo.gender === 'Male' && (
-                                            <Image
-                                                source={profile_icon_m}
-                                                className="h-40 w-40 rounded-full "
-                                            />
-                                        )}
-                                        {userInfo.gender !== 'Female' &&
-                                            userInfo.gender !== 'Male' && (
-                                                <Image
-                                                    source={profile_icon_x}
-                                                    className="h-40 w-40 rounded-full "
-                                                />
-                                            )}
+                                    <Image
+    source={
+      userInfo?.image && userInfo.image.trim().length
+        ? { uri: `data:image/jpeg;base64,${userInfo.image}` }
+        : userInfo.gender === 'Female'
+          ? profile_icon_f
+          : userInfo.gender === 'Male'
+            ? profile_icon_m
+            : profile_icon_x
+    }
+    className="h-40 w-40 rounded-full"
+  />
                                     </View>
                                     {verify && (
                                         <View className="absolute bottom-3 right-1">
@@ -248,6 +293,8 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                         </View>
                                     )}
                                 </View>
+
+
 
                                 <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
     <View className="mb-1 flex flex-row gap-2">
@@ -300,6 +347,32 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     />
 </TouchableOpacity>
 
+<TouchableOpacity onPress={handlePickImage}>
+    <View className="flex flex-col items-center">
+        <View className="mt-2">
+            <TouchableOpacity
+                style={{
+                    backgroundColor: COLORS['orchid'][800],
+                    borderRadius: 20,
+                    paddingVertical: 8,
+                    paddingHorizontal: 12,
+                    shadowOpacity: 0.25,
+                    shadowRadius: 4,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                }}
+                onPress={handlePickImage}
+            >
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                    Change Profile Photo
+                </Text>
+            </TouchableOpacity>
+        </View>
+    </View>
+</TouchableOpacity>
+
+
+
 
 </View>
 
@@ -324,9 +397,12 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                             {STRINGS.profesional_account}
                                         </Text>
                                     )}
-                                    <Text className="text-base text-orchid-800 ">
-                                        {}
-                                    </Text>
+                                   <Text
+    className="text-base text-orchid-800 bg-white px-2 py-1 rounded-md shadow"
+>
+    {profileBio}
+</Text>
+
                                 </View>
 
                                 <View className="flex flex-row items-center justify-center gap-5"></View>

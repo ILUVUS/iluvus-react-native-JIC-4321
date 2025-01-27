@@ -38,7 +38,7 @@
     "expo": "^52.0.7",
     "expo-av": "~15.0.1",
     "expo-image-loader": "~5.0.0",
-    "expo-image-picker": "~16.0.2",
+    "expo-image-picker": "~16.0.4",
     "expo-splash-screen": "~0.29.11",
     "expo-status-bar": "~2.0.0",
     "expo-updates": "~0.26.7",
