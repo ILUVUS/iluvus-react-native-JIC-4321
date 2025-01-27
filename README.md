@@ -123,6 +123,30 @@ npm start
 or scan the QR Code on the output with phone camera to run on Expo application.
 
 # Release Notes
+## Version 0.7.0
+
+### Features
+
+-  Users can now set their profile picture for their account
+-  Users can now add a personal bio to their profile page
+-  Users can now display both their skills and interests on their profile page
+-  Users can now toggle to set their profile settings to be general or professional
+-  Users can now view and agree to the terms and conditions of using the application upon account creation
+-  Users can edit their profile to display their job and relationship status if needed
+  
+### Bug Fixes
+
+- Interests list topics in both the community and profile screen were not loading when users looked up topics
+- Google Cloud Deployment was not syncing up with local environment testing
+- Profile Icon (no picture) was not loading properly anytime the user navigated to the screen
+
+### Known Issues
+
+-   Loading time for images and videos too long
+-   Announcement icon in community posts not working
+-   Community Posts not showing up on the posts screen
+-  "Forgot my password" link not working on the login screen
+
 ## Version 0.6.0
 
 ### New Features
@@ -143,13 +167,6 @@ or scan the QR Code on the output with phone camera to run on Expo application.
 -   Switching between default icons and user inputed images when entering community page, viewing posts 
 -   Loading time for images and videos too long
 -   Profile not loading properly unless you make a post first
-
-### Rationale for v.0.6.0 Feature Choices
-Overall, Communities are integral to providing support and recognition in everyday life – especially for marginalized individuals
-
--   Searching For Professiona & General Communities:  Allows users the essential option of finding communities that cater to their personal interests - this typically falls into general and professional - and provides the essential foundation for target users to personalize their experience.
--   Joining Communities: The first action that a user will want to do upon finding an interesting community - users can feel they are part of a chosen community and connect with people who share similar experiences, and interests. This and the leave feature create the backbone for the next core features we will be focusing on building - applications to speak, advanced moderation within communities etc.
--   Leaving Communities: Essential to supporting users freedom of movement - users should be able to leave any community they wish to for whatever reason without any questions as to why, when, or any other barriers and move on with their experience on the app.
 
 ## Version 0.5.0
 
