@@ -6,43 +6,40 @@ import {
     KeyboardAvoidingView,
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { BASE_URL } from '@env'
 import { Alert } from 'react-native';
 
 import { ScrollView } from 'react-native-gesture-handler'
 import { RefreshControl } from 'react-native'
-import { useCallback } from 'react'
-import { ImageBackground } from 'react-native'
+import { ImageBackground, Image, Keyboard, Modal } from 'react-native'
 import profileBg from '../../../assets/images/profileBg.png'
-import { Image } from 'react-native'
-import { Ionicons } from '@expo/vector-icons'
 import profile_icon_f from '../../../assets/images/profile_icon_f.png'
 import profile_icon_m from '../../../assets/images/profile_icon_m.png'
 import profile_icon_x from '../../../assets/images/profile_icon_x.png'
-import { Keyboard } from 'react-native'
 import COLORS from '../../constants/colors'
 import { faAward } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { Modal } from 'react-native'
 import InterestSelector from './InterestSelector'
 import SIZES from '../../constants/sizes'
 import STRINGS from '../../constants/strings'
+import { Ionicons } from '@expo/vector-icons'
 import Constants from 'expo-constants'
 import { useHeaderHeight } from '@react-navigation/elements'
-import PersonalBioEditor from './PersonalBioEditor';
+import PersonalBioEditor from './PersonalBioEditor'
+
+// -- NEW IMPORT for SkillSelector
+import SkillSelector from './SkillSelector'
 import * as ImagePicker from 'expo-image-picker';
 
 const Profile = () => {
     const [userId, setUserId] = useState('')
     const [userInfo, setUserInfo] = useState({})
     const [refreshing, setRefreshing] = useState(false)
-    const [isTopicSelectorModalVisible, setIsTopicSelectorModalVisible] =
-        useState(false)
+    const [isTopicSelectorModalVisible, setIsTopicSelectorModalVisible] = useState(false)
     const [verify, setVerify] = useState(false)
     const [selectedTopic, setSelectedTopic] = useState({})
-    const interestInteger = parseInt(userInfo.interest)
     const [interestList, setInterestList] = useState({})
     const [jobStatus, setJobStatus] = useState('');
 const [jobDetails, setJobDetails] = useState('');
@@ -85,7 +82,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 'Content-Type': 'application/json',
             },
         })
-            .then((res) => {
+            .then(() => {
                 setVerify(true)
             })
             .catch((err) => {
@@ -158,9 +155,11 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
             })
     }
 
+    // ---------------------------
+    // PERSIST INTERESTS (existing)
+    // ---------------------------
     const saveInterests = async () => {
         const selectedTopicString = Object.keys(selectedTopic).join(',')
-
         axios({
             method: 'POST',
             url: `${BASE_URL}/user/editInterest`,
@@ -180,19 +179,47 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 })
             })
             .catch((err) => {
-                console.log('cannot save in' + err)
+                console.log('cannot save interest ' + err)
             })
     }
-
     useEffect(() => {
-        // check if the selected topic is empty
-        if (
-            selectedTopic !== undefined &&
-            Object.keys(selectedTopic).length !== 0
-        ) {
+        if (selectedTopic && Object.keys(selectedTopic).length !== 0) {
             saveInterests()
         }
     }, [selectedTopic])
+
+    // ---------------------------
+    // PERSIST SKILLS (new)
+    // ---------------------------
+    const saveSkills = async () => {
+        // Turn { '0': 'JavaScript', '1': 'Python' } -> "JavaScript,Python"
+        const skillArray = Object.keys(selectedSkills).map((key) => selectedSkills[key])
+        const selectedSkillsString = skillArray.join(',')
+
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/user/editSkills`,
+            data: {
+                userId: userId,
+                selectedSkills: selectedSkillsString,
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(() => {
+                // If you need to handle the response, do it here
+                // console.log('Skills saved successfully')
+            })
+            .catch((err) => {
+                console.log('cannot save skills ' + err)
+            })
+    }
+    useEffect(() => {
+        if (selectedSkills && Object.keys(selectedSkills).length !== 0) {
+            saveSkills()
+        }
+    }, [selectedSkills])
 
     useEffect(() => {
         if (userId !== '') {
@@ -209,14 +236,24 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 'Content-Type': 'application/json',
             },
         })
-        .then((res) => {
-            const data = res.data;
-            setUserInfo(data);
-            setProfileBio(data.bio || ''); 
-            setJobStatus(data.jobStatus || '');
-            setJobDetails(data.jobDetails || '');
-            setRelationshipStatus(data.relationshipStatus || '');
-        })
+            .then((res) => {
+                const data = res.data
+                setUserInfo(data)
+                setProfileBio(data.bio || '')
+                setJobStatus(data.jobStatus || '')
+                setJobDetails(data.jobDetails || '')
+                setRelationshipStatus(data.relationshipStatus || '')
+
+                // If the server returns data.skills as an array
+                if (data.skills && Array.isArray(data.skills)) {
+                    // Convert that array to an object with numeric keys
+                    const skillObj = {}
+                    data.skills.forEach((skill, idx) => {
+                        skillObj[idx] = skill
+                    })
+                    setSelectedSkills(skillObj)
+                }
+            })
             .catch((err) => {
                 console.log('Cannot get user info' + err)
             })
@@ -236,7 +273,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     }
 
     return (
-        <View className="flex h-screen w-screen">
+        <View style={{ flex: 1 }} className="flex h-screen w-screen">
             <KeyboardAvoidingView
                 behavior="padding"
                 style={{ flex: 1 }}
@@ -245,10 +282,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 <ScrollView
                     style={{ flex: 1 }}
                     refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
                     horizontal={false}
                     contentContainerStyle={{
@@ -297,47 +331,47 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
 
 
                                 <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
-    <View className="mb-1 flex flex-row gap-2">
-        <Text className="mb-2 text-2xl font-bold text-orchid-900">
-            {STRINGS.job_relationship_details}
-        </Text>
-    </View>
+                                    <View className="mb-1 flex flex-row gap-2">
+                                        <Text className="mb-2 text-2xl font-bold text-orchid-900">
+                                            {STRINGS.job_relationship_details}
+                                        </Text>
+                                    </View>
 
-    {/* Job Status */}
-    <View className="mb-2 flex flex-col items-start justify-center gap-2">
-        <View className="flex flex-row items-start justify-start">
-            <Text className="mr-3 text-base font-semibold text-orchid-800">
-                Job Status:
-            </Text>
-            <Text className="text-base text-orchid-800">
-                {jobStatus || 'Not specified'}
-            </Text>
-        </View>
-        {jobStatus !== 'Other' && jobDetails && (
-            <View className="flex flex-row items-start justify-start">
-                <Text className="mr-3 text-base font-semibold text-orchid-800">
-                    {jobStatus === 'Employed'
-                        ? 'Job Details:'
-                        : 'Field of Study:'}
-                </Text>
-                <Text className="text-base text-orchid-800">
-                    {jobDetails}
-                </Text>
-            </View>
-        )}
-    </View>
+                                    {/* Job Status */}
+                                    <View className="mb-2 flex flex-col items-start justify-center gap-2">
+                                        <View className="flex flex-row items-start justify-start">
+                                            <Text className="mr-3 text-base font-semibold text-orchid-800">
+                                                Job Status:
+                                            </Text>
+                                            <Text className="text-base text-orchid-800">
+                                                {jobStatus || 'Not specified'}
+                                            </Text>
+                                        </View>
+                                        {jobStatus !== 'Other' && jobDetails && (
+                                            <View className="flex flex-row items-start justify-start">
+                                                <Text className="mr-3 text-base font-semibold text-orchid-800">
+                                                    {jobStatus === 'Employed'
+                                                        ? 'Job Details:'
+                                                        : 'Field of Study:'}
+                                                </Text>
+                                                <Text className="text-base text-orchid-800">
+                                                    {jobDetails}
+                                                </Text>
+                                            </View>
+                                        )}
+                                    </View>
 
-    {/* Relationship Status */}
-    <View className="mb-2 flex flex-col items-start justify-center gap-2">
-        <View className="flex flex-row items-start justify-start">
-            <Text className="mr-3 text-base font-semibold text-orchid-800">
-                Relationship Status:
-            </Text>
-            <Text className="text-base text-orchid-800">
-                {relationshipStatus || 'Not specified'}
-            </Text>
-        </View>
-    </View>
+                                    {/* Relationship Status */}
+                                    <View className="mb-2 flex flex-col items-start justify-center gap-2">
+                                        <View className="flex flex-row items-start justify-start">
+                                            <Text className="mr-3 text-base font-semibold text-orchid-800">
+                                                Relationship Status:
+                                            </Text>
+                                            <Text className="text-base text-orchid-800">
+                                                {relationshipStatus || 'Not specified'}
+                                            </Text>
+                                        </View>
+                                    </View>
 
     <TouchableOpacity onPress={() => setIsJobRelationshipModalVisible(true)}>
     <Ionicons
@@ -382,15 +416,6 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                         <Text className="text-2xl font-semibold text-white shadow shadow-orchid-600">
                                             {userInfo.lname}, {userInfo.fname}
                                         </Text>
-                                        {/* <Text className="text-base text-orchid-800 shadow shadow-orchid-600">
-                                            {verify && (
-                                                <FontAwesomeIcon
-                                                    icon={faAward}
-                                                    size={30}
-                                                    color={COLORS['gold'][900]}
-                                                />
-                                            )}
-                                        </Text> */}
                                     </View>
                                     {verify && (
                                         <Text className="text-lg italic text-white shadow shadow-orchid-600">
@@ -405,7 +430,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
 
                                 </View>
 
-                                <View className="flex flex-row items-center justify-center gap-5"></View>
+                                <View className="flex flex-row items-center justify-center gap-5" />
                             </ImageBackground>
 
                             <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
@@ -426,6 +451,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                     </View>
                                 </View>
 
+                                {/* Interests */}
                                 <View className="mb-3 flex flex-row items-center gap-2">
                                     <Text className="text-base font-semibold text-orchid-800">
                                         {STRINGS.interests_details}
@@ -440,62 +466,103 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                 </View>
                                 <View className="my-1 flex flex-grow flex-row flex-wrap gap-2">
                                     {selectedTopic &&
-                                        Object.keys(selectedTopic).map(
-                                            (key) => {
-                                                return (
-                                                    <View
-                                                        key={key}
-                                                        className="rounded-full bg-orchid-100 px-3 py-1 "
-                                                    >
-                                                        <Text className="text-base text-orchid-900">
-                                                            {selectedTopic[key]}
-                                                        </Text>
-                                                    </View>
-                                                )
-                                            }
-                                        )}
+                                        Object.keys(selectedTopic).map((key) => {
+                                            return (
+                                                <View
+                                                    key={key}
+                                                    className="rounded-full bg-orchid-100 px-3 py-1 "
+                                                >
+                                                    <Text className="text-base text-orchid-900">
+                                                        {selectedTopic[key]}
+                                                    </Text>
+                                                </View>
+                                            )
+                                        })}
+                                </View>
+
+                                {/* Skills */}
+                                <View className="mb-3 flex flex-row items-center gap-2">
+                                    <Text className="text-base font-semibold text-orchid-800">
+                                        Skills
+                                    </Text>
+                                    <TouchableOpacity
+                                        onPress={() => setIsSkillSelectorModalVisible(true)}
+                                    >
+                                        <Ionicons
+                                            name="create-outline"
+                                            size={SIZES.mediumIconSize}
+                                            color={COLORS['orchid'][900]}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                                <View className="my-1 flex flex-grow flex-row flex-wrap gap-2">
+                                    {selectedSkills &&
+                                        Object.keys(selectedSkills).map((key) => {
+                                            return (
+                                                <View
+                                                    key={key}
+                                                    className="rounded-full bg-orchid-100 px-3 py-1 "
+                                                >
+                                                    <Text className="text-base text-orchid-900">
+                                                        {selectedSkills[key]}
+                                                    </Text>
+                                                </View>
+                                            )
+                                        })}
                                 </View>
                             </View>
 
+                            {/* INTERESTS MODAL */}
                             <Modal
                                 presentationStyle="pageSheet"
                                 visible={isTopicSelectorModalVisible}
                                 transparent={false}
                                 animationType="slide"
                             >
-                                {/* safe area? */}
-
                                 <InterestSelector
                                     key={Math.random()}
-                                    setModalVisibility={
-                                        setIsTopicSelectorModalVisible
-                                    }
+                                    setModalVisibility={setIsTopicSelectorModalVisible}
                                     selectedTopic={selectedTopic}
                                     setSelectedTopic={setSelectedTopic}
                                 />
                             </Modal>
 
+                            {/* SKILLS MODAL */}
+                            <Modal
+                                presentationStyle="pageSheet"
+                                visible={isSkillSelectorModalVisible}
+                                transparent={false}
+                                animationType="slide"
+                            >
+                                <SkillSelector
+                                    setModalVisibility={setIsSkillSelectorModalVisible}
+                                    selectedSkills={selectedSkills}
+                                    setSelectedSkills={setSelectedSkills}
+                                />
+                            </Modal>
+
+                            {/* JOB/RELATIONSHIP MODAL */}
                             {isJobRelationshipModalVisible && (
-    <Modal
-        presentationStyle="pageSheet"
-        visible={isJobRelationshipModalVisible}
-        transparent={false}
-        animationType="slide"
-    >
-        <PersonalBioEditor
-            setModalVisibility={setIsJobRelationshipModalVisible}
-            userId={userId}
-            profileBio={profileBio}
-            setProfileBio={setProfileBio}
-            jobStatus={jobStatus}
-            setJobStatus={setJobStatus}
-            jobDetails={jobDetails}
-            setJobDetails={setJobDetails}
-            relationshipStatus={relationshipStatus}
-            setRelationshipStatus={setRelationshipStatus}
-        />
-    </Modal>
-)}
+                                <Modal
+                                    presentationStyle="pageSheet"
+                                    visible={isJobRelationshipModalVisible}
+                                    transparent={false}
+                                    animationType="slide"
+                                >
+                                    <PersonalBioEditor
+                                        setModalVisibility={setIsJobRelationshipModalVisible}
+                                        userId={userId}
+                                        profileBio={profileBio}
+                                        setProfileBio={setProfileBio}
+                                        jobStatus={jobStatus}
+                                        setJobStatus={setJobStatus}
+                                        jobDetails={jobDetails}
+                                        setJobDetails={setJobDetails}
+                                        relationshipStatus={relationshipStatus}
+                                        setRelationshipStatus={setRelationshipStatus}
+                                    />
+                                </Modal>
+                            )}
                         </>
                     ) : (
                         <ActivityIndicator />
