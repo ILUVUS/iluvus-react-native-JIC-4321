@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "newArchEnabled": true,
     "userInterfaceStyle": "light",
     "plugins": [
       "expo-image-picker",
@@ -52,5 +53,6 @@
     "updates": {
       "url": "https://u.expo.dev/a2c46b59-3ebc-4799-9324-3b748c8a23fe"
     }
+    
   }
 }
