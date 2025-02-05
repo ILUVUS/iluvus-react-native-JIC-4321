@@ -28,7 +28,6 @@ import { Ionicons } from '@expo/vector-icons'
 import Constants from 'expo-constants'
 import { useHeaderHeight } from '@react-navigation/elements'
 import PersonalBioEditor from './PersonalBioEditor'
-
 // -- NEW IMPORT for SkillSelector
 import SkillSelector from './SkillSelector'
 import * as ImagePicker from 'expo-image-picker';
@@ -49,6 +48,10 @@ const [profileImage, setProfileImage] = useState('');
 const [relationshipStatus, setRelationshipStatus] = useState('');
 const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     useState(false);
+
+    // -- NEW STATES for SKILLS
+    const [selectedSkills, setSelectedSkills] = useState({})
+    const [isSkillSelectorModalVisible, setIsSkillSelectorModalVisible] = useState(false)
     useEffect(() => {
         getVerified()
         const findUserInfoById = async () => {
@@ -105,7 +108,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
                 base64: true,
-                aspect: [1, 1], // Square image
+                aspect: [1, 1], // Square image2w
                 quality: 1,
             });
 
@@ -121,7 +124,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
 
     const handleUploadImage = async (base64Image) => {
         try {
-            const response = await axios.post(`${BASE_URL}/user/editProfileImage`, {
+            const response = await axios.post(`${BASE_URL}/user/editProfileImage`, {    
                 userId,
                 image: base64Image,
             });
