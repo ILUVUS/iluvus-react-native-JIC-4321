@@ -49,8 +49,6 @@ const [profileImage, setProfileImage] = useState('');
 const [relationshipStatus, setRelationshipStatus] = useState('');
 const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     useState(false);
-
-
     useEffect(() => {
         getVerified()
         const findUserInfoById = async () => {
