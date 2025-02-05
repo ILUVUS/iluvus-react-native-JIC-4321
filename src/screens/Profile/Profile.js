@@ -50,7 +50,9 @@ const [relationshipStatus, setRelationshipStatus] = useState('');
 const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     useState(false);
 
-
+    // -- NEW STATES for SKILLS
+    const [selectedSkills, setSelectedSkills] = useState({})
+    const [isSkillSelectorModalVisible, setIsSkillSelectorModalVisible] = useState(false)
     useEffect(() => {
         getVerified()
         const findUserInfoById = async () => {
