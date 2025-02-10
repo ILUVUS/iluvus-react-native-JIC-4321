@@ -7,6 +7,7 @@ import {
     TextInput,
     Alert,
     Image,
+    Linking,
 } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faFlag, faStar } from '@fortawesome/free-solid-svg-icons'
@@ -32,6 +33,7 @@ import {
 import { useNavigation } from '@react-navigation/native'
 
 const PostItem = ({ post, userId, displayCommunityName }) => {
+    console.log('POST DEBUG:', post);
     const [isCommentVisible, setIsCommentVisible] = useState(false)
     const [upliftNumber, setUpliftNumber] = useState(0)
     const [commentsNumber, setCommentsNumber] = useState(0)
@@ -44,6 +46,8 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
     const [community, setCommunity] = useState({})
 
     const navigate = useNavigation()
+
+   
 
     useEffect(() => {
         setTaggedUsernames([])
@@ -62,6 +66,15 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
         // console.log('topic id', post.topicId)
         getPostTopicById(post.topicId)
     }, [post.topicId])
+
+
+    const openSourceLink = () => {
+        if (post.sourceLink && post.sourceLink.trim().length > 0) {
+            Linking.openURL(post.sourceLink) // (2) NEW
+        } else {
+            Alert.alert('No valid source link provided.')
+        }
+    }
 
     const handleComment = () => {
         setCommentText('')
@@ -224,6 +237,10 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
         }
     }, [post])
 
+    
+
+    
+
     useEffect(() => {
         const commentsLen = post['comments']?.length
         setCommentsNumber(commentsLen)
@@ -290,6 +307,14 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                     <Text className="mb-2 mt-1 text-base text-orchid-700">
                         {post.text}
                     </Text>
+                    {post.sourceLink && (
+                        <TouchableOpacity onPress={openSourceLink}>
+                            <Text className="mb-2 text-sm text-blue-700 underline">
+                                {post.sourceLink}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
+
                     {/* horizontal scroll view for media */}
                     {post.medias && (
                         <ScrollView
