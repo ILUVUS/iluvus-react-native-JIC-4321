@@ -14,6 +14,7 @@ import { faFlag, faStar } from '@fortawesome/free-solid-svg-icons'
 import { faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
+import { faNewspaper } from '@fortawesome/free-solid-svg-icons'
 
 import COLORS from '../../../constants/colors'
 import STRINGS from '../../../constants/strings'
@@ -307,13 +308,6 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                     <Text className="mb-2 mt-1 text-base text-orchid-700">
                         {post.text}
                     </Text>
-                    {post.sourceLink && (
-                        <TouchableOpacity onPress={openSourceLink}>
-                            <Text className="mb-2 text-sm text-blue-700 underline">
-                                {post.sourceLink}
-                            </Text>
-                        </TouchableOpacity>
-                    )}
 
                     {/* horizontal scroll view for media */}
                     {post.medias && (
@@ -411,6 +405,19 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                             size={22}
                         />
                     </TouchableOpacity>
+
+                    {/* CHECK SOURCE BUTTON HERE */}
+                    {post.sourceLink && (
+                        <TouchableOpacity
+                            onPress={() => openSourceLink()}
+                        >
+                            <FontAwesomeIcon
+                                icon={faNewspaper}
+                                color={COLORS.green}
+                                size={22}
+                            />
+                        </TouchableOpacity>
+                    )}
 
                     {/* REPORT BUTTON HERE */}
                     <TouchableOpacity onPress={() => reportConfirm()}>
