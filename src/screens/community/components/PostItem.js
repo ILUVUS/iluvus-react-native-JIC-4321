@@ -162,6 +162,28 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
             })
     }
 
+    const handleShare = () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/post/share`,
+            data: {
+                postId: post.id,
+                userId: userId,
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                Alert.alert('Post Shared')
+                // console.log(res.data)
+            })
+            .catch((err) => {
+                console.log('Cannot Share the post', err)
+            })
+    }
+
+
     const getUserInfo = (userId) => {
         axios({
             method: 'GET',
@@ -396,15 +418,19 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                     </View>
 
                     {/* SHARE BUTTON HERE */}
-                    <TouchableOpacity
-                        onPress={() => console.log('Share button pressed')}
-                    >
-                        <FontAwesomeIcon
-                            icon={faBullhorn}
-                            color={COLORS.blue}
-                            size={22}
-                        />
-                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleShare()}>
+    <FontAwesomeIcon
+        icon={faBullhorn}
+        color={COLORS.blue}
+        size={22}
+    />
+</TouchableOpacity>
+
+{post.sharedBy && post.sharedBy.length > 0 && (
+    <Text className="text-xs text-orchid-600">
+        Shared by {post.sharedBy.length} user(s)
+    </Text>
+)}
 
                     {/* CHECK SOURCE BUTTON HERE */}
                     {post.sourceLink && (
