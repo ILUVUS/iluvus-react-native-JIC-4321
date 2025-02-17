@@ -10,8 +10,9 @@ import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { BASE_URL } from '@env'
 import { Alert } from 'react-native';
-
+import { useRoute } from '@react-navigation/native'
 import { ScrollView } from 'react-native-gesture-handler'
+
 import { RefreshControl } from 'react-native'
 import { ImageBackground, Image, Keyboard, Modal } from 'react-native'
 import profileBg from '../../../assets/images/profileBg.png'
@@ -25,14 +26,19 @@ import InterestSelector from './InterestSelector'
 import SIZES from '../../constants/sizes'
 import STRINGS from '../../constants/strings'
 import { Ionicons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native';
+
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 import Constants from 'expo-constants'
 import { useHeaderHeight } from '@react-navigation/elements'
 import PersonalBioEditor from './PersonalBioEditor'
+
 // -- NEW IMPORT for SkillSelector
 import SkillSelector from './SkillSelector'
 import * as ImagePicker from 'expo-image-picker';
 
-const Profile = () => {
+const Profile = ( ) => {
     const [userId, setUserId] = useState('')
     const [userInfo, setUserInfo] = useState({})
     const [refreshing, setRefreshing] = useState(false)
@@ -44,7 +50,8 @@ const Profile = () => {
 const [jobDetails, setJobDetails] = useState('');
 const [profileBio, setProfileBio] = useState('');
 const [profileImage, setProfileImage] = useState('');
-
+const navigation = useNavigation()
+const [posts, setPosts] = useState([]);
 const [relationshipStatus, setRelationshipStatus] = useState('');
 const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     useState(false);
@@ -66,6 +73,72 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
         }
         findUserInfoById()
     }, [])
+
+    useEffect(() => {
+        getUserId();
+    }, []);
+
+    useEffect(() => {
+        if (userId) {
+            //fetchUserPosts();
+            fetchSharedPosts();
+            //fetchTaggedPosts();
+        }
+    }, [userId]);
+
+    const getUserId = async () => {
+        const id = await AsyncStorage.getItem('userId');
+        setUserId(id);
+    };
+
+    // const fetchUserPosts = async () => {
+    //     axios({
+    //         method: 'GET',
+    //         url: `${BASE_URL}/user/getPosts?userId=${userId}`,
+    //         headers: { 'Content-Type': 'application/json' },
+    //     })
+    //         .then((res) => {
+    //             setPosts((prevPosts) => [...prevPosts, ...res.data.map(post => ({ ...post, type: 'Personal' }))]);
+    //         })
+    //         .catch((err) => {
+    //             console.log('Cannot fetch user posts', err);
+    //         });
+    // };
+
+    const fetchSharedPosts = async () => {
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/post/getSharedPosts?userId=${userId}`,
+            headers: { 'Content-Type': 'application/json' },
+        })
+            .then((res) => {
+                setPosts((prevPosts) => [...prevPosts, ...res.data.map(post => ({ ...post, type: 'Shared' }))]);
+            })
+            .catch((err) => {
+                console.log('Cannot fetch shared posts', err);
+            });
+    };
+    
+
+    // const fetchTaggedPosts = async () => {
+    //     axios({
+    //         method: 'GET',
+    //         url: `${BASE_URL}/user/getTaggedPosts?userId=${userId}`,
+    //         headers: { 'Content-Type': 'application/json' },
+    //     })
+    //         .then((res) => {
+    //             setPosts((prevPosts) => [...prevPosts, ...res.data.map(post => ({ ...post, type: 'Tagged' }))]);
+    //         })
+    //         .catch((err) => {
+    //             console.log('Cannot fetch tagged posts', err);
+    //         });
+    // }
+
+    const navigateToPosts = () => {
+        navigation.navigate('Post', {
+            userId: userId,
+        })
+    }
 
     const onRefresh = useCallback(() => {
         getVerified()
@@ -91,6 +164,9 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 setVerify(false)
             })
     }
+
+
+    
     const handlePickImage = async () => {
         // // Request media library permissions
         // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -568,6 +644,30 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                     ) : (
                         <ActivityIndicator />
                     )}
+
+<Text className="text-2xl font-bold text-orchid-900 mb-4">
+                {STRINGS.profilePosts}
+            </Text>
+            <TouchableOpacity 
+                onPress={navigateToPosts} 
+                className="mb-4 p-2 bg-orchid-900 rounded-full text-center">
+                <Text className="text-white font-bold text-center">View My Posts</Text>
+            </TouchableOpacity>
+            {posts.length > 0 ? (
+                posts.map((post, index) => (
+                    <PostItem
+                        key={index}
+                        post={post}
+                        userId={userId}
+                        displayCommunityName={!!post.community_id}
+                        postType={post.type}
+                    />
+                ))
+            ) : (
+                <Text className="text-lg text-center text-orchid-600">
+                    {STRINGS.noPostsAvailable}
+                </Text>
+            )}
                 </ScrollView>
             </KeyboardAvoidingView>
         </View>
