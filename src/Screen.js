@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 
 import STRINGS from './constants/strings'
-
+import PostScreen from './screens/Profile/PostScreen';  
 import HomeScreen from './screens/HomeScreen'
 import LoginScreen from './screens/login/Login'
 import RegistrationScreen from './screens/login/Registration'
@@ -54,6 +54,14 @@ export default function Screen() {
                         headerShown: false,
                     }}
                 />
+<Stack.Screen
+    name="PostScreen"  // Make sure this matches exactly with navigation.navigate()
+    component={PostScreen}
+    options={{
+        title: "My Posts",
+        headerShown: true,
+    }}
+/>
 
                 <Stack.Screen
                     name={STRINGS.registerscreen}

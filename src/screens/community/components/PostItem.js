@@ -432,6 +432,13 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
     </Text>
 )}
 
+{post.type === 'Shared' && post.author_id !== userId && (
+    <Text style={{ fontStyle: 'italic', color: 'gray' }}>
+        Shared from {post.author_id}
+    </Text>
+)}
+
+
                     {/* CHECK SOURCE BUTTON HERE */}
                     {post.sourceLink && (
                         <TouchableOpacity

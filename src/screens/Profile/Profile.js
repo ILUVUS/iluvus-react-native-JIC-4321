@@ -12,6 +12,7 @@ import { BASE_URL } from '@env'
 import { Alert } from 'react-native';
 import { useRoute } from '@react-navigation/native'
 import { ScrollView } from 'react-native-gesture-handler'
+import PostItem from '../community/components/PostItem';
 
 import { RefreshControl } from 'react-native'
 import { ImageBackground, Image, Keyboard, Modal } from 'react-native'
@@ -63,8 +64,18 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
         getVerified()
         const findUserInfoById = async () => {
             try {
-                const value = await AsyncStorage.getItem('userId')
-                if (value !== null) {
+                const userId = await AsyncStorage.getItem('userId');
+                if (!userId) {
+                    console.error('Error: No userId found in AsyncStorage');
+                    return;
+                }
+                axios.post(`${BASE_URL}/user/verify`, { userId })
+                    .then(() => setVerify(true))
+                    .catch(err => {
+                        console.error('cannot verify', err);
+                        setVerify(false);
+                    });
+                                if (value !== null) {
                     setUserId(value)
                 }
             } catch (e) {
@@ -106,18 +117,21 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     // };
 
     const fetchSharedPosts = async () => {
-        axios({
-            method: 'GET',
-            url: `${BASE_URL}/post/getSharedPosts?userId=${userId}`,
-            headers: { 'Content-Type': 'application/json' },
-        })
-            .then((res) => {
-                setPosts((prevPosts) => [...prevPosts, ...res.data.map(post => ({ ...post, type: 'Shared' }))]);
-            })
-            .catch((err) => {
-                console.log('Cannot fetch shared posts', err);
-            });
+        try {
+            const response = await axios.get(`${BASE_URL}/post/getSharedPosts?userId=${userId}`);
+    
+            // Ensure we get posts that were shared by the user, even if they were not the original author
+            const sharedPosts = response.data.map(post => ({ ...post, type: 'Shared' }));
+    
+            setPosts(prevPosts => [
+                ...prevPosts.filter(post => post.type !== 'Shared'), // Remove old shared posts
+                ...sharedPosts // Append updated shared posts
+            ]);
+        } catch (err) {
+            console.log('Cannot fetch shared posts', err);
+        }
     };
+    
     
 
     // const fetchTaggedPosts = async () => {
@@ -135,10 +149,13 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     // }
 
     const navigateToPosts = () => {
-        navigation.navigate('Post', {
-            userId: userId,
-        })
-    }
+        navigation.navigate('PostScreen', { 
+            userId: userId, 
+            posts: posts // Pass both personal and shared posts
+        });
+    };
+    
+    
 
     const onRefresh = useCallback(() => {
         getVerified()
@@ -156,16 +173,15 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 'Content-Type': 'application/json',
             },
         })
-            .then(() => {
-                setVerify(true)
-            })
-            .catch((err) => {
-                console.log('cannot verify' + err)
-                setVerify(false)
-            })
-    }
-
-
+        .then(() => {
+            setVerify(true);
+        })
+        .catch((err) => {
+            console.log('cannot verify' + err);
+            setVerify(false);
+        });
+    };
+    
     
     const handlePickImage = async () => {
         // // Request media library permissions
@@ -651,23 +667,9 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
             <TouchableOpacity 
                 onPress={navigateToPosts} 
                 className="mb-4 p-2 bg-orchid-900 rounded-full text-center">
-                <Text className="text-white font-bold text-center">View My Posts</Text>
+                <Text className="text-white font-bold text-center">View My Shared Posts</Text>
             </TouchableOpacity>
-            {posts.length > 0 ? (
-                posts.map((post, index) => (
-                    <PostItem
-                        key={index}
-                        post={post}
-                        userId={userId}
-                        displayCommunityName={!!post.community_id}
-                        postType={post.type}
-                    />
-                ))
-            ) : (
-                <Text className="text-lg text-center text-orchid-600">
-                    {STRINGS.noPostsAvailable}
-                </Text>
-            )}
+
                 </ScrollView>
             </KeyboardAvoidingView>
         </View>
