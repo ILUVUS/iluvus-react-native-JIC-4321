@@ -477,7 +477,7 @@ const NewPost = ({
                         pickedImages.map((imageInfo, index) => {
                             return (
                                 <TouchableOpacity
-                                    onPress={() => setImageViewerVisible(true)}
+                                    // Block is executed whenever the user selects a media image from a new post view.
                                     key={index}
                                 >
                                     <View className="relative h-16 w-16 bg-transparent">
