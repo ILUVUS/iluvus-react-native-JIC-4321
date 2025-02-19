@@ -121,11 +121,15 @@ const LoginScreen = () => {
                         {STRINGS.createAnAccount}
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => {}}>
-                    <Text className="mb-1 justify-center align-middle text-sm text-orchid-800 shadow-md shadow-slate-400">
-                        {STRINGS.forgotPassword}
-                    </Text>
-                </TouchableOpacity>
+                <TouchableOpacity
+        onPress={() => {
+            navigation.navigate(STRINGS.forgotPasswordScreen)
+        }}
+    >
+        <Text className="mb-1 justify-center align-middle text-sm text-orchid-800 shadow-md shadow-slate-400">
+            {STRINGS.forgotPassword}
+    </Text>
+</TouchableOpacity>
             </View>
         </CustomKeyboardAvoidingView>
     )
