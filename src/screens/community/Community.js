@@ -1,5 +1,9 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
+import { useRoute } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
+
 
 import axios from 'axios'
 import { BASE_URL } from '@env'
@@ -35,7 +39,7 @@ import { faCheckToSlot } from '@fortawesome/free-solid-svg-icons'
 
 const Community = () => {
     const navigation = useNavigation()
-
+    const route = useRoute()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const [searchValue, setSearchValue] = useState('')
@@ -46,9 +50,16 @@ const Community = () => {
     const [communityListInfo, setCommunityListInfo] = useState([])
 
     useEffect(() => {
-        getVerified()
-        fetchCommunityList()
-    }, [])
+        getVerified();
+        fetchCommunityList();
+    
+        if (route.params?.filters) {
+            setSelectedCommunityType(route.params.filters.selectedCommunityType);
+            setSelectedVisibility(route.params.filters.selectedVisibility);
+            setOwnerSearch(route.params.filters.ownerSearch);
+            applyFilters();
+        }
+    }, [route.params?.filters]);
 
     const onRefresh = React.useCallback(() => {
         setRefreshing(true)
@@ -139,13 +150,32 @@ const Community = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-            })
-            return res.data
+            });
+            const ownerUsername = await getUsername(res.data.ownerId);
+            return {
+                ...res.data,
+                ownerUsername, // Add username to the data
+            };
         } catch (err) {
             console.log(err)
             throw err // re-throw the error to be caught in the calling function
         }
     }
+    const getUsername = async (userId) => {
+        try {
+            const res = await axios({
+                method: 'GET',
+                url: `${BASE_URL}/user/get?userId=${userId}`, // Assuming the API endpoint
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            return res.data.username; // Return the username
+        } catch (err) {
+            console.log(err);
+            return "Unknown"; // Default value if fetching fails
+        }
+    };
 
     const newCommunity = () => {
         navigation.navigate('SetupCommunity')
@@ -180,17 +210,31 @@ const Community = () => {
             className="flex justify-center bg-white align-middle"
             style={{ paddingTop: Constants.statusBarHeight }}
         >
-            <SearchBar
-                placeholder={STRINGS.communitySearchBar}
-                onChangeText={(text) => searchFunction(text)}
-                value={searchValue}
-                containerStyle={[searchBarStyle.containerSearchBar]}
-                inputContainerStyle={searchBarStyle.inputSearchBar}
-                inputStyle={searchBarStyle.input}
-                placeholderTextColor={COLORS['orchid'][400]}
-                searchIcon={searchBarStyle.seachIcon}
-                clearIcon={searchBarStyle.clearIcon}
-            />
+            <View className="flex flex-row items-center justify-between px-4 py-2 bg-white">
+                {/* Search Bar (Shrinking to 85% width) */}
+                <View className="flex-1">
+                    <SearchBar
+                        placeholder={STRINGS.communitySearchBar}
+                        onChangeText={(text) => searchFunction(text)}
+                        value={searchValue}
+                        containerStyle={[searchBarStyle.containerSearchBar, { width: '104%' }]}
+                        inputContainerStyle={searchBarStyle.inputSearchBar}
+                        inputStyle={searchBarStyle.input}
+                        placeholderTextColor={COLORS['orchid'][400]}
+                        searchIcon={searchBarStyle.seachIcon}
+                        clearIcon={searchBarStyle.clearIcon}
+                    />
+                </View>
+
+                {/* Filter Button (Next to Search Bar) */}
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('CommunityFilterScreen')}
+                    className="p-2 bg-orchid-900 rounded-lg ml-2"
+                    style={{ width: 45, height: 45, justifyContent: 'center', alignItems: 'center' }}
+                >
+                    <FontAwesomeIcon icon={faFilter} size={20} color="white" />
+                </TouchableOpacity>
+            </View>
             {!searchValue && (
                 <ScrollView
                     className="h-screen w-screen"
