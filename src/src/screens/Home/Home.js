@@ -70,6 +70,8 @@ const Home = (nav) => {
             })
     }
 
+    
+
     return (
         <>
             <KeyboardAvoidingView
