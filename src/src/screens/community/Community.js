@@ -16,8 +16,10 @@ import {
 
 import { useNavigation } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import { debounce } from 'lodash';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import { debounce } from 'lodash';
+import sampleIcon from '../../../assets/images/sampleicon.jpg';
 import SIZES from '../../constants/sizes'
 import COLORS from '../../constants/colors'
 import STRINGS from '../../constants/strings'
@@ -30,6 +32,7 @@ import {
 } from '../../components/button'
 
 import Constants from 'expo-constants'
+const [searchResultList, setSearchResultList] = useState([]);
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCheckToSlot } from '@fortawesome/free-solid-svg-icons'
 
@@ -44,7 +47,8 @@ const Community = () => {
     const [verify, setVerify] = useState(false)
     const [searchResultList, setSearchResultList] = useState([])
     const [communityListInfo, setCommunityListInfo] = useState([])
-
+    const [userSearchList, setUserSearchList] = useState([]); 
+    
     useEffect(() => {
         getVerified()
         fetchCommunityList()
@@ -58,23 +62,6 @@ const Community = () => {
             setRefreshing(false)
         }, 1000)
     }, [])
-
-    useEffect(() => {
-        axios({
-            method: 'GET',
-            url: `${BASE_URL}/community/search?filter=${searchValue}`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                // console.log(res.data)
-                setSearchResultList(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }, [searchValue])
 
     const fetchCommunityList = async () => {
         axios({
@@ -110,9 +97,39 @@ const Community = () => {
             })
     }
 
+    const searchFunction = debounce(async (text) => {
+        setSearchValue(text);
+        
+        if (text.length === 0) {
+            setSearchResultList([]);
+            setUserSearchList([]);
+            return;
+        }
+    
+        try {
+            const [communityRes, userRes] = await Promise.all([
+                axios.get(`${BASE_URL}/community/search?filter=${text}`),
+                axios.get(`${BASE_URL}/user/search?filter=${text}`)
+            ]);
+    
+            console.log("Community Search Response:", communityRes.data);
+            console.log("User Search Response:", userRes.data);
+    
+            setSearchResultList(communityRes.data || []);
+            setUserSearchList([
+                { id: "1", username: "testuser", fname: "Test", lname: "User", image: null },
+                { id: "2", username: "john_doe", fname: "John", lname: "Doe", image: null }
+            ]);
+            
+    
+        } catch (err) {
+            console.error("Search error:", err);
+        }
+    }, 500);
+    
+
     useEffect(() => {
         setCommunityListInfo([])
-        // make sure data arrive in order
         const promises = Object.keys(communityList).map((key) =>
             getCommunityInfo(key)
         )
@@ -143,7 +160,7 @@ const Community = () => {
             return res.data
         } catch (err) {
             console.log(err)
-            throw err // re-throw the error to be caught in the calling function
+            throw err
         }
     }
 
@@ -166,10 +183,7 @@ const Community = () => {
     const communityClick = (id) => {
         navigation.navigate(STRINGS.communityView, { communityId: id })
     }
-
-    const searchFunction = (text) => {
-        setSearchValue(text)
-    }
+    
 
     const statusBarHeight = StatusBar.currentHeight
     const screenHeight = Dimensions.get('screen').height
@@ -191,137 +205,77 @@ const Community = () => {
                 searchIcon={searchBarStyle.seachIcon}
                 clearIcon={searchBarStyle.clearIcon}
             />
-            {!searchValue && (
-                <ScrollView
-                    className="h-screen w-screen"
-                    contentContainerStyle={{
-                        paddingHorizontal: 5,
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
+           {searchValue && (
+    <ScrollView
+        className="h-screen w-screen"
+        contentContainerStyle={{
+            paddingHorizontal: 5,
+            display: 'flex',
+            justifyContent: 'center',
+        }}
+        refreshControl={
+            <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+            />
+        }
+    >
+        {/* 🔹 Users Section */}
+        <View className="mb-5 bg-gray-100 p-4 rounded-lg shadow-md">
+    <Text className="text-2xl font-bold text-orchid-900 mb-2">Users</Text>
+
+    {console.log("Rendering Users List:", userSearchList)}
+
+    {userSearchList.length > 0 ? (
+        <View className="flex flex-col">
+            {userSearchList.map((user, index) => (
+                <TouchableOpacity 
+                    key={index} 
+                    className="flex flex-row items-center gap-4 p-3 border-b border-gray-300 bg-white rounded-md"
+                    onPress={() => navigation.navigate('UserProfile', { userId: user.id })}
                 >
-                    <View className="my-3 flex flex-row flex-wrap justify-evenly overflow-auto">
+                    <Image
+                        source={user.image ? { uri: `data:image/jpg;base64,${user.image}` } : sampleIcon}
+                        className="h-12 w-12 rounded-full border border-gray-300"
+                    />
+                    <View>
+                        <Text className="text-lg font-semibold">{user.username}</Text>
+                        <Text className="text-gray-500">{user.fname} {user.lname}</Text>
+                    </View>
+                </TouchableOpacity>
+            ))}
+        </View>
+    ) : (
+        <Text className="text-lg text-gray-500 text-center">User Not Found</Text>
+    )}
+</View>
 
-                        <CommunityViewMainButton onPress={() => newCommunity()}>
-                                <Icon
-                                    name="plus"
-                                    size={SIZES.communityIconSize}
-                                    color={COLORS['orchid'][900]}
-                                />
-                                <Text className="mt-1 text-base text-orchid-900">
-                                    {STRINGS.newCommunity}
-                                </Text>
-                        </CommunityViewMainButton>
 
-                        <CommunityViewMainButton
-                            onPress={() => myCreatedGroup()}
+        {/* 🔹 Communities Section (Appears Below Users) */}
+        <View className="mb-5">
+            <Text className="text-2xl font-bold text-orchid-900 mb-2">Communities</Text>
+            <View className="flex flex-row flex-wrap overflow-auto">
+                {searchResultList.length > 0 ? (
+                    searchResultList.map((community, index) => (
+                        <CommunityViewImageButton
+                            key={index}
+                            onPress={() => communityClick(community.id)}
                         >
-                            <Icon
-                                name="users"
-                                size={SIZES.communityIconSize}
-                                color={COLORS['orchid'][900]}
+                            <Image
+                                source={community.image ? { uri: `data:image/jpg;base64,${community.image}` } : communityIcon}
+                                className="h-24 w-24 rounded-3xl"
                             />
-                            <Text className="mt-1 text-base text-orchid-900">
-                                {STRINGS.myGroups}
+                            <Text className="mt-1 text-sm text-orchid-900">
+                                {community.name.length > 12 ? `${community.name.substring(0, 10)}...` : community.name}
                             </Text>
-                        </CommunityViewMainButton>
-                    </View>
+                        </CommunityViewImageButton>
+                    ))
+                ) : (
+                    <Text className="text-lg text-gray-500 text-center">No communities found.</Text>
+                )}
+            </View>
+        </View>
 
-                    <View className="mb-2 ml-5 flex w-screen items-start">
-                        <Text className="text-3xl font-bold text-orchid-900 shadow-md shadow-slate-200">
-                            Communities
-                        </Text>
-                    </View>
-
-                    <View className="flex flex-row flex-wrap overflow-auto">
-                        {communityListInfo.length > 0 ? (
-                            <>
-                                {communityListInfo.map((info, index) => (
-                                    <CommunityViewImageButton
-                                        key={index}
-                                        onPress={() => communityClick(info.id)}
-                                    >
-                                        <Image
-                                            source={
-                                                info.image != null &&
-                                                info.image !== ''
-                                                    ? {
-                                                          uri: `data:image/jpg;base64,${info.image}`,
-                                                      }
-                                                    : communityIcon
-                                            }
-                                            className="h-24 w-24 rounded-3xl"
-                                        />
-                                        <Text className="mt-1 text-sm text-orchid-900">
-                                            {info.name.length > 12
-                                                ? info.name
-                                                      .substring(0, 10)
-                                                      .trim() + '...'
-                                                : info.name}
-                                        </Text>
-                                    </CommunityViewImageButton>
-                                ))}
-                            </>
-                        ) : (
-                            <View className="flex w-full items-center justify-center gap-2 pt-14">
-                                <ActivityIndicator />
-                                <Text>{STRINGS.loading_indicator}</Text>
-                            </View>
-                        )}
-                    </View>
-                </ScrollView>
-            )}
-
-            {searchValue && (
-                <ScrollView
-                    className="h-screen w-screen"
-                    contentContainerStyle={{
-                        paddingHorizontal: 5,
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
-                >
-                    <View className="flex flex-row flex-wrap overflow-auto">
-                        {Object.keys(searchResultList).map((key, index) => (
-                            <CommunityViewImageButton
-                                key={key}
-                                onPress={() => communityClick(key)}
-                            >
-                                {/* fetch community info and set image */}
-
-                                <Image
-                                    source={
-                                        searchResultList[key].image != null &&
-                                        searchResultList[key].image !== ''
-                                            ? {
-                                                  uri: `data:image/jpg;base64,${searchResultList[key].image}`,
-                                              }
-                                            : communityIcon
-                                    }
-                                    className="h-24 w-24 rounded-3xl"
-                                />
-                                <Text className="mt-1 text-base text-orchid-900">
-                                    {searchResultList[key].name.length > 12
-                                        ? searchResultList[key].name
-                                              .substring(0, 10)
-                                              .trim() + '...'
-                                        : searchResultList[key].name}
-                                </Text>
-                            </CommunityViewImageButton>
-                        ))}
-                    </View>
                 </ScrollView>
             )}
         </View>
