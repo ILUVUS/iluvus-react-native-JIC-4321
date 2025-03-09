@@ -362,8 +362,8 @@ const Community = () => {
                                         searchResultList[key].image != null &&
                                         searchResultList[key].image !== ''
                                             ? {
-                                                  uri: `data:image/jpg;base64,${searchResultList[key].image}`,
-                                              }
+                                                uri: `data:image/jpg;base64,${searchResultList[key].image}`,
+                                            }
                                             : communityIcon
                                     }
                                     className="h-24 w-24 rounded-3xl"
@@ -371,8 +371,8 @@ const Community = () => {
                                 <Text className="mt-1 text-base text-orchid-900">
                                     {searchResultList[key].name.length > 12
                                         ? searchResultList[key].name
-                                              .substring(0, 10)
-                                              .trim() + '...'
+                                            .substring(0, 10)
+                                            .trim() + '...'
                                         : searchResultList[key].name}
                                 </Text>
                             </CommunityViewImageButton>
@@ -382,7 +382,6 @@ const Community = () => {
     <Text className="text-lg font-semibold text-blue-900">
         Users Found
     </Text>
-
     {userSearchResults.length === 0 && searchValue.trim() !== '' ? (
         <Text className="text-base text-gray-600 mt-2">
             No users found
@@ -403,7 +402,6 @@ const Community = () => {
         ))
     )}
 </View>
-
                 </ScrollView>
             )}
         </View>
