@@ -71,6 +71,7 @@ const Community = () => {
             // Fetch Users
             axios.get(`${BASE_URL}/user/search?filter=${searchValue}`)
                 .then((res) => {
+                    console.log("User Search API Response:", res.data);
                     setUserSearchResults(res.data || []);
                 })
                 .catch((err) => {
@@ -82,6 +83,7 @@ const Community = () => {
     
         return () => clearTimeout(delayDebounceFn);
     }, [searchValue]);
+    
     
     
 
@@ -390,10 +392,18 @@ const Community = () => {
         userSearchResults.map((user, index) => (
             <TouchableOpacity key={index} onPress={() => navigateToUserProfile(user.id)}>
                 <View className="flex-row items-center mt-2 p-2 bg-white rounded-md">
-                    <Image
-                        source={user.avatar ? { uri: user.avatar } : sampleIcon} 
-                        className="h-10 w-10 rounded-full mr-3"
-                    />
+                <Image
+    source={
+        user.avatar && user.avatar.trim() !== "" 
+            ? { uri: user.avatar.startsWith("data:image/") 
+                ? user.avatar 
+                : `data:image/jpeg;base64,${user.avatar.trim()}` } 
+            : sampleIcon
+    }
+    className="h-10 w-10 rounded-full mr-3"
+/>
+
+
                     <Text className="text-base text-blue-900">
                         {user.fname} {user.lname}
                     </Text>
