@@ -10,9 +10,9 @@ import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { BASE_URL } from '@env'
 import { Alert } from 'react-native';
-import { useRoute } from '@react-navigation/native'
 import { ScrollView } from 'react-native-gesture-handler'
 import PostItem from '../community/components/PostItem';
+import { useRoute } from '@react-navigation/native';
 
 import { RefreshControl } from 'react-native'
 import { ImageBackground, Image, Keyboard, Modal } from 'react-native'
@@ -40,7 +40,6 @@ import SkillSelector from './SkillSelector'
 import * as ImagePicker from 'expo-image-picker';
 
 const Profile = ( ) => {
-    const [userId, setUserId] = useState('')
     const [userInfo, setUserInfo] = useState({})
     const [refreshing, setRefreshing] = useState(false)
     const [isTopicSelectorModalVisible, setIsTopicSelectorModalVisible] = useState(false)
@@ -52,6 +51,11 @@ const [jobDetails, setJobDetails] = useState('');
 const [profileBio, setProfileBio] = useState('');
 const [profileImage, setProfileImage] = useState('');
 const navigation = useNavigation()
+const route = useRoute();
+const { userId: profileUserId } = route.params || {}; // ✅ Only extract userId
+const [userId, setUserId] = useState('');
+const [isCurrentUser, setIsCurrentUser] = useState(false);
+
 const [posts, setPosts] = useState([]);
 const [relationshipStatus, setRelationshipStatus] = useState('');
 const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
@@ -90,12 +94,31 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     }, []);
 
     useEffect(() => {
+        const fetchUserData = async () => {
+            const loggedInUserId = await AsyncStorage.getItem('userId');
+            setIsCurrentUser(loggedInUserId === profileUserId);
+            setUserId(profileUserId || loggedInUserId); 
+        };
+        fetchUserData();
+    }, [profileUserId]);
+    
+
+    useEffect(() => {
         if (userId) {
             //fetchUserPosts();
             fetchSharedPosts();
             //fetchTaggedPosts();
         }
     }, [userId]);
+
+    useEffect(() => {
+        const checkUser = async () => {
+            const loggedInUserId = await AsyncStorage.getItem('userId');
+            setIsCurrentUser(loggedInUserId === profileUserId);
+        };
+        checkUser();
+    }, [profileUserId]);
+    
 
     const getUserId = async () => {
         const id = await AsyncStorage.getItem('userId');
@@ -466,17 +489,20 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                         </View>
                                     </View>
 
+                                    {isCurrentUser && (
     <TouchableOpacity onPress={() => setIsJobRelationshipModalVisible(true)}>
-    <Ionicons
-        name="create-outline"
-        size={SIZES.mediumIconSize}
-        color={COLORS['orchid'][900]}
-    />
-</TouchableOpacity>
+        <Ionicons
+            name="create-outline"
+            size={SIZES.mediumIconSize}
+            color={COLORS['orchid'][900]}
+        />
+    </TouchableOpacity>
+)}
 
 <TouchableOpacity onPress={handlePickImage}>
     <View className="flex flex-col items-center">
         <View className="mt-2">
+        {isCurrentUser && (
             <TouchableOpacity
                 style={{
                     backgroundColor: COLORS['orchid'][800],
@@ -494,6 +520,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                     Change Profile Photo
                 </Text>
             </TouchableOpacity>
+        )}
         </View>
     </View>
 </TouchableOpacity>
@@ -549,13 +576,16 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                     <Text className="text-base font-semibold text-orchid-800">
                                         {STRINGS.interests_details}
                                     </Text>
-                                    <TouchableOpacity onPress={editProfile}>
-                                        <Ionicons
-                                            name="create-outline"
-                                            size={SIZES.mediumIconSize}
-                                            color={COLORS['orchid'][900]}
-                                        />
-                                    </TouchableOpacity>
+                                    {isCurrentUser && (
+    <TouchableOpacity onPress={editProfile}>
+        <Ionicons
+            name="create-outline"
+            size={SIZES.mediumIconSize}
+            color={COLORS['orchid'][900]}
+        />
+    </TouchableOpacity>
+)}
+
                                 </View>
                                 <View className="my-1 flex flex-grow flex-row flex-wrap gap-2">
                                     {selectedTopic &&
@@ -578,6 +608,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                     <Text className="text-base font-semibold text-orchid-800">
                                         Skills
                                     </Text>
+                                    {isCurrentUser && (
                                     <TouchableOpacity
                                         onPress={() => setIsSkillSelectorModalVisible(true)}
                                     >
@@ -587,6 +618,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                             color={COLORS['orchid'][900]}
                                         />
                                     </TouchableOpacity>
+                                    )}
                                 </View>
                                 <View className="my-1 flex flex-grow flex-row flex-wrap gap-2">
                                     {selectedSkills &&
@@ -661,14 +693,19 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                         <ActivityIndicator />
                     )}
 
-<Text className="text-2xl font-bold text-orchid-900 mb-4">
-                {STRINGS.profilePosts}
-            </Text>
-            <TouchableOpacity 
-                onPress={navigateToPosts} 
-                className="mb-4 p-2 bg-orchid-900 rounded-full text-center">
-                <Text className="text-white font-bold text-center">View My Shared Posts</Text>
-            </TouchableOpacity>
+{isCurrentUser && (
+    <>
+        <Text className="text-2xl font-bold text-orchid-900 mb-4">
+            {STRINGS.profilePosts}
+        </Text>
+        <TouchableOpacity 
+            onPress={navigateToPosts} 
+            className="mb-4 p-2 bg-orchid-900 rounded-full text-center">
+            <Text className="text-white font-bold text-center">View My Shared Posts</Text>
+        </TouchableOpacity>
+    </>
+)}
+
 
                 </ScrollView>
             </KeyboardAvoidingView>

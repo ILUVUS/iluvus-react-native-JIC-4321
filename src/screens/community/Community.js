@@ -32,6 +32,7 @@ import {
 import Constants from 'expo-constants'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCheckToSlot } from '@fortawesome/free-solid-svg-icons'
+import { TouchableOpacity } from 'react-native';
 
 const Community = () => {
     const navigation = useNavigation()
@@ -44,6 +45,7 @@ const Community = () => {
     const [verify, setVerify] = useState(false)
     const [searchResultList, setSearchResultList] = useState([])
     const [communityListInfo, setCommunityListInfo] = useState([])
+    const [userSearchResults, setUserSearchResults] = useState([]);
 
     useEffect(() => {
         getVerified()
@@ -58,6 +60,32 @@ const Community = () => {
             setRefreshing(false)
         }, 1000)
     }, [])
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(() => {
+            if (!searchValue.trim()) {
+                setUserSearchResults([]);
+                return;
+            }
+    
+            // Fetch Users
+            axios.get(`${BASE_URL}/user/search?filter=${searchValue}`)
+                .then((res) => {
+                    console.log("User Search API Response:", res.data);
+                    setUserSearchResults(res.data || []);
+                })
+                .catch((err) => {
+                    console.log("User Search Error:", err);
+                    setUserSearchResults([]);
+                });
+    
+        });
+    
+        return () => clearTimeout(delayDebounceFn);
+    }, [searchValue]);
+    
+    
+    
 
     useEffect(() => {
         axios({
@@ -110,6 +138,12 @@ const Community = () => {
             })
     }
 
+    const navigateToUserProfile = (userId) => {
+        navigation.navigate('Profile', { userId }); // Pass userId properly
+    };
+    
+    
+
     useEffect(() => {
         setCommunityListInfo([])
         // make sure data arrive in order
@@ -147,6 +181,29 @@ const Community = () => {
         }
     }
 
+    const fetchCommunitySearch = async (filter) => {
+        try {
+            const userId = await AsyncStorage.getItem('userId');
+            if (!userId) return;
+    
+            const res = await axios.get(`${BASE_URL}/user/getMyFollowingGroups?userId=${userId}`);
+            if (res.data) {
+                const filteredCommunities = Object.keys(res.data)
+                    .filter((id) => res.data[id].toLowerCase().includes(filter.toLowerCase()))
+                    .map((id) => ({
+                        id,
+                        name: res.data[id],
+                        image: '',  // Placeholder for images
+                    }));
+                setSearchResultList(filteredCommunities);
+            }
+        } catch (err) {
+            console.error("Community Search Error:", err);
+            setSearchResultList([]);
+        }
+    };
+    
+
     const newCommunity = () => {
         navigation.navigate('SetupCommunity')
     }
@@ -180,17 +237,18 @@ const Community = () => {
             className="flex justify-center bg-white align-middle"
             style={{ paddingTop: Constants.statusBarHeight }}
         >
-            <SearchBar
-                placeholder={STRINGS.communitySearchBar}
-                onChangeText={(text) => searchFunction(text)}
-                value={searchValue}
-                containerStyle={[searchBarStyle.containerSearchBar]}
-                inputContainerStyle={searchBarStyle.inputSearchBar}
-                inputStyle={searchBarStyle.input}
-                placeholderTextColor={COLORS['orchid'][400]}
-                searchIcon={searchBarStyle.seachIcon}
-                clearIcon={searchBarStyle.clearIcon}
-            />
+           <SearchBar
+    placeholder={STRINGS.communitySearchBar}
+    onChangeText={(text) => searchFunction(text)}
+    value={searchValue}
+    containerStyle={[searchBarStyle.containerSearchBar]}
+    inputContainerStyle={searchBarStyle.inputSearchBar}
+    inputStyle={searchBarStyle.input}
+    placeholderTextColor={COLORS['orchid'][400]}
+    searchIcon={searchBarStyle.seachIcon}
+    clearIcon={searchBarStyle.clearIcon}
+/>
+
             {!searchValue && (
                 <ScrollView
                     className="h-screen w-screen"
@@ -306,8 +364,8 @@ const Community = () => {
                                         searchResultList[key].image != null &&
                                         searchResultList[key].image !== ''
                                             ? {
-                                                  uri: `data:image/jpg;base64,${searchResultList[key].image}`,
-                                              }
+                                                uri: `data:image/jpg;base64,${searchResultList[key].image}`,
+                                            }
                                             : communityIcon
                                     }
                                     className="h-24 w-24 rounded-3xl"
@@ -315,13 +373,45 @@ const Community = () => {
                                 <Text className="mt-1 text-base text-orchid-900">
                                     {searchResultList[key].name.length > 12
                                         ? searchResultList[key].name
-                                              .substring(0, 10)
-                                              .trim() + '...'
+                                            .substring(0, 10)
+                                            .trim() + '...'
                                         : searchResultList[key].name}
                                 </Text>
                             </CommunityViewImageButton>
                         ))}
                     </View>
+                    <View className="bg-blue-100 p-4 rounded-lg">
+    <Text className="text-lg font-semibold text-blue-900">
+        Users Found
+    </Text>
+    {userSearchResults.length === 0 && searchValue.trim() !== '' ? (
+        <Text className="text-base text-gray-600 mt-2">
+            No users found
+        </Text>
+    ) : (
+        userSearchResults.map((user, index) => (
+            <TouchableOpacity key={index} onPress={() => navigateToUserProfile(user.id)}>
+                <View className="flex-row items-center mt-2 p-2 bg-white rounded-md">
+                <Image
+    source={
+        user.avatar && user.avatar.trim() !== "" 
+            ? { uri: user.avatar.startsWith("data:image/") 
+                ? user.avatar 
+                : `data:image/jpeg;base64,${user.avatar.trim()}` } 
+            : sampleIcon
+    }
+    className="h-10 w-10 rounded-full mr-3"
+/>
+
+
+                    <Text className="text-base text-blue-900">
+                        {user.fname} {user.lname}
+                    </Text>
+                </View>
+            </TouchableOpacity>
+        ))
+    )}
+</View>
                 </ScrollView>
             )}
         </View>
