@@ -116,15 +116,15 @@ const Community = () => {
             console.log("User Search Response:", userRes.data);
     
             setSearchResultList(communityRes.data || []);
-            setUserSearchList([
-                { id: "1", username: "testuser", fname: "Test", lname: "User", image: null },
-                { id: "2", username: "john_doe", fname: "John", lname: "Doe", image: null }
-            ]);
+            setUserSearchList(userRes.data || []);
+
             
     
         } catch (err) {
             console.error("Search error:", err);
+            Alert.alert("Error", "Failed to fetch search results. Please try again.");
         }
+        
     }, 500);
     
 
@@ -205,6 +205,8 @@ const Community = () => {
                 searchIcon={searchBarStyle.seachIcon}
                 clearIcon={searchBarStyle.clearIcon}
             />
+                        {loading && <ActivityIndicator size="large" color="#6200ea" style={{ marginVertical: 10 }} />}
+
            {searchValue && (
     <ScrollView
         className="h-screen w-screen"
@@ -220,60 +222,59 @@ const Community = () => {
             />
         }
     >
-        {/* 🔹 Users Section */}
-        <View className="mb-5 bg-gray-100 p-4 rounded-lg shadow-md">
-    <Text className="text-2xl font-bold text-orchid-900 mb-2">Users</Text>
-
-    {console.log("Rendering Users List:", userSearchList)}
-
-    {userSearchList.length > 0 ? (
-        <View className="flex flex-col">
-            {userSearchList.map((user, index) => (
-                <TouchableOpacity 
-                    key={index} 
-                    className="flex flex-row items-center gap-4 p-3 border-b border-gray-300 bg-white rounded-md"
-                    onPress={() => navigation.navigate('UserProfile', { userId: user.id })}
-                >
-                    <Image
-                        source={user.image ? { uri: `data:image/jpg;base64,${user.image}` } : sampleIcon}
-                        className="h-12 w-12 rounded-full border border-gray-300"
-                    />
-                    <View>
-                        <Text className="text-lg font-semibold">{user.username}</Text>
-                        <Text className="text-gray-500">{user.fname} {user.lname}</Text>
+        {/* 🔵 Users Section */}
+        <View style={{ backgroundColor: '#D0E6F7', padding: 10, borderRadius: 10, marginBottom: 15 }}>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#005A9C', marginBottom: 8 }}>
+                            Users
+                        </Text>
+                        {userSearchList.length > 0 ? (
+                            userSearchList.map((user, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={{ flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderBottomColor: '#B0C4DE' }}
+                                    onPress={() => navigation.navigate('UserProfile', { userId: user.id })}
+                                >
+                                    <Image
+                                        source={user.image ? { uri: `data:image/jpg;base64,${user.image}` } : sampleIcon}
+                                        style={{ height: 40, width: 40, borderRadius: 20, marginRight: 10 }}
+                                    />
+                                    <View>
+                                        <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#003366' }}>{user.username}</Text>
+                                        <Text style={{ fontSize: 14, color: '#005A9C' }}>{user.fname} {user.lname}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            ))
+                        ) : (
+                            <Text style={{ textAlign: 'center', color: '#005A9C', fontSize: 16 }}>No users found.</Text>
+                        )}
                     </View>
-                </TouchableOpacity>
-            ))}
-        </View>
-    ) : (
-        <Text className="text-lg text-gray-500 text-center">User Not Found</Text>
-    )}
-</View>
 
-
-        {/* 🔹 Communities Section (Appears Below Users) */}
-        <View className="mb-5">
-            <Text className="text-2xl font-bold text-orchid-900 mb-2">Communities</Text>
-            <View className="flex flex-row flex-wrap overflow-auto">
-                {searchResultList.length > 0 ? (
-                    searchResultList.map((community, index) => (
-                        <CommunityViewImageButton
-                            key={index}
-                            onPress={() => communityClick(community.id)}
-                        >
-                            <Image
-                                source={community.image ? { uri: `data:image/jpg;base64,${community.image}` } : communityIcon}
-                                className="h-24 w-24 rounded-3xl"
-                            />
-                            <Text className="mt-1 text-sm text-orchid-900">
-                                {community.name.length > 12 ? `${community.name.substring(0, 10)}...` : community.name}
-                            </Text>
-                        </CommunityViewImageButton>
-                    ))
-                ) : (
-                    <Text className="text-lg text-gray-500 text-center">No communities found.</Text>
-                )}
-            </View>
+                    {/* 🟩 Communities Section */}
+                    <View style={{ backgroundColor: '#DFF7D0', padding: 10, borderRadius: 10 }}>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2E7D32', marginBottom: 8 }}>
+                            Communities
+                        </Text>
+                        <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                            {searchResultList.length > 0 ? (
+                                searchResultList.map((community, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={{ alignItems: 'center', margin: 8 }}
+                                        onPress={() => navigation.navigate('CommunityView', { communityId: community.id })}
+                                    >
+                                        <Image
+                                            source={community.image ? { uri: `data:image/jpg;base64,${community.image}` } : communityIcon}
+                                            style={{ height: 60, width: 60, borderRadius: 30, marginBottom: 5 }}
+                                        />
+                                        <Text style={{ fontSize: 14, color: '#1B5E20' }}>
+                                            {community.name.length > 12 ? `${community.name.substring(0, 10)}...` : community.name}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))
+                            ) : (
+                                <Text style={{ textAlign: 'center', color: '#2E7D32', fontSize: 16 }}>No communities found.</Text>
+                            )}
+                        </View>
         </View>
 
                 </ScrollView>
