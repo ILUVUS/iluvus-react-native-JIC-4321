@@ -35,9 +35,9 @@ const Home = () => {
    const [searchValue, setSearchValue] = useState('');
   
    const navigation = useNavigation();
-   const route = useconst [searchValue, setSearchValue] = useState('');
-   const [isLoading, setIsLoading] = useState(false);Route();
-
+   const route = useRoute();  // This gets the current route params
+   const [isLoading, setIsLoading] = useState(false);
+    
 
    useEffect(() => {
        fetchUserId();
@@ -91,40 +91,43 @@ const fetchSearchResults = async (text) => {
 
 
    const fetchPosts = async () => {
-       try {
-           const res = await axios.get(`${BASE_URL}/post/getPostForHomePage?userId=${userId}`, {
-               headers: { 'Content-Type': 'application/json' },
-           });
+    try {
+        const res = await axios.get(`${BASE_URL}/post/getPostForHomePage?userId=${userId}`, {
+            headers: { 'Content-Type': 'application/json' },
+        });
+        const posts = res.data.reverse(); // Shows latest posts first
+        setPostData(posts);
+        setFilteredPosts(posts);
+        
+    } catch (err) {
+        console.log('Cannot get posts', err);
+        setPostData([]);  // Prevent crash by setting an empty array
+        setFilteredPosts([]);
+    }
+};
 
 
-           const posts = res.data.reverse();
-           setPostData(posts);
-           setFilteredPosts(posts);
-       } catch (err) {
-           console.log('Cannot get posts', err);
-           setPostData([]);
-           setFilteredPosts([]);
-       }
-   };
 
 
-   const handleSearch = async (text) => {
+const handleSearch = async (text) => {
     setSearchValue(text);
-    
-    if (!text.trim()) {
+
+    if (text.trim() === '') {
         setFilteredPosts(postData);
         return;
     }
 
     try {
         const res = await axios.get(`${BASE_URL}/post/search`, {
-            params: { userId, searchTerm: text },
+            params: { userId: userId, searchTerm: text },
             headers: { 'Content-Type': 'application/json' },
         });
+
+        console.log(res.data);
         setFilteredPosts(res.data);
     } catch (err) {
         console.log('Search API failed', err);
-        setFilteredPosts([]);
+        setFilteredPosts([]);  // Prevent crash
     }
 };
 
