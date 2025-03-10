@@ -75,7 +75,6 @@ const Home = () => {
 
    const handleSearch = async (text) => {
        setSearchValue(text);
-
        
        if (text.trim() === '') {
            setFilteredPosts(postData);
@@ -83,7 +82,6 @@ const Home = () => {
        }
 
        try {
-     
            const res = await axios.get(`${BASE_URL}/post/search`, {
                params: {
                    userId: userId,
@@ -91,8 +89,7 @@ const Home = () => {
                },
                headers: { 'Content-Type': 'application/json' },
            });
-
-           
+           console.log(res.data);
            setFilteredPosts(res.data);
        } catch (err) {
            console.log('Search API failed', err);
