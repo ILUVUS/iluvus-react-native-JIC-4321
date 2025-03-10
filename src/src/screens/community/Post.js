@@ -18,6 +18,8 @@ import ImageView from 'react-native-image-viewing'
 
 import TopicSelector from './components/TopicSelector'
 
+import { SearchBar } from 'react-native-elements'; 
+
 import {
     View,
     Text,
@@ -65,6 +67,8 @@ const Post = (nav) => {
         }, 1000)
     }, [])
 
+    const [searchValue, setSearchValue] = useState('');
+
     const [taggedUsers, setTaggedUsers] = useState([])
 
     const findUserId = async () => {
@@ -106,6 +110,35 @@ const Post = (nav) => {
             })
     }
 
+    const searchPostsInCommunity = async (term) => {
+        try {
+            const res = await axios.get(`${BASE_URL}/post/searchInCommunity`, {
+                params: {
+                    communityId: community_id,
+                    searchTerm: term,
+                },
+            });
+   
+            setPostData(res.data);
+        } catch (err) {
+            console.log('Search in community failed:', err);
+            setPostData([]);
+        }
+    };
+
+   
+    const handleSearch = (text) => {
+        setSearchValue(text);
+
+        if (!text || text.trim().length === 0) {
+          
+            getPosts();
+        } else {
+           
+            searchPostsInCommunity(text);
+        }
+    };
+
     const handleOpenPopup = () => {
         setIsModalVisible(true)
     }
@@ -113,6 +146,21 @@ const Post = (nav) => {
     return (
         <>
             <View className="h-screen w-screen flex-1 bg-white">
+                <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
+                        <SearchBar
+                            placeholder="Please search posts..."
+                            onChangeText={handleSearch}
+                            value={searchValue}
+                            containerStyle={{
+                                backgroundColor: 'white',
+                                borderBottomColor: 'transparent',
+                                borderTopColor: 'transparent',
+                            }}
+                            inputContainerStyle={{
+                                backgroundColor: '#F1F1F1',
+                            }}
+                        />
+                    </View>
                 {postData.length > 0 && Object.keys(postData[0]).length > 0 ? (
                     <View className="h-full w-full">
                         <ScrollView
