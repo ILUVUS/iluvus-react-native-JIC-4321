@@ -35,7 +35,8 @@ const Home = () => {
    const [searchValue, setSearchValue] = useState('');
   
    const navigation = useNavigation();
-   const route = useRoute();
+   const route = useconst [searchValue, setSearchValue] = useState('');
+   const [isLoading, setIsLoading] = useState(false);Route();
 
 
    useEffect(() => {
@@ -52,6 +53,32 @@ const Home = () => {
        if (route.params?.filters) applyFilters(route.params.filters);
    }, [route.params?.filters]);
 
+   useEffect(() => {
+    const delaySearch = setTimeout(() => {
+        if (searchValue) {
+            fetchSearchResults(searchValue);
+        } else {
+            setFilteredPosts(postData);
+        }
+    }, 500); // Delay API call by 500ms
+
+    return () => clearTimeout(delaySearch);
+}, [searchValue]);
+
+const fetchSearchResults = async (text) => {
+    setIsLoading(true);
+    try {
+        const res = await axios.get(`${BASE_URL}/post/search`, {
+            params: { userId, searchTerm: text },
+            headers: { 'Content-Type': 'application/json' },
+        });
+        setFilteredPosts(res.data);
+    } catch (err) {
+        console.log('Search API failed', err);
+        setFilteredPosts([]);
+    }
+    setIsLoading(false);
+};
 
    const fetchUserId = async () => {
        try {
@@ -82,25 +109,24 @@ const Home = () => {
 
 
    const handleSearch = async (text) => {
-       setSearchValue(text);
+    setSearchValue(text);
+    
+    if (!text.trim()) {
+        setFilteredPosts(postData);
+        return;
+    }
 
-
-       if (text.trim() === '') {
-           setFilteredPosts(postData);
-           return;
-       }
-
-
-       try {
-           const res = await axios.get(`${BASE_URL}/post/search?filter=${text}`, {
-               headers: { 'Content-Type': 'application/json' },
-           });
-           setFilteredPosts(res.data);
-       } catch (err) {
-           console.log('Search API failed', err);
-           setFilteredPosts([]);
-       }
-   };
+    try {
+        const res = await axios.get(`${BASE_URL}/post/search`, {
+            params: { userId, searchTerm: text },
+            headers: { 'Content-Type': 'application/json' },
+        });
+        setFilteredPosts(res.data);
+    } catch (err) {
+        console.log('Search API failed', err);
+        setFilteredPosts([]);
+    }
+};
 
 
    const applyFilters = async (filters) => {
