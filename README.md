@@ -336,4 +336,4 @@ This project is licensed under the MIT License.
 
 ## Acknowledgments
 
-Ideas, Inspiration, and Project belong to [James Elliott](#)
+Ideas, Inspiration, and Project belong to [Jay Elliott](#)
