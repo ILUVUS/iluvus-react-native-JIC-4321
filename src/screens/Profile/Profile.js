@@ -360,6 +360,12 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 setJobDetails(data.jobDetails || '')
                 setRelationshipStatus(data.relationshipStatus || '')
 
+                if (data.image && data.image.trim().length > 0) {
+                    setProfileImage(`data:image/jpeg;base64,${data.image}`);
+                } else {
+                    setProfileImage(null); // Fallback
+                }
+
                 // If the server returns data.skills as an array
                 if (data.skills && Array.isArray(data.skills)) {
                     // Convert that array to an object with numeric keys
@@ -422,16 +428,17 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                     <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
                                     <Image
     source={
-      userInfo?.image && userInfo.image.trim().length
-        ? { uri: `data:image/jpeg;base64,${userInfo.image}` }
-        : userInfo.gender === 'Female'
-          ? profile_icon_f
-          : userInfo.gender === 'Male'
-            ? profile_icon_m
-            : profile_icon_x
+        profileImage 
+            ? { uri: profileImage } 
+            : userInfo.gender === 'Female'
+                ? profile_icon_f
+                : userInfo.gender === 'Male'
+                    ? profile_icon_m
+                    : profile_icon_x
     }
     className="h-40 w-40 rounded-full"
-  />
+/>
+
                                     </View>
                                     {verify && (
                                         <View className="absolute bottom-3 right-1">
