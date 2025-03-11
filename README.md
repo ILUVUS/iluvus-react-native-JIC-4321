@@ -123,6 +123,25 @@ npm start
 or scan the QR Code on the output with phone camera to run on Expo application.
 
 # Release Notes
+## Version 0.9.0
+
+### Features
+
+-  Users can now look up BOTH communities and other users and click on their icons to view their respective pages.
+-  Users can now search for specific posts using keywords.
+-  Users can now add filters to their search to narrow down content by specific criteria.
+
+### Bug Fixes
+
+- After sharing posts, other icons were being pushed off to the side.
+- Publish post button was not working for posts with media in it.
+- Clicking on a picture that has already been added while creating a post was causing the application to crash.
+
+### Known Issues
+
+-   When searching for users to tag in a post, no users are showing up.
+-   Loading time across the application is still too long.
+
 ## Version 0.8.0
 
 ### Features
