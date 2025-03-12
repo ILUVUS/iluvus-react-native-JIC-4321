@@ -74,12 +74,12 @@ const Home = () => {
            setPostData(posts);
            setFilteredPosts(posts);
        } catch (err) {
+        //something happening here, timing out - too many queries on backend?
            console.log('Cannot get posts', err);
            setPostData([]);
            setFilteredPosts([]);
        }
    };
-
 
    const handleSearch = async (text) => {
        setSearchValue(text);

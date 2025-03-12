@@ -178,6 +178,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
         })
         .catch((err) => {
             console.log('cannot verify' + err);
+            //error happening here, cannot verify
             setVerify(false);
         });
     };
@@ -209,6 +210,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 handleUploadImage(base64Image);
             }
         } catch (error) {
+            //error happening here?
             console.error('Error picking an image:', error);
             Alert.alert('Error', 'Unable to pick an image. Please try again.');
         }
@@ -400,6 +402,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                     <Image
     source={
       userInfo?.image && userInfo.image.trim().length
+      // ? { uri: profileImage } 
         ? { uri: `data:image/jpeg;base64,${userInfo.image}` }
         : userInfo.gender === 'Female'
           ? profile_icon_f
