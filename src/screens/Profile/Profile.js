@@ -10,8 +10,10 @@ import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { BASE_URL } from '@env'
 import { Alert } from 'react-native';
-
 import { ScrollView } from 'react-native-gesture-handler'
+import PostItem from '../community/components/PostItem';
+import { useRoute } from '@react-navigation/native';
+
 import { RefreshControl } from 'react-native'
 import { ImageBackground, Image, Keyboard, Modal } from 'react-native'
 import profileBg from '../../../assets/images/profileBg.png'
@@ -25,15 +27,19 @@ import InterestSelector from './InterestSelector'
 import SIZES from '../../constants/sizes'
 import STRINGS from '../../constants/strings'
 import { Ionicons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native';
+
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack'
 import Constants from 'expo-constants'
 import { useHeaderHeight } from '@react-navigation/elements'
 import PersonalBioEditor from './PersonalBioEditor'
+
 // -- NEW IMPORT for SkillSelector
 import SkillSelector from './SkillSelector'
 import * as ImagePicker from 'expo-image-picker';
 
-const Profile = () => {
-    const [userId, setUserId] = useState('')
+const Profile = ( ) => {
     const [userInfo, setUserInfo] = useState({})
     const [refreshing, setRefreshing] = useState(false)
     const [isTopicSelectorModalVisible, setIsTopicSelectorModalVisible] = useState(false)
@@ -44,7 +50,13 @@ const Profile = () => {
 const [jobDetails, setJobDetails] = useState('');
 const [profileBio, setProfileBio] = useState('');
 const [profileImage, setProfileImage] = useState('');
+const navigation = useNavigation()
+const route = useRoute();
+const { userId: profileUserId } = route.params || {}; // ✅ Only extract userId
+const [userId, setUserId] = useState('');
+const [isCurrentUser, setIsCurrentUser] = useState(false);
 
+const [posts, setPosts] = useState([]);
 const [relationshipStatus, setRelationshipStatus] = useState('');
 const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     useState(false);
@@ -56,8 +68,18 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
         getVerified()
         const findUserInfoById = async () => {
             try {
-                const value = await AsyncStorage.getItem('userId')
-                if (value !== null) {
+                const userId = await AsyncStorage.getItem('userId');
+                if (!userId) {
+                    console.error('Error: No userId found in AsyncStorage');
+                    return;
+                }
+                axios.post(`${BASE_URL}/user/verify`, { userId })
+                    .then(() => setVerify(true))
+                    .catch(err => {
+                        console.error('cannot verify', err);
+                        setVerify(false);
+                    });
+                                if (value !== null) {
                     setUserId(value)
                 }
             } catch (e) {
@@ -66,6 +88,97 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
         }
         findUserInfoById()
     }, [])
+
+    useEffect(() => {
+        getUserId();
+    }, []);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const loggedInUserId = await AsyncStorage.getItem('userId');
+            setIsCurrentUser(loggedInUserId === profileUserId);
+            setUserId(profileUserId || loggedInUserId); 
+        };
+        fetchUserData();
+    }, [profileUserId]);
+    
+
+    useEffect(() => {
+        if (userId) {
+            //fetchUserPosts();
+            fetchSharedPosts();
+            //fetchTaggedPosts();
+        }
+    }, [userId]);
+
+    useEffect(() => {
+        const checkUser = async () => {
+            const loggedInUserId = await AsyncStorage.getItem('userId');
+            setIsCurrentUser(loggedInUserId === profileUserId);
+        };
+        checkUser();
+    }, [profileUserId]);
+    
+
+    const getUserId = async () => {
+        const id = await AsyncStorage.getItem('userId');
+        setUserId(id);
+    };
+
+    // const fetchUserPosts = async () => {
+    //     axios({
+    //         method: 'GET',
+    //         url: `${BASE_URL}/user/getPosts?userId=${userId}`,
+    //         headers: { 'Content-Type': 'application/json' },
+    //     })
+    //         .then((res) => {
+    //             setPosts((prevPosts) => [...prevPosts, ...res.data.map(post => ({ ...post, type: 'Personal' }))]);
+    //         })
+    //         .catch((err) => {
+    //             console.log('Cannot fetch user posts', err);
+    //         });
+    // };
+
+    const fetchSharedPosts = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/post/getSharedPosts?userId=${userId}`);
+    
+            // Ensure we get posts that were shared by the user, even if they were not the original author
+            const sharedPosts = response.data.map(post => ({ ...post, type: 'Shared' }));
+    
+            setPosts(prevPosts => [
+                ...prevPosts.filter(post => post.type !== 'Shared'), // Remove old shared posts
+                ...sharedPosts // Append updated shared posts
+            ]);
+        } catch (err) {
+            console.log('Cannot fetch shared posts', err);
+        }
+    };
+    
+    
+
+    // const fetchTaggedPosts = async () => {
+    //     axios({
+    //         method: 'GET',
+    //         url: `${BASE_URL}/user/getTaggedPosts?userId=${userId}`,
+    //         headers: { 'Content-Type': 'application/json' },
+    //     })
+    //         .then((res) => {
+    //             setPosts((prevPosts) => [...prevPosts, ...res.data.map(post => ({ ...post, type: 'Tagged' }))]);
+    //         })
+    //         .catch((err) => {
+    //             console.log('Cannot fetch tagged posts', err);
+    //         });
+    // }
+
+    const navigateToPosts = () => {
+        navigation.navigate('PostScreen', { 
+            userId: userId, 
+            posts: posts // Pass both personal and shared posts
+        });
+    };
+    
+    
 
     const onRefresh = useCallback(() => {
         getVerified()
@@ -83,14 +196,16 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 'Content-Type': 'application/json',
             },
         })
-            .then(() => {
-                setVerify(true)
-            })
-            .catch((err) => {
-                console.log('cannot verify' + err)
-                setVerify(false)
-            })
-    }
+        .then(() => {
+            setVerify(true);
+        })
+        .catch((err) => {
+            console.log('cannot verify' + err);
+            setVerify(false);
+        });
+    };
+    
+    
     const handlePickImage = async () => {
         // // Request media library permissions
         // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -245,6 +360,12 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 setJobDetails(data.jobDetails || '')
                 setRelationshipStatus(data.relationshipStatus || '')
 
+                if (data.image && data.image.trim().length > 0) {
+                    setProfileImage(`data:image/jpeg;base64,${data.image}`);
+                } else {
+                    setProfileImage(null); // Fallback
+                }
+
                 // If the server returns data.skills as an array
                 if (data.skills && Array.isArray(data.skills)) {
                     // Convert that array to an object with numeric keys
@@ -307,16 +428,17 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                     <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
                                     <Image
     source={
-      userInfo?.image && userInfo.image.trim().length
-        ? { uri: `data:image/jpeg;base64,${userInfo.image}` }
-        : userInfo.gender === 'Female'
-          ? profile_icon_f
-          : userInfo.gender === 'Male'
-            ? profile_icon_m
-            : profile_icon_x
+        profileImage 
+            ? { uri: profileImage } 
+            : userInfo.gender === 'Female'
+                ? profile_icon_f
+                : userInfo.gender === 'Male'
+                    ? profile_icon_m
+                    : profile_icon_x
     }
     className="h-40 w-40 rounded-full"
-  />
+/>
+
                                     </View>
                                     {verify && (
                                         <View className="absolute bottom-3 right-1">
@@ -374,17 +496,20 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                         </View>
                                     </View>
 
+                                    {isCurrentUser && (
     <TouchableOpacity onPress={() => setIsJobRelationshipModalVisible(true)}>
-    <Ionicons
-        name="create-outline"
-        size={SIZES.mediumIconSize}
-        color={COLORS['orchid'][900]}
-    />
-</TouchableOpacity>
+        <Ionicons
+            name="create-outline"
+            size={SIZES.mediumIconSize}
+            color={COLORS['orchid'][900]}
+        />
+    </TouchableOpacity>
+)}
 
 <TouchableOpacity onPress={handlePickImage}>
     <View className="flex flex-col items-center">
         <View className="mt-2">
+        {isCurrentUser && (
             <TouchableOpacity
                 style={{
                     backgroundColor: COLORS['orchid'][800],
@@ -402,6 +527,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                     Change Profile Photo
                 </Text>
             </TouchableOpacity>
+        )}
         </View>
     </View>
 </TouchableOpacity>
@@ -457,13 +583,16 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                     <Text className="text-base font-semibold text-orchid-800">
                                         {STRINGS.interests_details}
                                     </Text>
-                                    <TouchableOpacity onPress={editProfile}>
-                                        <Ionicons
-                                            name="create-outline"
-                                            size={SIZES.mediumIconSize}
-                                            color={COLORS['orchid'][900]}
-                                        />
-                                    </TouchableOpacity>
+                                    {isCurrentUser && (
+    <TouchableOpacity onPress={editProfile}>
+        <Ionicons
+            name="create-outline"
+            size={SIZES.mediumIconSize}
+            color={COLORS['orchid'][900]}
+        />
+    </TouchableOpacity>
+)}
+
                                 </View>
                                 <View className="my-1 flex flex-grow flex-row flex-wrap gap-2">
                                     {selectedTopic &&
@@ -486,6 +615,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                     <Text className="text-base font-semibold text-orchid-800">
                                         Skills
                                     </Text>
+                                    {isCurrentUser && (
                                     <TouchableOpacity
                                         onPress={() => setIsSkillSelectorModalVisible(true)}
                                     >
@@ -495,6 +625,7 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                             color={COLORS['orchid'][900]}
                                         />
                                     </TouchableOpacity>
+                                    )}
                                 </View>
                                 <View className="my-1 flex flex-grow flex-row flex-wrap gap-2">
                                     {selectedSkills &&
@@ -568,6 +699,21 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                     ) : (
                         <ActivityIndicator />
                     )}
+
+{isCurrentUser && (
+    <>
+        <Text className="text-2xl font-bold text-orchid-900 mb-4">
+            {STRINGS.profilePosts}
+        </Text>
+        <TouchableOpacity 
+            onPress={navigateToPosts} 
+            className="mb-4 p-2 bg-orchid-900 rounded-full text-center">
+            <Text className="text-white font-bold text-center">View My Shared Posts</Text>
+        </TouchableOpacity>
+    </>
+)}
+
+
                 </ScrollView>
             </KeyboardAvoidingView>
         </View>

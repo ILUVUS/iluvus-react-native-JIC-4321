@@ -71,6 +71,8 @@ const NewPost = ({
     const [signal, setSignal] = useState(false)
     const [readyToPost, setReadyToPost] = useState(false)
 
+    const [sourceLink, setSourceLink] = useState('')
+
     const getSignal = async () => {
         axios({
             method: 'GET',
@@ -224,6 +226,7 @@ const NewPost = ({
                     medias: JSON.stringify({ urls: imageURLs }),
                     tagged: taggedUsersId.join(','),
                     topicId: selectedTopic.id,
+                    sourceLink: sourceLink,
                 },
                 headers: {
                     'Content-Type': 'application/json',
@@ -265,6 +268,7 @@ const NewPost = ({
                         setIsPostModalVisible(false)
                         setOpenTopicSelector(false)
                         setSelectedTopic({})
+                        setSourceLink('')
                     },
                 },
             ],
@@ -282,6 +286,7 @@ const NewPost = ({
         setOpenTopicSelector(false)
         setSelectedTopic({})
         setIsNewData(true)
+        setSourceLink('')
     }
 
     return (
@@ -298,6 +303,11 @@ const NewPost = ({
                     placeholder={STRINGS.postContentPlaceholder}
                     value={postContent}
                     onChangeText={(text) => setPostContent(text)}
+                />
+                <PostInput
+                    placeholder="Add a source for more credibility"
+                    value={sourceLink}
+                    onChangeText={(text) => setSourceLink(text)}
                 />
 
                 <View className="flex h-fit w-full flex-row items-center justify-between">
@@ -467,7 +477,7 @@ const NewPost = ({
                         pickedImages.map((imageInfo, index) => {
                             return (
                                 <TouchableOpacity
-                                    onPress={() => setImageViewerVisible(true)}
+                                    // Block is executed whenever the user selects a media image from a new post view.
                                     key={index}
                                 >
                                     <View className="relative h-16 w-16 bg-transparent">

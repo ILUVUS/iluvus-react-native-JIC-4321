@@ -187,4 +187,6 @@ export default {
 
     // notification
     no_notification_alert: "You don't have any notifications.",
+    //forgot password 
+    forgotPasswordScreen: 'ForgotPasswordScreen',
 }

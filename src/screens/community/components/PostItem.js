@@ -7,12 +7,14 @@ import {
     TextInput,
     Alert,
     Image,
+    Linking,
 } from 'react-native'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faFlag, faStar } from '@fortawesome/free-solid-svg-icons'
 import { faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
+import { faNewspaper } from '@fortawesome/free-solid-svg-icons'
 
 import COLORS from '../../../constants/colors'
 import STRINGS from '../../../constants/strings'
@@ -32,6 +34,7 @@ import {
 import { useNavigation } from '@react-navigation/native'
 
 const PostItem = ({ post, userId, displayCommunityName }) => {
+    console.log('POST DEBUG:', post);
     const [isCommentVisible, setIsCommentVisible] = useState(false)
     const [upliftNumber, setUpliftNumber] = useState(0)
     const [commentsNumber, setCommentsNumber] = useState(0)
@@ -44,6 +47,8 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
     const [community, setCommunity] = useState({})
 
     const navigate = useNavigation()
+
+   
 
     useEffect(() => {
         setTaggedUsernames([])
@@ -62,6 +67,15 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
         // console.log('topic id', post.topicId)
         getPostTopicById(post.topicId)
     }, [post.topicId])
+
+
+    const openSourceLink = () => {
+        if (post.sourceLink && post.sourceLink.trim().length > 0) {
+            Linking.openURL(post.sourceLink) // (2) NEW
+        } else {
+            Alert.alert('No valid source link provided.')
+        }
+    }
 
     const handleComment = () => {
         setCommentText('')
@@ -148,6 +162,28 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
             })
     }
 
+    const handleShare = () => {
+        axios({
+            method: 'POST',
+            url: `${BASE_URL}/post/share`,
+            data: {
+                postId: post.id,
+                userId: userId,
+            },
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                Alert.alert('Post Shared')
+                // console.log(res.data)
+            })
+            .catch((err) => {
+                console.log('Cannot Share the post', err)
+            })
+    }
+
+
     const getUserInfo = (userId) => {
         axios({
             method: 'GET',
@@ -224,6 +260,10 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
         }
     }, [post])
 
+    
+
+    
+
     useEffect(() => {
         const commentsLen = post['comments']?.length
         setCommentsNumber(commentsLen)
@@ -290,6 +330,7 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                     <Text className="mb-2 mt-1 text-base text-orchid-700">
                         {post.text}
                     </Text>
+
                     {/* horizontal scroll view for media */}
                     {post.medias && (
                         <ScrollView
@@ -377,15 +418,39 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                     </View>
 
                     {/* SHARE BUTTON HERE */}
-                    <TouchableOpacity
-                        onPress={() => console.log('Share button pressed')}
-                    >
-                        <FontAwesomeIcon
-                            icon={faBullhorn}
-                            color={COLORS.blue}
-                            size={22}
-                        />
-                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleShare()}>
+    <FontAwesomeIcon
+        icon={faBullhorn}
+        color={COLORS.blue}
+        size={22}
+    />
+</TouchableOpacity>
+
+{post.sharedBy && post.sharedBy.length > 0 && (
+    <Text className="text-xs text-orchid-600">
+        Shared by {post.sharedBy.length} user(s)
+    </Text>
+)}
+
+{post.type === 'Shared' && post.author_id !== userId && (
+    <Text style={{ fontStyle: 'italic', color: 'gray' }}>
+        Shared from {post.author_id}
+    </Text>
+)}
+
+
+                    {/* CHECK SOURCE BUTTON HERE */}
+                    {post.sourceLink && (
+                        <TouchableOpacity
+                            onPress={() => openSourceLink()}
+                        >
+                            <FontAwesomeIcon
+                                icon={faNewspaper}
+                                color={COLORS.green}
+                                size={22}
+                            />
+                        </TouchableOpacity>
+                    )}
 
                     {/* REPORT BUTTON HERE */}
                     <TouchableOpacity onPress={() => reportConfirm()}>
