@@ -22,6 +22,8 @@ import MyCreatedGroup from './screens/community/MyCreatedGroup'
 import MediaViewer from './screens/community/components/MediaViewer'
 import ForgotPasswordScreen from './screens/login/ForgotPasswordScreen'
 
+import HomeFilterScreen from './screens/Home/HomeFilterScreen';
+
 LogBox.ignoreAllLogs(true)
 
 const Stack = createStackNavigator()
@@ -175,6 +177,15 @@ export default function Screen() {
                     component={ForgotPasswordScreen}
                     options={{
                         title: "Forgot Password",
+                        headerShown: true,
+                    }}
+                />
+
+                <Stack.Screen
+                    name="HomeFilterScreen"
+                    component={HomeFilterScreen}
+                    options={{
+                        title: "Filter Posts",
                         headerShown: true,
                     }}
                 />
