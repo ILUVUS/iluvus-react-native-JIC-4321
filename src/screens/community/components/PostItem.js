@@ -15,7 +15,7 @@ import { faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
 import { faNewspaper } from '@fortawesome/free-solid-svg-icons'
-
+import { useRef } from 'react';
 import COLORS from '../../../constants/colors'
 import STRINGS from '../../../constants/strings'
 import { useState } from 'react'
@@ -33,7 +33,10 @@ import {
 } from '../../../utils/Utils'
 import { useNavigation } from '@react-navigation/native'
 
-const PostItem = ({ post, userId, displayCommunityName }) => {
+const PostItem = ({ post, userId: propUserId, displayCommunityName, }) => {
+    const [userId, setUserId] = useState(propUserId);
+
+    console.log("Current userId in PostItem:", userId);
     console.log('POST DEBUG:', post);
     const [isCommentVisible, setIsCommentVisible] = useState(false)
     const [upliftNumber, setUpliftNumber] = useState(0)
@@ -41,14 +44,12 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
     const [comments, setComments] = useState([])
     const [commentText, setCommentText] = useState('')
     const [taggedUsers, setTaggedUsers] = useState([])
-
+    const scrollViewRef = useRef(null);
     const [taggedUsernames, setTaggedUsernames] = useState([])
     const [topic, setTopic] = useState({})
     const [community, setCommunity] = useState({})
-
+    const [posts, setPosts] = useState([]); // Store all posts
     const navigate = useNavigation()
-
-   
 
     useEffect(() => {
         setTaggedUsernames([])
@@ -56,6 +57,22 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
             getUserInfo(userId)
         })
     }, [taggedUsers])
+
+    
+    useEffect(() => {
+        const fetchUserId = async () => {
+            if (!propUserId) {
+                const storedUserId = await AsyncStorage.getItem('userId');
+                if (storedUserId) {
+                    setUserId(storedUserId);
+                } else {
+                    console.error("No user ID found in AsyncStorage");
+                }
+            }
+        };
+        fetchUserId();
+    }, [propUserId]);
+    
 
     useEffect(() => {
         if (post.tagged && post.tagged.length > 0) {
@@ -77,32 +94,46 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
         }
     }
 
+    
+
     const handleComment = () => {
         setCommentText('')
         getAllComments()
         setIsCommentVisible(!isCommentVisible)
     }
 
-    const handleLike = () => {
-        axios({
-            method: 'POST',
-            url: `${BASE_URL}/post/like`,
-            data: {
+    const updatePost = (updatedPost) => {
+        setPosts((prevPosts) =>
+            prevPosts.map((p) => (p.id === updatedPost.id ? updatedPost : p))
+        );
+    };
+    const handleLike = async () => {
+        if (!userId) {
+            console.error("User ID is undefined, cannot like post.");
+            return;
+        }
+    
+        try {
+            const response = await axios.post(`${BASE_URL}/post/like`, {
                 postId: post.id,
                 userId: userId,
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                // console.log('Post liked', res.data)
-                setUpliftNumber(res.data)
-            })
-            .catch((err) => {
-                console.log('Cannot like the post', err)
-            })
-    }
+            }, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+    
+            console.log("Like Response:", response.data); 
+    
+            if (typeof response.data === "number") {
+                console.warn("Unexpected response format, expected an object.");
+            } else {
+                setUpliftNumber(response.data.likes); // Assuming backend returns { likes: 1 }
+            }
+    
+        } catch (err) {
+            console.error("Cannot like the post", err);
+        }
+    };
+    
 
     const getAllComments = () => {
         axios({
@@ -162,27 +193,39 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
             })
     }
 
-    const handleShare = () => {
-        axios({
-            method: 'POST',
-            url: `${BASE_URL}/post/share`,
-            data: {
+    const handleShare = async () => {
+        if (!userId) {
+            console.error("User ID is undefined, cannot share post.");
+            return;
+        }
+    
+        try {
+            const response = await axios.post(`${BASE_URL}/post/share`, {
                 postId: post.id,
                 userId: userId,
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                Alert.alert('Post Shared')
-                // console.log(res.data)
-            })
-            .catch((err) => {
-                console.log('Cannot Share the post', err)
-            })
-    }
-
+            }, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+    
+            console.log("Share Response:", response.data);
+    
+            if (response.data && response.data.sharedBy) {
+                // Update the local state with the new sharedBy list
+                setPost((prevPost) => ({
+                    ...prevPost,
+                    sharedBy: response.data.sharedBy,
+                }));
+            } else {
+                console.error("Invalid response format:", response.data);
+            }
+    
+            Alert.alert('Success', 'Post shared successfully!');
+        } catch (err) {
+            console.error("Cannot share the post", err);
+            Alert.alert("Error", "Failed to share the post. Please try again.");
+        }
+    };
+    
 
     const getUserInfo = (userId) => {
         axios({
@@ -227,29 +270,41 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
     }
 
     const writeComment = async () => {
-        axios({
-            method: 'POST',
-            url: `${BASE_URL}/post/comment`,
-            data: {
+        if (!userId) {
+            console.error("User ID is undefined, cannot comment.");
+            return;
+        }
+        if (!commentText.trim()) {
+            Alert.alert("Comment cannot be empty!");
+            return;
+        }
+    
+        try {
+            const response = await axios.post(`${BASE_URL}/post/comment`, {
                 postId: post.id,
                 authorId: userId,
-                text: commentText,
+                text: commentText.trim(),
                 dateTime: getDatetime(),
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                setCommentText('')
-                // console.log('Comment written', res.data)
-                setComments(res.data)
-                setCommentsNumber(res.data.length)
-            })
-            .catch((err) => {
-                console.log('Cannot write the comment', err)
-            })
-    }
+            }, {
+                headers: { 'Content-Type': 'application/json' },
+            });
+    
+            console.log("Comment Response:", response.data);
+    
+            if (Array.isArray(response.data)) {
+                setComments(response.data);
+                setCommentsNumber(response.data.length);
+            } else {
+                console.error("Invalid response format:", response.data);
+            }
+    
+            setCommentText(""); // Clear the input field after success
+        } catch (err) {
+            console.error("Cannot write the comment", err);
+            Alert.alert("Error", "Failed to post comment. Please try again.");
+        }
+    };
+    
 
     useEffect(() => {
         if (post['likedBy']) {
@@ -259,9 +314,6 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
             getCommunityInfo()
         }
     }, [post])
-
-    
-
     
 
     useEffect(() => {
@@ -427,8 +479,7 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
 </TouchableOpacity>
 
 {post.sharedBy && post.sharedBy.length > 0 && (
-    <Text className="text-xs text-orchid-600">
-        Shared by {post.sharedBy.length} user(s)
+    <Text className="text-xs text-orchid-600">{post.sharedBy.length}
     </Text>
 )}
 
@@ -467,21 +518,17 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                 <View className="mb-5 flex h-fit max-h-80 w-full flex-1 rounded-3xl bg-white py-3 shadow-md shadow-slate-300">
                     <View className="flex h-full w-full flex-col">
                         <View className="flex flex-1">
-                            <ScrollView
-                                contentContainerStyle={{
-                                    flexGrow: 1,
-                                    justifyContent: 'flex-start',
-                                }}
-                                className="px-3"
-                                ref={(ref) => {
-                                    this.scrollView = ref
-                                }}
-                                onContentSizeChange={() =>
-                                    this.scrollView.scrollToEnd({
-                                        animated: true,
-                                    })
-                                }
-                            >
+                        <ScrollView
+    ref={scrollViewRef}
+    contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: 'flex-start',
+    }}
+    className="px-3"
+    onContentSizeChange={() =>
+        scrollViewRef.current?.scrollToEnd({ animated: true })
+    }
+>
                                 {comments.map((comment, index) => (
                                     <Comment
                                         key={index}

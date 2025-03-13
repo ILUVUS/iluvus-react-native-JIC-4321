@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState, useEffect, useCallback } from 'react'
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, RefreshControl } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
@@ -11,7 +11,7 @@ const PostScreen = () => {
     const { userId } = route.params || {}; // Get userId from navigation params
     const [sharedPosts, setSharedPosts] = useState([]); // Store only shared posts
     const [refreshing, setRefreshing] = useState(false);
-
+    const [loading, setLoading] = useState(true); // Added loading state
     useEffect(() => {
         fetchSharedPosts(); // Fetch shared posts when screen loads
     }, []);
@@ -32,26 +32,47 @@ const PostScreen = () => {
         }
     };
 
+    const onRefresh = useCallback(() => {
+        fetchSharedPosts();
+    }, []);
+
+
     return (
         <View style={{ flex: 1, backgroundColor: '#fff', padding: 10 }}>
+            {/* Back Button */}
             <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginBottom: 10 }}>
                 <Text style={{ fontSize: 18, color: 'blue' }}>← Back</Text>
             </TouchableOpacity>
 
-            <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>My Shared Posts</Text>
+            {/* Title */}
+            <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 10 }}>
+                My Shared Posts
+            </Text>
 
-            {sharedPosts.length > 0 ? (
-                <ScrollView 
+            {/* Loading Indicator */}
+            {loading ? (
+                <ActivityIndicator size="large" color="blue" style={{ marginTop: 20 }} />
+            ) : (
+                <ScrollView
                     refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={fetchSharedPosts} />
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
                 >
-                    {sharedPosts.map((post, index) => (
-                        <PostItem key={index} post={post} userId={userId} displayCommunityName={!!post.community_id} />
-                    ))}
+                    {sharedPosts.length > 0 ? (
+                        sharedPosts.map((post, index) => (
+                            <PostItem
+                                key={index}
+                                post={post}
+                                userId={userId}
+                                displayCommunityName={!!post.community_id}
+                            />
+                        ))
+                    ) : (
+                        <Text style={{ fontSize: 16, textAlign: 'center', marginTop: 20 }}>
+                            No shared posts available.
+                        </Text>
+                    )}
                 </ScrollView>
-            ) : (
-                <Text style={{ fontSize: 16, textAlign: 'center', marginTop: 20 }}>No shared posts available.</Text>
             )}
         </View>
     );

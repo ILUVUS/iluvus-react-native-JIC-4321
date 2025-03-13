@@ -62,27 +62,22 @@ const Community = () => {
     }, [])
 
     useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            if (!searchValue.trim()) {
-                setUserSearchResults([]);
-                return;
-            }
-    
-            // Fetch Users
-            axios.get(`${BASE_URL}/user/search?filter=${searchValue}`)
-                .then((res) => {
-                    console.log("User Search API Response:", res.data);
-                    setUserSearchResults(res.data || []);
-                })
-                .catch((err) => {
-                    console.log("User Search Error:", err);
-                    setUserSearchResults([]);
-                });
-    
-        });
-    
-        return () => clearTimeout(delayDebounceFn);
+        axios({
+            method: 'GET',
+            url: `${BASE_URL}/community/search?filter=${searchValue}`,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((res) => {
+                console.log("Community Search API Response:", res.data); // Debug log
+                setSearchResultList(res.data);
+            })
+            .catch((err) => {
+                console.log("Community Search Error:", err);
+            });
     }, [searchValue]);
+    
     
     
     
@@ -139,9 +134,8 @@ const Community = () => {
     }
 
     const navigateToUserProfile = (userId) => {
-        navigation.navigate('Profile', { userId }); // Pass userId properly
+        navigation.navigate('Profile', { userId, showBackButton: true }); // Pass `showBackButton` as a param
     };
-    
     
 
     useEffect(() => {
@@ -203,7 +197,6 @@ const Community = () => {
         }
     };
     
-
     const newCommunity = () => {
         navigation.navigate('SetupCommunity')
     }
@@ -298,40 +291,33 @@ const Community = () => {
                     </View>
 
                     <View className="flex flex-row flex-wrap overflow-auto">
-                        {communityListInfo.length > 0 ? (
-                            <>
-                                {communityListInfo.map((info, index) => (
-                                    <CommunityViewImageButton
-                                        key={index}
-                                        onPress={() => communityClick(info.id)}
-                                    >
-                                        <Image
-                                            source={
-                                                info.image != null &&
-                                                info.image !== ''
-                                                    ? {
-                                                          uri: `data:image/jpg;base64,${info.image}`,
-                                                      }
-                                                    : communityIcon
-                                            }
-                                            className="h-24 w-24 rounded-3xl"
-                                        />
-                                        <Text className="mt-1 text-sm text-orchid-900">
-                                            {info.name.length > 12
-                                                ? info.name
-                                                      .substring(0, 10)
-                                                      .trim() + '...'
-                                                : info.name}
-                                        </Text>
-                                    </CommunityViewImageButton>
-                                ))}
-                            </>
-                        ) : (
-                            <View className="flex w-full items-center justify-center gap-2 pt-14">
-                                <ActivityIndicator />
-                                <Text>{STRINGS.loading_indicator}</Text>
-                            </View>
-                        )}
+                    {searchResultList?.length > 0 ? (
+        searchResultList.map((community, index) => (
+        <CommunityViewImageButton
+            key={index}
+            onPress={() => communityClick(info.id)}
+        >
+            <Image
+                source={
+                    info.image != null && info.image !== ''
+                        ? { uri: `data:image/jpg;base64,${info.image}` }
+                        : communityIcon
+                }
+                className="h-24 w-24 rounded-3xl"
+            />
+            <Text className="mt-1 text-sm text-orchid-900">
+                {info.name?.length > 12 
+                    ? info.name.substring(0, 10).trim() + '...'
+                    : info.name}
+            </Text>
+        </CommunityViewImageButton>
+    ))
+) : (
+    <View className="flex w-full items-center justify-center gap-2 pt-14">
+        <ActivityIndicator />
+        <Text>{STRINGS.loading_indicator}</Text>
+    </View>
+)}
                     </View>
                 </ScrollView>
             )}
@@ -371,11 +357,9 @@ const Community = () => {
                                     className="h-24 w-24 rounded-3xl"
                                 />
                                 <Text className="mt-1 text-base text-orchid-900">
-                                    {searchResultList[key].name.length > 12
-                                        ? searchResultList[key].name
-                                            .substring(0, 10)
-                                            .trim() + '...'
-                                        : searchResultList[key].name}
+                                {searchResultList[key]?.name?.length > 12 ? 
+    searchResultList[key]?.name.substring(0, 10).trim() + '...' : 
+    searchResultList[key]?.name || "Unknown"}
                                 </Text>
                             </CommunityViewImageButton>
                         ))}
@@ -384,33 +368,30 @@ const Community = () => {
     <Text className="text-lg font-semibold text-blue-900">
         Users Found
     </Text>
-    {userSearchResults.length === 0 && searchValue.trim() !== '' ? (
-        <Text className="text-base text-gray-600 mt-2">
-            No users found
-        </Text>
-    ) : (
-        userSearchResults.map((user, index) => (
-            <TouchableOpacity key={index} onPress={() => navigateToUserProfile(user.id)}>
-                <View className="flex-row items-center mt-2 p-2 bg-white rounded-md">
+    {(userSearchResults?.length ?? 0) === 0 && searchValue.trim() !== '' ? (
+    <Text className="text-base text-gray-600 mt-2">No users found</Text>
+) : (
+    (userSearchResults || []).map((user, index) => (
+        <TouchableOpacity key={index} onPress={() => navigateToUserProfile(user.id)}>
+            <View className="flex-row items-center mt-2 p-2 bg-white rounded-md">
                 <Image
-    source={
-        user.avatar && user.avatar.trim() !== "" 
-            ? { uri: user.avatar.startsWith("data:image/") 
-                ? user.avatar 
-                : `data:image/jpeg;base64,${user.avatar.trim()}` } 
-            : sampleIcon
-    }
-    className="h-10 w-10 rounded-full mr-3"
-/>
+                    source={
+                        user.avatar && user.avatar.trim() !== "" 
+                            ? { uri: user.avatar.startsWith("data:image/") 
+                                ? user.avatar 
+                                : `data:image/jpeg;base64,${user.avatar.trim()}` } 
+                            : sampleIcon
+                    }
+                    className="h-10 w-10 rounded-full mr-3"
+                />
+                <Text className="text-base text-blue-900">
+                    {user.fname} {user.lname}
+                </Text>
+            </View>
+        </TouchableOpacity>
+    ))
+)}
 
-
-                    <Text className="text-base text-blue-900">
-                        {user.fname} {user.lname}
-                    </Text>
-                </View>
-            </TouchableOpacity>
-        ))
-    )}
 </View>
                 </ScrollView>
             )}
