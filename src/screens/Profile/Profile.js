@@ -9,10 +9,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import { BASE_URL } from '@env'
-import { Alert } from 'react-native';
+import { Alert } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
-import PostItem from '../community/components/PostItem';
-import { useRoute } from '@react-navigation/native';
+import PostItem from '../community/components/PostItem'
+import { useRoute } from '@react-navigation/native'
 
 import { RefreshControl } from 'react-native'
 import { ImageBackground, Image, Keyboard, Modal } from 'react-native'
@@ -27,7 +27,7 @@ import InterestSelector from './InterestSelector'
 import SIZES from '../../constants/sizes'
 import STRINGS from '../../constants/strings'
 import { Ionicons } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -37,93 +37,100 @@ import PersonalBioEditor from './PersonalBioEditor'
 
 // -- NEW IMPORT for SkillSelector
 import SkillSelector from './SkillSelector'
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker'
 
-const Profile = ( ) => {
+const Profile = () => {
     const [userInfo, setUserInfo] = useState({})
     const [refreshing, setRefreshing] = useState(false)
-    const [isTopicSelectorModalVisible, setIsTopicSelectorModalVisible] = useState(false)
+    const [isTopicSelectorModalVisible, setIsTopicSelectorModalVisible] =
+        useState(false)
     const [verify, setVerify] = useState(false)
     const [selectedTopic, setSelectedTopic] = useState({})
     const [interestList, setInterestList] = useState({})
-    const [jobStatus, setJobStatus] = useState('');
-const [jobDetails, setJobDetails] = useState('');
-const [profileBio, setProfileBio] = useState('');
-const [profileImage, setProfileImage] = useState('');
-const navigation = useNavigation()
-const route = useRoute();
-const { userId: profileUserId } = route.params || {}; // ✅ Only extract userId
-const [userId, setUserId] = useState('');
-const [isCurrentUser, setIsCurrentUser] = useState(false);
+    const [jobStatus, setJobStatus] = useState('')
+    const [jobDetails, setJobDetails] = useState('')
+    const [profileBio, setProfileBio] = useState('')
+    const [profileImage, setProfileImage] = useState('')
+    const navigation = useNavigation()
+    const route = useRoute()
+    const { userId: profileUserId, showBackButton } = route.params || {}
 
-const [posts, setPosts] = useState([]);
-const [relationshipStatus, setRelationshipStatus] = useState('');
-const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
-    useState(false);
-
-    // -- NEW STATES for SKILLS
+    const [userId, setUserId] = useState('')
+    const [isCurrentUser, setIsCurrentUser] = useState(false)
+    const [posts, setPosts] = useState([])
+    const [relationshipStatus, setRelationshipStatus] = useState('')
+    const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
+        useState(false)
     const [selectedSkills, setSelectedSkills] = useState({})
-    const [isSkillSelectorModalVisible, setIsSkillSelectorModalVisible] = useState(false)
+    const [isSkillSelectorModalVisible, setIsSkillSelectorModalVisible] =
+        useState(false)
     useEffect(() => {
-        getVerified()
-        const findUserInfoById = async () => {
+        const checkCurrentUser = async () => {
             try {
-                const userId = await AsyncStorage.getItem('userId');
-                if (!userId) {
-                    console.error('Error: No userId found in AsyncStorage');
-                    return;
+                const storedUserId = await AsyncStorage.getItem('userId')
+                console.log('Stored User ID:', storedUserId)
+                //not loading??
+                console.log('Profile User ID from Route:', profileUserId)
+
+                if (!storedUserId) {
+                    console.error('Error: No userId found in AsyncStorage')
+                    return
                 }
-                axios.post(`${BASE_URL}/user/verify`, { userId })
-                    .then(() => setVerify(true))
-                    .catch(err => {
-                        console.error('cannot verify', err);
-                        setVerify(false);
-                    });
-                                if (value !== null) {
-                    setUserId(value)
-                }
-            } catch (e) {
-                console.log('cannot get verify' + e)
+
+                const finalUserId = profileUserId || storedUserId
+                console.log('Final User ID being set:', finalUserId)
+
+                setUserId(finalUserId)
+                setIsCurrentUser(storedUserId.trim() === finalUserId.trim())
+                console.log(
+                    'Is Current User:',
+                    storedUserId.trim() === finalUserId.trim()
+                )
+            } catch (error) {
+                console.error('Error checking current user:', error)
             }
         }
-        findUserInfoById()
-    }, [])
+
+        checkCurrentUser()
+        const unsubscribe = navigation.addListener('focus', () => {
+            checkCurrentUser()
+        })
+        return unsubscribe
+    }, [profileUserId, navigation])
 
     useEffect(() => {
-        getUserId();
-    }, []);
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const loggedInUserId = await AsyncStorage.getItem('userId');
-            setIsCurrentUser(loggedInUserId === profileUserId);
-            setUserId(profileUserId || loggedInUserId); 
-        };
-        fetchUserData();
-    }, [profileUserId]);
-    
-
-    useEffect(() => {
-        if (userId) {
-            //fetchUserPosts();
-            fetchSharedPosts();
-            //fetchTaggedPosts();
+        if (userId && userId.trim() !== '') {
+            fetchSharedPosts()
         }
-    }, [userId]);
+    }, [userId])
 
-    useEffect(() => {
-        const checkUser = async () => {
-            const loggedInUserId = await AsyncStorage.getItem('userId');
-            setIsCurrentUser(loggedInUserId === profileUserId);
-        };
-        checkUser();
-    }, [profileUserId]);
-    
+    const handleBackPress = async () => {
+        if (showBackButton) {
+            try {
+                // Retrieve your own user ID from AsyncStorage
+                const storedUserId = await AsyncStorage.getItem('userId')
+                if (storedUserId) {
+                    navigation.replace('Profile', {
+                        userId: storedUserId,
+                        showBackButton: false,
+                    })
+                } else {
+                    console.error('No stored user ID found.')
+                    navigation.goBack()
+                }
+            } catch (error) {
+                console.error('Error retrieving user ID:', error)
+                navigation.goBack()
+            }
+        } else {
+            navigation.goBack()
+        }
+    }
 
     const getUserId = async () => {
-        const id = await AsyncStorage.getItem('userId');
-        setUserId(id);
-    };
+        const id = await AsyncStorage.getItem('userId')
+        setUserId(id)
+    }
 
     // const fetchUserPosts = async () => {
     //     axios({
@@ -141,21 +148,31 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
 
     const fetchSharedPosts = async () => {
         try {
-            const response = await axios.get(`${BASE_URL}/post/getSharedPosts?userId=${userId}`);
-    
-            // Ensure we get posts that were shared by the user, even if they were not the original author
-            const sharedPosts = response.data.map(post => ({ ...post, type: 'Shared' }));
-    
-            setPosts(prevPosts => [
-                ...prevPosts.filter(post => post.type !== 'Shared'), // Remove old shared posts
-                ...sharedPosts // Append updated shared posts
-            ]);
+            const response = await axios.get(
+                `${BASE_URL}/post/getSharedPosts?userId=${userId}`
+            )
+
+            if (!response.data || !Array.isArray(response.data)) {
+                console.log('No shared posts found.')
+                setPosts((prevPosts) =>
+                    prevPosts.filter((post) => post.type !== 'Shared')
+                ) // Clear old shared posts
+                return
+            }
+
+            const sharedPosts = response.data.map((post) => ({
+                ...post,
+                type: 'Shared',
+            }))
+
+            setPosts((prevPosts) => [
+                ...prevPosts.filter((post) => post.type !== 'Shared'), // Remove old shared posts
+                ...sharedPosts, // Append updated shared posts
+            ])
         } catch (err) {
-            console.log('Cannot fetch shared posts', err);
+            console.error('Cannot fetch shared posts', err)
         }
-    };
-    
-    
+    }
 
     // const fetchTaggedPosts = async () => {
     //     axios({
@@ -172,13 +189,16 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     // }
 
     const navigateToPosts = () => {
-        navigation.navigate('PostScreen', { 
-            userId: userId, 
-            posts: posts // Pass both personal and shared posts
-        });
-    };
-    
-    
+        if (posts.length === 0) {
+            Alert.alert('No Posts', "You haven't shared any posts yet.")
+            return
+        }
+
+        navigation.navigate('PostScreen', {
+            userId: userId,
+            posts: posts, // Pass both personal and shared posts
+        })
+    }
 
     const onRefresh = useCallback(() => {
         getVerified()
@@ -196,16 +216,15 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 'Content-Type': 'application/json',
             },
         })
-        .then(() => {
-            setVerify(true);
-        })
-        .catch((err) => {
-            console.log('cannot verify' + err);
-            setVerify(false);
-        });
-    };
-    
-    
+            .then(() => {
+                setVerify(true)
+            })
+            .catch((err) => {
+                console.log('cannot verify' + err)
+                setVerify(false)
+            })
+    }
+
     const handlePickImage = async () => {
         // // Request media library permissions
         // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -225,36 +244,45 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 base64: true,
                 aspect: [1, 1], // Square image2w
                 quality: 1,
-            });
+            })
 
             if (!result.canceled) {
-                const base64Image = result.assets[0].base64;
-                handleUploadImage(base64Image);
+                const base64Image = result.assets[0].base64
+                handleUploadImage(base64Image)
             }
         } catch (error) {
-            console.error('Error picking an image:', error);
-            Alert.alert('Error', 'Unable to pick an image. Please try again.');
+            console.error('Error picking an image:', error)
+            Alert.alert('Error', 'Unable to pick an image. Please try again.')
         }
-    };
+    }
 
     const handleUploadImage = async (base64Image) => {
+        if (!isCurrentUser) {
+            Alert.alert('Unauthorized', 'You can only edit your own profile.')
+            return
+        }
         try {
-            const response = await axios.post(`${BASE_URL}/user/editProfileImage`, {    
-                userId,
-                image: base64Image,
-            });
+            const response = await axios.post(
+                `${BASE_URL}/user/editProfileImage`,
+                {
+                    userId,
+                    image: base64Image,
+                }
+            )
             if (response.status === 200) {
-                Alert.alert('Success', 'Profile image updated successfully!');
-                setProfileImage(base64Image); // Update the profile image locally
-                getUserInfo(userId); // Refresh user info
+                Alert.alert('Success', 'Profile image updated successfully!')
+                setProfileImage(base64Image)
+                getUserInfo(userId)
             }
         } catch (error) {
-            console.error('Error uploading image:', error);
-            Alert.alert('Error', 'Failed to update the profile image. Please try again.');
+            console.error('Error uploading image:', error)
+            Alert.alert(
+                'Error',
+                'Failed to update the profile image. Please try again.'
+            )
         }
-    };
-    
-    
+    }
+
     const getTopics = async (name) => {
         axios({
             method: 'GET',
@@ -309,7 +337,9 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
     // ---------------------------
     const saveSkills = async () => {
         // Turn { '0': 'JavaScript', '1': 'Python' } -> "JavaScript,Python"
-        const skillArray = Object.keys(selectedSkills).map((key) => selectedSkills[key])
+        const skillArray = Object.keys(selectedSkills).map(
+            (key) => selectedSkills[key]
+        )
         const selectedSkillsString = skillArray.join(',')
 
         axios({
@@ -361,9 +391,9 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 setRelationshipStatus(data.relationshipStatus || '')
 
                 if (data.image && data.image.trim().length > 0) {
-                    setProfileImage(`data:image/jpeg;base64,${data.image}`);
+                    setProfileImage(`data:image/jpeg;base64,${data.image}`)
                 } else {
-                    setProfileImage(null); // Fallback
+                    setProfileImage(null) // Fallback
                 }
 
                 // If the server returns data.skills as an array
@@ -404,7 +434,10 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                 <ScrollView
                     style={{ flex: 1 }}
                     refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
                     }
                     horizontal={false}
                     contentContainerStyle={{
@@ -414,6 +447,19 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                     className="flex h-screen w-screen overflow-auto bg-white px-6 py-4"
                     onTouchStart={Keyboard.dismiss}
                 >
+                    {showBackButton && (
+                        <TouchableOpacity
+                            onPress={handleBackPress}
+                            style={{ padding: 10 }}
+                        >
+                            <Ionicons
+                                name="arrow-back"
+                                size={28}
+                                color="black"
+                            />
+                        </TouchableOpacity>
+                    )}
+
                     {Object.keys(userInfo).length > 0 ? (
                         <>
                             <ImageBackground
@@ -426,19 +472,20 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                             >
                                 <View className="height-fit relative w-fit">
                                     <View className="mb-5 flex h-fit w-28 items-center justify-center rounded-full bg-white shadow shadow-slate-600">
-                                    <Image
-    source={
-        profileImage 
-            ? { uri: profileImage } 
-            : userInfo.gender === 'Female'
-                ? profile_icon_f
-                : userInfo.gender === 'Male'
-                    ? profile_icon_m
-                    : profile_icon_x
-    }
-    className="h-40 w-40 rounded-full"
-/>
-
+                                        <Image
+                                            source={
+                                                profileImage
+                                                    ? { uri: profileImage }
+                                                    : userInfo.gender ===
+                                                        'Female'
+                                                      ? profile_icon_f
+                                                      : userInfo.gender ===
+                                                          'Male'
+                                                        ? profile_icon_m
+                                                        : profile_icon_x
+                                            }
+                                            className="h-40 w-40 rounded-full"
+                                        />
                                     </View>
                                     {verify && (
                                         <View className="absolute bottom-3 right-1">
@@ -450,8 +497,6 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                         </View>
                                     )}
                                 </View>
-
-
 
                                 <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
                                     <View className="mb-1 flex flex-row gap-2">
@@ -470,18 +515,20 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                                 {jobStatus || 'Not specified'}
                                             </Text>
                                         </View>
-                                        {jobStatus !== 'Other' && jobDetails && (
-                                            <View className="flex flex-row items-start justify-start">
-                                                <Text className="mr-3 text-base font-semibold text-orchid-800">
-                                                    {jobStatus === 'Employed'
-                                                        ? 'Job Details:'
-                                                        : 'Field of Study:'}
-                                                </Text>
-                                                <Text className="text-base text-orchid-800">
-                                                    {jobDetails}
-                                                </Text>
-                                            </View>
-                                        )}
+                                        {jobStatus !== 'Other' &&
+                                            jobDetails && (
+                                                <View className="flex flex-row items-start justify-start">
+                                                    <Text className="mr-3 text-base font-semibold text-orchid-800">
+                                                        {jobStatus ===
+                                                        'Employed'
+                                                            ? 'Job Details:'
+                                                            : 'Field of Study:'}
+                                                    </Text>
+                                                    <Text className="text-base text-orchid-800">
+                                                        {jobDetails}
+                                                    </Text>
+                                                </View>
+                                            )}
                                     </View>
 
                                     {/* Relationship Status */}
@@ -491,52 +538,82 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                                 Relationship Status:
                                             </Text>
                                             <Text className="text-base text-orchid-800">
-                                                {relationshipStatus || 'Not specified'}
+                                                {relationshipStatus ||
+                                                    'Not specified'}
                                             </Text>
                                         </View>
                                     </View>
 
-                                    {isCurrentUser && (
-    <TouchableOpacity onPress={() => setIsJobRelationshipModalVisible(true)}>
-        <Ionicons
-            name="create-outline"
-            size={SIZES.mediumIconSize}
-            color={COLORS['orchid'][900]}
-        />
-    </TouchableOpacity>
-)}
+                                    {isCurrentUser ? (
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                setIsJobRelationshipModalVisible(
+                                                    true
+                                                )
+                                            }
+                                        >
+                                            <Ionicons
+                                                name="create-outline"
+                                                size={SIZES.mediumIconSize}
+                                                color={COLORS['orchid'][900]}
+                                            />
+                                        </TouchableOpacity>
+                                    ) : null}
 
-<TouchableOpacity onPress={handlePickImage}>
-    <View className="flex flex-col items-center">
-        <View className="mt-2">
-        {isCurrentUser && (
-            <TouchableOpacity
-                style={{
-                    backgroundColor: COLORS['orchid'][800],
-                    borderRadius: 20,
-                    paddingVertical: 8,
-                    paddingHorizontal: 12,
-                    shadowOpacity: 0.25,
-                    shadowRadius: 4,
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                }}
-                onPress={handlePickImage}
-            >
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>
-                    Change Profile Photo
-                </Text>
-            </TouchableOpacity>
-        )}
-        </View>
-    </View>
-</TouchableOpacity>
-
-
-
-
-</View>
-
+                                    <TouchableOpacity onPress={handlePickImage}>
+                                        <View className="flex flex-col items-center">
+                                            <View className="mt-2">
+                                                {isCurrentUser ? (
+                                                    <TouchableOpacity
+                                                        onPress={
+                                                            handlePickImage
+                                                        }
+                                                    >
+                                                        <View className="flex flex-col items-center">
+                                                            <View className="mt-2">
+                                                                <TouchableOpacity
+                                                                    style={{
+                                                                        backgroundColor:
+                                                                            COLORS[
+                                                                                'orchid'
+                                                                            ][800],
+                                                                        borderRadius: 20,
+                                                                        paddingVertical: 8,
+                                                                        paddingHorizontal: 12,
+                                                                        shadowOpacity: 0.25,
+                                                                        shadowRadius: 4,
+                                                                        shadowColor:
+                                                                            '#000',
+                                                                        shadowOffset:
+                                                                            {
+                                                                                width: 0,
+                                                                                height: 2,
+                                                                            },
+                                                                    }}
+                                                                    onPress={
+                                                                        handlePickImage
+                                                                    }
+                                                                >
+                                                                    <Text
+                                                                        style={{
+                                                                            color: 'white',
+                                                                            fontWeight:
+                                                                                'bold',
+                                                                        }}
+                                                                    >
+                                                                        Change
+                                                                        Profile
+                                                                        Photo
+                                                                    </Text>
+                                                                </TouchableOpacity>
+                                                            </View>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                ) : null}
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
 
                                 <View className="mb-5 flex items-center justify-center">
                                     <View className="mb-1 flex flex-row gap-1">
@@ -549,12 +626,9 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                             {STRINGS.profesional_account}
                                         </Text>
                                     )}
-                                   <Text
-    className="text-base text-orchid-800 bg-white px-2 py-1 rounded-md shadow"
->
-    {profileBio}
-</Text>
-
+                                    <Text className="rounded-md bg-white px-2 py-1 text-base text-orchid-800 shadow">
+                                        {profileBio}
+                                    </Text>
                                 </View>
 
                                 <View className="flex flex-row items-center justify-center gap-5" />
@@ -583,31 +657,32 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                     <Text className="text-base font-semibold text-orchid-800">
                                         {STRINGS.interests_details}
                                     </Text>
-                                    {isCurrentUser && (
-    <TouchableOpacity onPress={editProfile}>
-        <Ionicons
-            name="create-outline"
-            size={SIZES.mediumIconSize}
-            color={COLORS['orchid'][900]}
-        />
-    </TouchableOpacity>
-)}
-
+                                    {isCurrentUser ? (
+                                        <TouchableOpacity onPress={editProfile}>
+                                            <Ionicons
+                                                name="create-outline"
+                                                size={SIZES.mediumIconSize}
+                                                color={COLORS['orchid'][900]}
+                                            />
+                                        </TouchableOpacity>
+                                    ) : null}
                                 </View>
                                 <View className="my-1 flex flex-grow flex-row flex-wrap gap-2">
                                     {selectedTopic &&
-                                        Object.keys(selectedTopic).map((key) => {
-                                            return (
-                                                <View
-                                                    key={key}
-                                                    className="rounded-full bg-orchid-100 px-3 py-1 "
-                                                >
-                                                    <Text className="text-base text-orchid-900">
-                                                        {selectedTopic[key]}
-                                                    </Text>
-                                                </View>
-                                            )
-                                        })}
+                                        Object.keys(selectedTopic).map(
+                                            (key) => {
+                                                return (
+                                                    <View
+                                                        key={key}
+                                                        className="rounded-full bg-orchid-100 px-3 py-1 "
+                                                    >
+                                                        <Text className="text-base text-orchid-900">
+                                                            {selectedTopic[key]}
+                                                        </Text>
+                                                    </View>
+                                                )
+                                            }
+                                        )}
                                 </View>
 
                                 {/* Skills */}
@@ -615,32 +690,42 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                     <Text className="text-base font-semibold text-orchid-800">
                                         Skills
                                     </Text>
-                                    {isCurrentUser && (
-                                    <TouchableOpacity
-                                        onPress={() => setIsSkillSelectorModalVisible(true)}
-                                    >
-                                        <Ionicons
-                                            name="create-outline"
-                                            size={SIZES.mediumIconSize}
-                                            color={COLORS['orchid'][900]}
-                                        />
-                                    </TouchableOpacity>
-                                    )}
+                                    {isCurrentUser ? (
+                                        <TouchableOpacity
+                                            onPress={() =>
+                                                setIsSkillSelectorModalVisible(
+                                                    true
+                                                )
+                                            }
+                                        >
+                                            <Ionicons
+                                                name="create-outline"
+                                                size={SIZES.mediumIconSize}
+                                                color={COLORS['orchid'][900]}
+                                            />
+                                        </TouchableOpacity>
+                                    ) : null}
                                 </View>
                                 <View className="my-1 flex flex-grow flex-row flex-wrap gap-2">
                                     {selectedSkills &&
-                                        Object.keys(selectedSkills).map((key) => {
-                                            return (
-                                                <View
-                                                    key={key}
-                                                    className="rounded-full bg-orchid-100 px-3 py-1 "
-                                                >
-                                                    <Text className="text-base text-orchid-900">
-                                                        {selectedSkills[key]}
-                                                    </Text>
-                                                </View>
-                                            )
-                                        })}
+                                        Object.keys(selectedSkills).map(
+                                            (key) => {
+                                                return (
+                                                    <View
+                                                        key={key}
+                                                        className="rounded-full bg-orchid-100 px-3 py-1 "
+                                                    >
+                                                        <Text className="text-base text-orchid-900">
+                                                            {
+                                                                selectedSkills[
+                                                                    key
+                                                                ]
+                                                            }
+                                                        </Text>
+                                                    </View>
+                                                )
+                                            }
+                                        )}
                                 </View>
                             </View>
 
@@ -653,7 +738,9 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                             >
                                 <InterestSelector
                                     key={Math.random()}
-                                    setModalVisibility={setIsTopicSelectorModalVisible}
+                                    setModalVisibility={
+                                        setIsTopicSelectorModalVisible
+                                    }
                                     selectedTopic={selectedTopic}
                                     setSelectedTopic={setSelectedTopic}
                                 />
@@ -667,7 +754,9 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                 animationType="slide"
                             >
                                 <SkillSelector
-                                    setModalVisibility={setIsSkillSelectorModalVisible}
+                                    setModalVisibility={
+                                        setIsSkillSelectorModalVisible
+                                    }
                                     selectedSkills={selectedSkills}
                                     setSelectedSkills={setSelectedSkills}
                                 />
@@ -682,7 +771,9 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                     animationType="slide"
                                 >
                                     <PersonalBioEditor
-                                        setModalVisibility={setIsJobRelationshipModalVisible}
+                                        setModalVisibility={
+                                            setIsJobRelationshipModalVisible
+                                        }
                                         userId={userId}
                                         profileBio={profileBio}
                                         setProfileBio={setProfileBio}
@@ -691,7 +782,9 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                                         jobDetails={jobDetails}
                                         setJobDetails={setJobDetails}
                                         relationshipStatus={relationshipStatus}
-                                        setRelationshipStatus={setRelationshipStatus}
+                                        setRelationshipStatus={
+                                            setRelationshipStatus
+                                        }
                                     />
                                 </Modal>
                             )}
@@ -700,20 +793,21 @@ const [isJobRelationshipModalVisible, setIsJobRelationshipModalVisible] =
                         <ActivityIndicator />
                     )}
 
-{isCurrentUser && (
-    <>
-        <Text className="text-2xl font-bold text-orchid-900 mb-4">
-            {STRINGS.profilePosts}
-        </Text>
-        <TouchableOpacity 
-            onPress={navigateToPosts} 
-            className="mb-4 p-2 bg-orchid-900 rounded-full text-center">
-            <Text className="text-white font-bold text-center">View My Shared Posts</Text>
-        </TouchableOpacity>
-    </>
-)}
-
-
+                    {isCurrentUser ? (
+                        <>
+                            <Text className="mb-4 text-2xl font-bold text-orchid-900">
+                                {STRINGS.profilePosts}
+                            </Text>
+                            <TouchableOpacity
+                                onPress={navigateToPosts}
+                                className="mb-4 rounded-full bg-orchid-900 p-2 text-center"
+                            >
+                                <Text className="text-center font-bold text-white">
+                                    View My Shared Posts
+                                </Text>
+                            </TouchableOpacity>
+                        </>
+                    ) : null}
                 </ScrollView>
             </KeyboardAvoidingView>
         </View>
