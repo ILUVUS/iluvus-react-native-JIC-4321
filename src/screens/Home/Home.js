@@ -100,7 +100,7 @@ const Home = () => {
            setFilteredPosts([]);
        }
         */
-       alert("search value: " + searchValue);
+       //alert("search value: " + searchValue);
        try {
            const res = await axios.get(`${BASE_URL}/post/search`, {
                params: {
