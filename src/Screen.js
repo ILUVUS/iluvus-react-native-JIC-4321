@@ -1,10 +1,10 @@
 import { LogBox } from 'react-native'
 
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack' 
+import { createStackNavigator } from '@react-navigation/stack'
 
 import STRINGS from './constants/strings'
-import PostScreen from './screens/Profile/PostScreen';  
+import PostScreen from './screens/Profile/PostScreen'
 import HomeScreen from './screens/HomeScreen'
 import LoginScreen from './screens/login/Login'
 import RegistrationScreen from './screens/login/Registration'
@@ -21,6 +21,7 @@ import MyGroup from './screens/community/MyGroup'
 import MyCreatedGroup from './screens/community/MyCreatedGroup'
 import MediaViewer from './screens/community/components/MediaViewer'
 import ForgotPasswordScreen from './screens/login/ForgotPasswordScreen'
+import CommunityFilterScreen from './screens/community/CommunityFilterScreen'
 
 LogBox.ignoreAllLogs(true)
 
@@ -55,14 +56,14 @@ export default function Screen() {
                         headerShown: false,
                     }}
                 />
-<Stack.Screen
-    name="PostScreen"  // Make sure this matches exactly with navigation.navigate()
-    component={PostScreen}
-    options={{
-        title: "My Posts",
-        headerShown: true,
-    }}
-/>
+                <Stack.Screen
+                    name="PostScreen" // Make sure this matches exactly with navigation.navigate()
+                    component={PostScreen}
+                    options={{
+                        title: 'My Posts',
+                        headerShown: true,
+                    }}
+                />
 
                 <Stack.Screen
                     name={STRINGS.registerscreen}
@@ -170,11 +171,19 @@ export default function Screen() {
                         headerShown: false,
                     }}
                 />
-                 <Stack.Screen
+                <Stack.Screen
                     name="ForgotPasswordScreen"
                     component={ForgotPasswordScreen}
                     options={{
-                        title: "Forgot Password",
+                        title: 'Forgot Password',
+                        headerShown: true,
+                    }}
+                />
+                <Stack.Screen
+                    name="CommunityFilterScreen"
+                    component={CommunityFilterScreen}
+                    options={{
+                        title: 'Filter Communities',
                         headerShown: true,
                     }}
                 />
