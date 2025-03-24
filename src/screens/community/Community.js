@@ -70,6 +70,29 @@ const Community = () => {
         }
     }, [route.params?.filters])
 
+    // useEffect(() => {
+    //     const delayDebounceFn = setTimeout(() => {
+    //         if (!searchValue.trim()) {
+    //             setUserSearchResults([]);
+    //             return;
+    //         }
+
+    //         // Fetch Users
+    //         axios.get(`${BASE_URL}/user/search?filter=${searchValue}`)
+    //             .then((res) => {
+    //                 console.log("User Search API Response:", res.data);
+    //                 setUserSearchResults(res.data || []);
+    //             })
+    //             .catch((err) => {
+    //                 console.log("User Search Error:", err);
+    //                 setUserSearchResults([]);
+    //             });
+
+    //     });
+
+    //     return () => clearTimeout(delayDebounceFn);
+    // }, [searchValue]);
+
     const fetchFilteredCommunities = async (filters) => {
         const { selectedCommunityType, selectedVisibility, ownerSearch } =
             filters
@@ -102,45 +125,23 @@ const Community = () => {
         }
     }
 
-    useEffect(() => {
-        const delayDebounceFn = setTimeout(() => {
-            if (!searchValue.trim()) {
-                setUserSearchResults([])
-                return
-            }
 
-            // Fetch Users
-            axios
-                .get(`${BASE_URL}/user/search?filter=${searchValue}`)
-                .then((res) => {
-                    console.log('User Search API Response:', res.data)
-                    setUserSearchResults(res.data || [])
-                })
-                .catch((err) => {
-                    console.log('User Search Error:', err)
-                    setUserSearchResults([])
-                })
-        })
-
-        return () => clearTimeout(delayDebounceFn)
-    }, [searchValue])
-
-    useEffect(() => {
-        axios({
-            method: 'GET',
-            url: `${BASE_URL}/community/search?filter=${searchValue}`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                // console.log(res.data)
-                setSearchResultList(res.data)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }, [searchValue])
+    // useEffect(() => {
+    //     axios({
+    //         method: 'GET',
+    //         url: `${BASE_URL}/community/search?filter=${searchValue}`,
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //     })
+    //         .then((res) => {
+    //             // console.log(res.data)
+    //             setSearchResultList(res.data)
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //         })
+    // }, [searchValue])
 
     const fetchCommunityList = async () => {
         axios({
@@ -179,6 +180,7 @@ const Community = () => {
     const navigateToUserProfile = (userId) => {
         navigation.navigate('Profile', { userId }) // Pass userId properly
     }
+
 
     useEffect(() => {
         setCommunityListInfo([])
@@ -219,31 +221,25 @@ const Community = () => {
 
     const fetchCommunitySearch = async (filter) => {
         try {
-            const userId = await AsyncStorage.getItem('userId')
-            if (!userId) return
+            const userId = await AsyncStorage.getItem('userId');
+            if (!userId) return;
 
-            const res = await axios.get(
-                `${BASE_URL}/user/getMyFollowingGroups?userId=${userId}`
-            )
+            const res = await axios.get(`${BASE_URL}/user/getMyFollowingGroups?userId=${userId}`);
             if (res.data) {
                 const filteredCommunities = Object.keys(res.data)
-                    .filter((id) =>
-                        res.data[id]
-                            .toLowerCase()
-                            .includes(filter.toLowerCase())
-                    )
+                    .filter((id) => res.data[id].toLowerCase().includes(filter.toLowerCase()))
                     .map((id) => ({
                         id,
                         name: res.data[id],
-                        image: '', // Placeholder for images
-                    }))
-                setSearchResultList(filteredCommunities)
+                        image: '',  // Placeholder for images
+                    }));
+                setSearchResultList(filteredCommunities);
             }
         } catch (err) {
-            console.error('Community Search Error:', err)
-            setSearchResultList([])
+            console.error("Community Search Error:", err);
+            setSearchResultList([]);
         }
-    }
+    };
 
     const newCommunity = () => {
         navigation.navigate('SetupCommunity')
@@ -265,9 +261,35 @@ const Community = () => {
         navigation.navigate(STRINGS.communityView, { communityId: id })
     }
 
-    const searchFunction = (text) => {
-        setSearchValue(text)
-    }
+    const searchFunction = debounce(async (text) => {
+        setSearchValue(text);
+
+        if (text.length === 0) {
+            setSearchResultList([]);
+            setUserSearchResults([]); 
+            return;
+        }
+
+        try {
+            const [communityRes, userRes] = await Promise.all([
+                axios.get(`${BASE_URL}/community/search?filter=${text}`),
+                axios.get(`${BASE_URL}/user/search?filter=${text}`)
+            ]);
+
+            console.log("Community Search Response:", communityRes.data);
+            console.log("User Search Response:", userRes.data);
+
+            setSearchResultList(communityRes.data || []);
+            setUserSearchResults(userRes.data || []);
+
+
+
+        } catch (err) {
+            console.error("Search error:", err);
+            Alert.alert("Error", "Failed to fetch search results. Please try again.");
+        }
+
+    }, 500);
 
     const statusBarHeight = StatusBar.currentHeight
     const screenHeight = Dimensions.get('screen').height
@@ -289,20 +311,17 @@ const Community = () => {
                 }}
             >
                 <View style={{ flex: 1 }}>
-                    <SearchBar
-                        placeholder={STRINGS.communitySearchBar}
-                        onChangeText={searchFunction}
-                        value={searchValue}
-                        containerStyle={[
-                            searchBarStyle.containerSearchBar,
-                            { width: '104%' },
-                        ]}
-                        inputContainerStyle={searchBarStyle.inputSearchBar}
-                        inputStyle={searchBarStyle.input}
-                        placeholderTextColor={COLORS['orchid'][400]}
-                        searchIcon={searchBarStyle.seachIcon}
-                        clearIcon={searchBarStyle.clearIcon}
-                    />
+                <SearchBar
+    placeholder={STRINGS.communitySearchBar}
+    onChangeText={(text) => searchFunction(text)}
+    value={searchValue}
+    containerStyle={[searchBarStyle.containerSearchBar]}
+    inputContainerStyle={searchBarStyle.inputSearchBar}
+    inputStyle={searchBarStyle.input}
+    placeholderTextColor={COLORS['orchid'][400]}
+    searchIcon={searchBarStyle.seachIcon}
+    clearIcon={searchBarStyle.clearIcon}
+/>
                 </View>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('CommunityFilterScreen')}
@@ -380,8 +399,9 @@ const Community = () => {
                                                 info.image != null &&
                                                 info.image !== ''
                                                     ? {
-                                                          uri: `data:image/jpg;base64,${info.image}`,
-                                                      }
+                                                        uri: `data:image/jpg;base64,${info.image}`
+
+                                                    }
                                                     : communityIcon
                                             }
                                             className="h-24 w-24 rounded-3xl"
@@ -403,6 +423,7 @@ const Community = () => {
                             </View>
                         )}
                     </View>
+                    
                 </ScrollView>
             )}
 

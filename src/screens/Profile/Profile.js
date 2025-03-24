@@ -48,6 +48,7 @@ const Profile = () => {
     const [selectedTopic, setSelectedTopic] = useState({})
     const [interestList, setInterestList] = useState({})
     const [jobStatus, setJobStatus] = useState('')
+   
     const [jobDetails, setJobDetails] = useState('')
     const [profileBio, setProfileBio] = useState('')
     const [profileImage, setProfileImage] = useState('')
@@ -104,6 +105,14 @@ const Profile = () => {
         }
     }, [userId])
 
+    useEffect(() => {
+        const checkUser = async () => {
+            const loggedInUserId = await AsyncStorage.getItem('userId');
+            setIsCurrentUser(loggedInUserId === profileUserId);
+        };
+        checkUser();
+    }, [profileUserId]);
+
     const handleBackPress = async () => {
         if (showBackButton) {
             try {
@@ -125,11 +134,6 @@ const Profile = () => {
         } else {
             navigation.goBack()
         }
-    }
-
-    const getUserId = async () => {
-        const id = await AsyncStorage.getItem('userId')
-        setUserId(id)
     }
 
     // const fetchUserPosts = async () => {
