@@ -19,7 +19,7 @@ import Constants from 'expo-constants';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faFilter, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
 
 import STRINGS from '../../constants/strings';
@@ -33,7 +33,6 @@ const Home = () => {
    const [userId, setUserId] = useState('');
    const [refreshing, setRefreshing] = useState(false);
    const [searchValue, setSearchValue] = useState('');
-   const [doneSearch, setDoneSearch] = useState(false);
   
    const navigation = useNavigation();
    const route = useRoute();
@@ -83,38 +82,24 @@ const Home = () => {
    };
 
    const handleSearch = async (text) => {
-       //setSearchValue(text);
-       //if (text.trim() === '') {
-       //    setFilteredPosts(postData);
-       //    return;
-       //}
-       /*
+       setSearchValue(text);
+
+
+       if (text.trim() === '') {
+           setFilteredPosts(postData);
+           return;
+       }
+
+
        try {
            const res = await axios.get(`${BASE_URL}/post/search?filter=${text}`, {
                headers: { 'Content-Type': 'application/json' },
            });
            setFilteredPosts(res.data);
        } catch (err) {
-           //alert("error: " + err);
            console.log('Search API failed', err);
            setFilteredPosts([]);
        }
-        */
-       alert("search value: " + searchValue);
-       try {
-           const res = await axios.get(`${BASE_URL}/post/search`, {
-               params: {
-                   userId: userId, // Make sure you have the user's ID
-                   searchTerm: searchValue
-               },
-               headers: { 'Content-Type': 'application/json' },
-           });
-           setFilteredPosts(res.data);
-       } catch (err) {
-           console.error('Search API failed', err);
-           setFilteredPosts([]);
-       }
-       setDoneSearch(true);
    };
 
 
@@ -147,11 +132,8 @@ const Home = () => {
            console.log('Filter Error:', err);
        }
    };
+  
 
-    const handleSaveSearchText = async (text) => {
-        setSearchValue(text);
-        setDoneSearch(false);
-    }
 
    return (
        <>
@@ -167,10 +149,9 @@ const Home = () => {
                        {/* Search Bar */}
                        <SearchBar
                            placeholder="Search posts..."
-                           //onChangeText={handleSearch}
-                           onChangeText={handleSaveSearchText}
+                           onChangeText={handleSearch}
                            value={searchValue}
-                           containerStyle={[searchBarStyle.containerSearchBar, { width: '72%' }]}
+                           containerStyle={[searchBarStyle.containerSearchBar, { width: '88%' }]}
                            inputContainerStyle={searchBarStyle.inputSearchBar}
                            inputStyle={searchBarStyle.input}
                            placeholderTextColor={COLORS['orchid'][400]}
@@ -178,20 +159,12 @@ const Home = () => {
                            clearIcon={searchBarStyle.clearIcon}
                        />
 
-                       {/* Search Button */}
-                       <TouchableOpacity
-                           onPress={handleSearch}
-                           className="p-3 bg-orchid-900 rounded-lg ml-2"
-                           style={{ width: "12.5%", height: 45, justifyContent: 'center', alignItems: 'center' }}
-                       >
-                           <FontAwesomeIcon icon={faSearch} size={20} color="white"/>
-                       </TouchableOpacity>
 
                        {/* Filter Button */}
                        <TouchableOpacity
                            onPress={() => navigation.navigate('HomeFilterScreen')}
                            className="p-3 bg-orchid-900 rounded-lg ml-2"
-                           style={{ width: "12.5%", height: 45, justifyContent: 'center', alignItems: 'center' }}
+                           style={{ width: 45, height: 45, justifyContent: 'center', alignItems: 'center' }}
                        >
                            <FontAwesomeIcon icon={faFilter} size={20} color="white" />
                        </TouchableOpacity>
@@ -217,7 +190,7 @@ const Home = () => {
                                ))
                            ) : (
                                <View className="flex h-full w-full items-center justify-center gap-2">
-                                   {(searchValue.trim() !== '' && doneSearch === true) ? (
+                                   {searchValue.trim() !== '' ? (
                                        <Text className="text-lg font-semibold text-orchid-900">
                                            No matching posts found.
                                        </Text>
