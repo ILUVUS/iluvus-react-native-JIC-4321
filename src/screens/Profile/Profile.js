@@ -113,6 +113,14 @@ const Profile = () => {
         checkUser();
     }, [profileUserId]);
 
+    useLayoutEffect(() => {
+        navigation.setOptions({
+          headerShown: true,
+          title: 'Profile',
+        });
+      }, [navigation]);
+      
+
     const handleBackPress = async () => {
         if (showBackButton) {
             try {
@@ -430,6 +438,27 @@ const Profile = () => {
 
     return (
         <View style={{ flex: 1 }} className="flex h-screen w-screen">
+            {navigation.canGoBack() && (
+  <TouchableOpacity
+    onPress={() => navigation.goBack()}
+    style={{
+      position: 'absolute',
+      top: 50,
+      left: 20,
+      zIndex: 10,
+      padding: 8,
+      backgroundColor: 'white',
+      borderRadius: 999,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 3,
+    }}
+  >
+    <Ionicons name="arrow-back" size={24} color="black" />
+  </TouchableOpacity>
+)}
+
             <KeyboardAvoidingView
                 behavior="padding"
                 style={{ flex: 1 }}
@@ -451,18 +480,7 @@ const Profile = () => {
                     className="flex h-screen w-screen overflow-auto bg-white px-6 py-4"
                     onTouchStart={Keyboard.dismiss}
                 >
-                    {showBackButton && (
-                        <TouchableOpacity
-                            onPress={handleBackPress}
-                            style={{ padding: 10 }}
-                        >
-                            <Ionicons
-                                name="arrow-back"
-                                size={28}
-                                color="black"
-                            />
-                        </TouchableOpacity>
-                    )}
+
 
                     {Object.keys(userInfo).length > 0 ? (
                         <>

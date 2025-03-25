@@ -179,7 +179,7 @@ const Community = () => {
     }
 
     const navigateToUserProfile = (userId) => {
-        navigation.navigate('Profile', { userId }) // Pass userId properly
+        navigation.push('Profile', { userId: user.id })
     }
 
 
