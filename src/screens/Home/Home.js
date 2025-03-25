@@ -73,12 +73,13 @@ const Home = () => {
 
            alert("Fetching posts 2");
 
-        // Assuming the backend returns paginated response
+        // Backend returns pagenated response
         const posts = res.data.content.reverse(); // `content` contains the list of posts
         setPostData(posts);
         setFilteredPosts(posts);
 
         alert("Final Fetch Posts Check");
+        console.log("Response data:", res.data);
 
        } catch (err) {
         //something happening here, timing out - too many queries on backend?
