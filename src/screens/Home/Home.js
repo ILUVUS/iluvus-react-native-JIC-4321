@@ -66,14 +66,20 @@ const Home = () => {
 
    const fetchPosts = async () => {
        try {
+        alert("fetching posts 1")
            const res = await axios.get(`${BASE_URL}/post/getPostForHomePage?userId=${userId}`, {
                headers: { 'Content-Type': 'application/json' },
            });
 
+           alert("Fetching posts 2");
 
-           const posts = res.data.reverse();
-           setPostData(posts);
-           setFilteredPosts(posts);
+        // Assuming the backend returns paginated response
+        const posts = res.data.content.reverse(); // `content` contains the list of posts
+        setPostData(posts);
+        setFilteredPosts(posts);
+
+        alert("Final Fetch Posts Check");
+
        } catch (err) {
         //something happening here, timing out - too many queries on backend?
            console.log('Cannot get posts', err);
