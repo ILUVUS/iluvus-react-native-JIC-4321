@@ -65,44 +65,46 @@ const Profile = () => {
     const [selectedSkills, setSelectedSkills] = useState({})
     const [isSkillSelectorModalVisible, setIsSkillSelectorModalVisible] =
         useState(false)
-        useEffect(() => {
-            const checkCurrentUser = async () => {
-                try {
-                    const storedUserId = await AsyncStorage.getItem('userId');
-                    const finalUserId = profileUserId || storedUserId;
-        
-                    setUserId((prev) => {
-                        // Only update if it changed
-                        if (prev !== finalUserId) {
-                            console.log('Setting new userId:', finalUserId);
-                            return finalUserId;
+            useEffect(() => {
+                const checkCurrentUser = async () => {
+                    try {
+                        const storedUserId = await AsyncStorage.getItem('userId');
+                        console.log('[checkCurrentUser] Stored userId from AsyncStorage:', storedUserId);
+                        console.log('[checkCurrentUser] profileUserId from route.params:', profileUserId);
+            
+                        const finalUserId = profileUserId || storedUserId;
+                        console.log('[checkCurrentUser] Final userId to use:', finalUserId);
+            
+                        setUserId((prev) => {
+                            if (prev !== finalUserId) {
+                                console.log('Updating userId state to:', finalUserId);
+                                return finalUserId;
+                            } else {
+                                console.log('Skipping userId update (no change)');
+                                return prev;
+                            }
+                        });
+            
+                        if (storedUserId && finalUserId) {
+                            const trimmed = storedUserId.trim() === finalUserId.trim();
+                            console.log('Is current user:', trimmed);
+                            setIsCurrentUser(trimmed);
                         }
-                        return prev;
-                    });
-        
-                    setIsCurrentUser(storedUserId.trim() === finalUserId.trim());
-                } catch (error) {
-                    console.error('Error checking current user:', error);
-                }
-            };
-        
-            checkCurrentUser();
-        
-            const unsubscribe = navigation.addListener('focus', () => {
-                // Don't reset userId on focus
-                setIsCurrentUser((curr) => {
-                    AsyncStorage.getItem('userId').then((storedUserId) => {
-                        if (storedUserId && profileUserId) {
-                            return storedUserId.trim() === profileUserId.trim();
-                        }
-                    });
-                    return curr;
+                    } catch (error) {
+                        console.error('Error checking current user:', error);
+                    }
+                };
+            
+                checkCurrentUser();
+            
+                const unsubscribe = navigation.addListener('focus', () => {
+                    console.log('[Navigation Focus] Checking if current user again');
+                    checkCurrentUser();
                 });
-            });
-        
-            return unsubscribe;
-        }, []);
-        
+            
+                return unsubscribe;
+            }, [profileUserId, navigation]);
+            
 
     useEffect(() => {
         if (userId && userId.trim() !== '') {
@@ -117,14 +119,6 @@ const Profile = () => {
         };
         checkUser();
     }, [profileUserId]);
-
-    useLayoutEffect(() => {
-        navigation.setOptions({
-          headerShown: true,
-          title: 'Profile',
-        });
-      }, [navigation]);
-      
 
       const handleBackPress = async () => {
         if (showBackButton) {
@@ -165,7 +159,7 @@ const Profile = () => {
     const fetchSharedPosts = async () => {
         try {
             const response = await axios.get(
-                `${BASE_URL}/post/getSharedPosts?userId=${userId}`
+                '${BASE_URL}/post/getSharedPosts?userId=${userId}'
             )
 
             if (!response.data || !Array.isArray(response.data)) {

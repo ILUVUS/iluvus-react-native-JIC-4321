@@ -180,6 +180,7 @@ const Community = () => {
     }
 
     const navigateToUserProfile = (userId) => {
+        console.log('Navigating to Profile with userId:', userId);
         navigation.navigate('Profile', { userId, showBackButton: true });
     };
     
