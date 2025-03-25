@@ -31,6 +31,7 @@ import {
 
 import Constants from 'expo-constants'
 import { TouchableOpacity } from 'react-native'
+import { debounce } from 'lodash';
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 
@@ -257,39 +258,42 @@ const Community = () => {
         navigation.navigate('MyCreatedGroup')
     }
 
-    const communityClick = (id) => {
-        navigation.navigate(STRINGS.communityView, { communityId: id })
-    }
+    const communityClick = (communityOrId) => {
+        if (typeof communityOrId === 'string') {
+          navigation.navigate(STRINGS.communityView, { communityId: communityOrId });
+        } else {
+          navigation.navigate(STRINGS.communityView, { communityData: communityOrId });
+        }
+      };
+      
 
-    const searchFunction = debounce(async (text) => {
+      const searchFunction = debounce(async (text) => {
         setSearchValue(text);
-
+    
         if (text.length === 0) {
             setSearchResultList([]);
-            setUserSearchResults([]); 
+            setUserSearchResults([]);
             return;
         }
-
+    
         try {
             const [communityRes, userRes] = await Promise.all([
                 axios.get(`${BASE_URL}/community/search?filter=${text}`),
                 axios.get(`${BASE_URL}/user/search?filter=${text}`)
             ]);
-
+    
             console.log("Community Search Response:", communityRes.data);
-            console.log("User Search Response:", userRes.data);
-
-            setSearchResultList(communityRes.data || []);
+            console.log("User Search Response:", userRes.data.map(({ id, fname, lname }) => ({ id, fname, lname })));
+    
+            // communityRes.data is expected to be an object: { id1: { name, image, ... }, id2: { ... } }
+            setSearchResultList(communityRes.data || {});
             setUserSearchResults(userRes.data || []);
-
-
-
         } catch (err) {
             console.error("Search error:", err);
             Alert.alert("Error", "Failed to fetch search results. Please try again.");
         }
-
     }, 500);
+    
 
     const statusBarHeight = StatusBar.currentHeight
     const screenHeight = Dimensions.get('screen').height
@@ -442,35 +446,39 @@ const Community = () => {
                         />
                     }
                 >
-                    <View className="flex flex-row flex-wrap overflow-auto">
-                        {Object.keys(searchResultList).map((key, index) => (
-                            <CommunityViewImageButton
-                                key={key}
-                                onPress={() => communityClick(key)}
-                            >
-                                {/* fetch community info and set image */}
+             {searchResultList && Object.keys(searchResultList).length > 0 && (
+  <View className="mb-4">
+    <Text className="text-lg font-semibold text-orchid-900 mb-2">Communities Found</Text>
+    <View className="flex flex-row flex-wrap overflow-auto">
+      {Object.keys(searchResultList).map((key) => {
+        const community = searchResultList[key];
+        return (
+          <CommunityViewImageButton
+            key={key}
+            onPress={() => communityClick(key)} // or communityClick({ id: key, ...community }) if needed
+          >
+            <Image
+              source={
+                community.image && community.image !== ''
+                  ? { uri: `data:image/jpg;base64,${community.image}` }
+                  : communityIcon
+              }
+              className="h-24 w-24 rounded-3xl"
+            />
+            <Text className="mt-1 text-base text-orchid-900">
+              {community.name?.length > 12
+                ? community.name.substring(0, 10).trim() + '...'
+                : community.name || 'Unnamed'}
+            </Text>
+          </CommunityViewImageButton>
+        );
+      })}
+    </View>
+  </View>
+)}
 
-                                <Image
-                                    source={
-                                        searchResultList[key].image != null &&
-                                        searchResultList[key].image !== ''
-                                            ? {
-                                                  uri: `data:image/jpg;base64,${searchResultList[key].image}`,
-                                              }
-                                            : communityIcon
-                                    }
-                                    className="h-24 w-24 rounded-3xl"
-                                />
-                                <Text className="mt-1 text-base text-orchid-900">
-                                    {searchResultList[key].name.length > 12
-                                        ? searchResultList[key].name
-                                              .substring(0, 10)
-                                              .trim() + '...'
-                                        : searchResultList[key].name}
-                                </Text>
-                            </CommunityViewImageButton>
-                        ))}
-                    </View>
+
+
                     <View className="rounded-lg bg-blue-100 p-4">
                         <Text className="text-lg font-semibold text-blue-900">
                             Users Found
@@ -489,25 +497,25 @@ const Community = () => {
                                     }
                                 >
                                     <View className="mt-2 flex-row items-center rounded-md bg-white p-2">
-                                        <Image
-                                            source={
-                                                user.avatar &&
-                                                user.avatar.trim() !== ''
-                                                    ? {
-                                                          uri: user.avatar.startsWith(
-                                                              'data:image/'
-                                                          )
-                                                              ? user.avatar
-                                                              : `data:image/jpeg;base64,${user.avatar.trim()}`,
-                                                      }
-                                                    : sampleIcon
-                                            }
-                                            className="mr-3 h-10 w-10 rounded-full"
-                                        />
+                                    <Image
+  source={
+    typeof user.avatar === 'string' && user.avatar.trim() !== ''
+      ? {
+          uri: user.avatar.startsWith('data:image/') 
+            ? user.avatar
+            : `data:image/jpeg;base64,${user.avatar.trim()}`,
+        }
+      : sampleIcon
+  }
+  className="mr-3 h-10 w-10 rounded-full"
+/>
 
-                                        <Text className="text-base text-blue-900">
-                                            {user.fname} {user.lname}
-                                        </Text>
+<Text className="text-base text-blue-900">
+  {user?.fname && user?.lname
+    ? `${user.fname} ${user.lname}`
+    : user?.username || 'Unknown User'}
+</Text>
+
                                     </View>
                                 </TouchableOpacity>
                             ))
