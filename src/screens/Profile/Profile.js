@@ -65,39 +65,44 @@ const Profile = () => {
     const [selectedSkills, setSelectedSkills] = useState({})
     const [isSkillSelectorModalVisible, setIsSkillSelectorModalVisible] =
         useState(false)
-    useEffect(() => {
-        const checkCurrentUser = async () => {
-            try {
-                const storedUserId = await AsyncStorage.getItem('userId')
-                console.log('Stored User ID:', storedUserId)
-                //not loading??
-                console.log('Profile User ID from Route:', profileUserId)
-
-                if (!storedUserId) {
-                    console.error('Error: No userId found in AsyncStorage')
-                    return
+        useEffect(() => {
+            const checkCurrentUser = async () => {
+                try {
+                    const storedUserId = await AsyncStorage.getItem('userId');
+                    const finalUserId = profileUserId || storedUserId;
+        
+                    setUserId((prev) => {
+                        // Only update if it changed
+                        if (prev !== finalUserId) {
+                            console.log('Setting new userId:', finalUserId);
+                            return finalUserId;
+                        }
+                        return prev;
+                    });
+        
+                    setIsCurrentUser(storedUserId.trim() === finalUserId.trim());
+                } catch (error) {
+                    console.error('Error checking current user:', error);
                 }
-
-                const finalUserId = profileUserId || storedUserId
-                console.log('Final User ID being set:', finalUserId)
-
-                setUserId(finalUserId)
-                setIsCurrentUser(storedUserId.trim() === finalUserId.trim())
-                console.log(
-                    'Is Current User:',
-                    storedUserId.trim() === finalUserId.trim()
-                )
-            } catch (error) {
-                console.error('Error checking current user:', error)
-            }
-        }
-
-        checkCurrentUser()
-        const unsubscribe = navigation.addListener('focus', () => {
-            checkCurrentUser()
-        })
-        return unsubscribe
-    }, [profileUserId, navigation])
+            };
+        
+            checkCurrentUser();
+        
+            const unsubscribe = navigation.addListener('focus', () => {
+                // Don't reset userId on focus
+                setIsCurrentUser((curr) => {
+                    AsyncStorage.getItem('userId').then((storedUserId) => {
+                        if (storedUserId && profileUserId) {
+                            return storedUserId.trim() === profileUserId.trim();
+                        }
+                    });
+                    return curr;
+                });
+            });
+        
+            return unsubscribe;
+        }, []);
+        
 
     useEffect(() => {
         if (userId && userId.trim() !== '') {

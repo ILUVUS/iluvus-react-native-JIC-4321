@@ -220,7 +220,7 @@ const Community = () => {
                 const res = await axios.get(`${BASE_URL}/user/get?userId=${userId}`);
                 const user = res.data;
                 const fullName = `${user.fname} ${user.lname}`;
-                setUserFullName(fullName); // ✅ Save for later
+                setUserFullName(fullName);
             } catch (err) {
                 console.error('Error fetching own user info:', err);
             }
