@@ -39,6 +39,7 @@ const Community = () => {
     const navigation = useNavigation()
     const route = useRoute()
     const [appliedFilters, setAppliedFilters] = useState(null)
+    const [userFullName, setUserFullName] = useState('');
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -179,9 +180,58 @@ const Community = () => {
     }
 
     const navigateToUserProfile = (userId) => {
-        navigation.push('Profile', { userId: user.id })
-    }
+        navigation.navigate('Profile', { userId, showBackButton: true });
+    };
+    
 
+    useEffect(() => {
+        if (route.params?.resetSearchToUser) {
+            resetSearchToCurrentUser()
+            navigation.setParams({ resetSearchToUser: false }) // Clear flag after use
+        }
+    }, [route.params?.resetSearchToUser])
+    
+    const resetSearchToCurrentUser = async () => {
+        if (userFullName) {
+            setSearchValue(userFullName);
+            searchFunction(userFullName);
+        } else {
+            try {
+                const userId = await AsyncStorage.getItem('userId');
+                if (!userId) return;
+    
+                const res = await axios.get(`${BASE_URL}/user/get?userId=${userId}`);
+                const user = res.data;
+                const fullName = `${user.fname} ${user.lname}`;
+                setUserFullName(fullName);
+                setSearchValue(fullName);
+                searchFunction(fullName);
+            } catch (err) {
+                console.error('Error during fallback reset:', err);
+            }
+        }
+    };
+    
+    
+    useEffect(() => {
+        const getOwnUserInfo = async () => {
+            try {
+                const userId = await AsyncStorage.getItem('userId');
+                const res = await axios.get(`${BASE_URL}/user/get?userId=${userId}`);
+                const user = res.data;
+                const fullName = `${user.fname} ${user.lname}`;
+                setUserFullName(fullName); // ✅ Save for later
+            } catch (err) {
+                console.error('Error fetching own user info:', err);
+            }
+        };
+    
+        getOwnUserInfo();
+        getVerified();
+        fetchCommunityList();
+    }, []);
+    
+    
 
     useEffect(() => {
         setCommunityListInfo([])

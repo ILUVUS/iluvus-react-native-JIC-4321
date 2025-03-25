@@ -121,15 +121,13 @@ const Profile = () => {
       }, [navigation]);
       
 
-    const handleBackPress = async () => {
+      const handleBackPress = async () => {
         if (showBackButton) {
             try {
-                // Retrieve your own user ID from AsyncStorage
                 const storedUserId = await AsyncStorage.getItem('userId')
                 if (storedUserId) {
-                    navigation.replace('Profile', {
-                        userId: storedUserId,
-                        showBackButton: false,
+                    navigation.navigate('Community', { resetSearchToUser: true
+
                     })
                 } else {
                     console.error('No stored user ID found.')
@@ -143,6 +141,7 @@ const Profile = () => {
             navigation.goBack()
         }
     }
+    
 
     // const fetchUserPosts = async () => {
     //     axios({
@@ -440,7 +439,7 @@ const Profile = () => {
         <View style={{ flex: 1 }} className="flex h-screen w-screen">
             {navigation.canGoBack() && (
   <TouchableOpacity
-    onPress={() => navigation.goBack()}
+  onPress={handleBackPress}
     style={{
       position: 'absolute',
       top: 50,
