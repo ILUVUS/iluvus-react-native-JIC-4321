@@ -2,6 +2,7 @@ import { LogBox } from 'react-native'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import Profile from './screens/Profile/Profile';
 
 import STRINGS from './constants/strings'
 import PostScreen from './screens/Profile/PostScreen'
@@ -47,6 +48,16 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
+
+<Stack.Screen
+  name="Profile"
+  component={Profile}
+  options={{
+    title: 'Profile',
+    headerShown: false, // Or true, depending on your design
+  }}
+/>
+
 
                 <Stack.Screen
                     name={STRINGS.loginscreen}
