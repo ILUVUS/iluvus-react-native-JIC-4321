@@ -159,8 +159,9 @@ const Profile = () => {
     const fetchSharedPosts = async () => {
         try {
             const response = await axios.get(
-                '${BASE_URL}/post/getSharedPosts?userId=${userId}'
-            )
+                `${BASE_URL}/post/getSharedPosts?userId=${userId}`
+              )
+              
 
             if (!response.data || !Array.isArray(response.data)) {
                 console.log('No shared posts found.')
@@ -216,25 +217,17 @@ const Profile = () => {
     }, [refreshing])
 
     const getVerified = async () => {
-        axios({
-            method: 'POST',
-            url: `${BASE_URL}/user/verify`,
-            data: {
-                userId: await AsyncStorage.getItem('userId'),
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(() => {
-                setVerify(true)
-            })
-            .catch((err) => {
-                console.log('cannot verify' + err)
-                setVerify(false)
-            })
-    }
-
+        try {
+            const response = await axios.post(`${BASE_URL}/user/verify`, {
+                userId: userId, // this is the ID of the profile being viewed
+            });
+            setVerify(true);
+        } catch (err) {
+            console.log('cannot verify', err);
+            setVerify(false);
+        }
+    };
+    
     const handlePickImage = async () => {
         // // Request media library permissions
         // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -456,6 +449,30 @@ const Profile = () => {
     <Ionicons name="arrow-back" size={24} color="black" />
   </TouchableOpacity>
 )}
+
+{!isCurrentUser && (
+    <TouchableOpacity
+        onPress={async () => {
+            const myUserId = await AsyncStorage.getItem('userId');
+            console.log('Navigating back to current user profile:', myUserId);
+            navigation.replace('Profile', {
+                userId: myUserId,
+                showBackButton: false,
+            });
+        }}
+        style={{
+            backgroundColor: COLORS.orchid[900],
+            padding: 10,
+            margin: 10,
+            borderRadius: 10,
+        }}
+    >
+        <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
+            Switch to My Profile
+        </Text>
+    </TouchableOpacity>
+)}
+
 
             <KeyboardAvoidingView
                 behavior="padding"
