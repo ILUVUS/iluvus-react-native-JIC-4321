@@ -48,6 +48,7 @@ const Profile = () => {
     const [selectedTopic, setSelectedTopic] = useState({})
     const [interestList, setInterestList] = useState({})
     const [jobStatus, setJobStatus] = useState('')
+   
     const [jobDetails, setJobDetails] = useState('')
     const [profileBio, setProfileBio] = useState('')
     const [profileImage, setProfileImage] = useState('')
@@ -64,39 +65,46 @@ const Profile = () => {
     const [selectedSkills, setSelectedSkills] = useState({})
     const [isSkillSelectorModalVisible, setIsSkillSelectorModalVisible] =
         useState(false)
-    useEffect(() => {
-        const checkCurrentUser = async () => {
-            try {
-                const storedUserId = await AsyncStorage.getItem('userId')
-                console.log('Stored User ID:', storedUserId)
-                //not loading??
-                console.log('Profile User ID from Route:', profileUserId)
-
-                if (!storedUserId) {
-                    console.error('Error: No userId found in AsyncStorage')
-                    return
-                }
-
-                const finalUserId = profileUserId || storedUserId
-                console.log('Final User ID being set:', finalUserId)
-
-                setUserId(finalUserId)
-                setIsCurrentUser(storedUserId.trim() === finalUserId.trim())
-                console.log(
-                    'Is Current User:',
-                    storedUserId.trim() === finalUserId.trim()
-                )
-            } catch (error) {
-                console.error('Error checking current user:', error)
-            }
-        }
-
-        checkCurrentUser()
-        const unsubscribe = navigation.addListener('focus', () => {
-            checkCurrentUser()
-        })
-        return unsubscribe
-    }, [profileUserId, navigation])
+            useEffect(() => {
+                const checkCurrentUser = async () => {
+                    try {
+                        const storedUserId = await AsyncStorage.getItem('userId');
+                        console.log('[checkCurrentUser] Stored userId from AsyncStorage:', storedUserId);
+                        console.log('[checkCurrentUser] profileUserId from route.params:', profileUserId);
+            
+                        const finalUserId = profileUserId || storedUserId;
+                        console.log('[checkCurrentUser] Final userId to use:', finalUserId);
+            
+                        setUserId((prev) => {
+                            if (prev !== finalUserId) {
+                                console.log('Updating userId state to:', finalUserId);
+                                return finalUserId;
+                            } else {
+                                console.log('Skipping userId update (no change)');
+                                return prev;
+                            }
+                        });
+            
+                        if (storedUserId && finalUserId) {
+                            const trimmed = storedUserId.trim() === finalUserId.trim();
+                            console.log('Is current user:', trimmed);
+                            setIsCurrentUser(trimmed);
+                        }
+                    } catch (error) {
+                        console.error('Error checking current user:', error);
+                    }
+                };
+            
+                checkCurrentUser();
+            
+                const unsubscribe = navigation.addListener('focus', () => {
+                    console.log('[Navigation Focus] Checking if current user again');
+                    checkCurrentUser();
+                });
+            
+                return unsubscribe;
+            }, [profileUserId, navigation]);
+            
 
     useEffect(() => {
         if (userId && userId.trim() !== '') {
@@ -104,15 +112,21 @@ const Profile = () => {
         }
     }, [userId])
 
-    const handleBackPress = async () => {
+    useEffect(() => {
+        const checkUser = async () => {
+            const loggedInUserId = await AsyncStorage.getItem('userId');
+            setIsCurrentUser(loggedInUserId === profileUserId);
+        };
+        checkUser();
+    }, [profileUserId]);
+
+      const handleBackPress = async () => {
         if (showBackButton) {
             try {
-                // Retrieve your own user ID from AsyncStorage
                 const storedUserId = await AsyncStorage.getItem('userId')
                 if (storedUserId) {
-                    navigation.replace('Profile', {
-                        userId: storedUserId,
-                        showBackButton: false,
+                    navigation.navigate('Community', { resetSearchToUser: true
+
                     })
                 } else {
                     console.error('No stored user ID found.')
@@ -126,11 +140,7 @@ const Profile = () => {
             navigation.goBack()
         }
     }
-
-    const getUserId = async () => {
-        const id = await AsyncStorage.getItem('userId')
-        setUserId(id)
-    }
+    
 
     // const fetchUserPosts = async () => {
     //     axios({
@@ -150,7 +160,8 @@ const Profile = () => {
         try {
             const response = await axios.get(
                 `${BASE_URL}/post/getSharedPosts?userId=${userId}`
-            )
+              )
+              
 
             if (!response.data || !Array.isArray(response.data)) {
                 console.log('No shared posts found.')
@@ -206,25 +217,17 @@ const Profile = () => {
     }, [refreshing])
 
     const getVerified = async () => {
-        axios({
-            method: 'POST',
-            url: `${BASE_URL}/user/verify`,
-            data: {
-                userId: await AsyncStorage.getItem('userId'),
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(() => {
-                setVerify(true)
-            })
-            .catch((err) => {
-                console.log('cannot verify' + err)
-                setVerify(false)
-            })
-    }
-
+        try {
+            const response = await axios.post(`${BASE_URL}/user/verify`, {
+                userId: userId, // this is the ID of the profile being viewed
+            });
+            setVerify(true);
+        } catch (err) {
+            console.log('cannot verify', err);
+            setVerify(false);
+        }
+    };
+    
     const handlePickImage = async () => {
         // // Request media library permissions
         // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -396,9 +399,7 @@ const Profile = () => {
                     setProfileImage(null) // Fallback
                 }
 
-                // If the server returns data.skills as an array
                 if (data.skills && Array.isArray(data.skills)) {
-                    // Convert that array to an object with numeric keys
                     const skillObj = {}
                     data.skills.forEach((skill, idx) => {
                         skillObj[idx] = skill
@@ -426,6 +427,52 @@ const Profile = () => {
 
     return (
         <View style={{ flex: 1 }} className="flex h-screen w-screen">
+            {navigation.canGoBack() && (
+  <TouchableOpacity
+  onPress={handleBackPress}
+    style={{
+      position: 'absolute',
+      top: 50,
+      left: 20,
+      zIndex: 10,
+      padding: 8,
+      backgroundColor: 'white',
+      borderRadius: 999,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 3,
+    }}
+  >
+    <Ionicons name="arrow-back" size={24} color="black" />
+  </TouchableOpacity>
+)}
+
+{!isCurrentUser && (
+   <TouchableOpacity
+   onPress={async () => {
+     const myUserId = await AsyncStorage.getItem('userId');
+     console.log('Navigating to tab profile view with my user ID:', myUserId);
+     navigation.navigate(STRINGS.profiletab, {
+       userId: myUserId,
+       showBackButton: false,
+     });
+   }}
+ 
+        style={{
+            backgroundColor: COLORS.orchid[900],
+            padding: 10,
+            margin: 10,
+            borderRadius: 10,
+        }}
+    >
+        <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
+            Switch to My Profile
+        </Text>
+    </TouchableOpacity>
+)}
+
+
             <KeyboardAvoidingView
                 behavior="padding"
                 style={{ flex: 1 }}
@@ -447,18 +494,7 @@ const Profile = () => {
                     className="flex h-screen w-screen overflow-auto bg-white px-6 py-4"
                     onTouchStart={Keyboard.dismiss}
                 >
-                    {showBackButton && (
-                        <TouchableOpacity
-                            onPress={handleBackPress}
-                            style={{ padding: 10 }}
-                        >
-                            <Ionicons
-                                name="arrow-back"
-                                size={28}
-                                color="black"
-                            />
-                        </TouchableOpacity>
-                    )}
+
 
                     {Object.keys(userInfo).length > 0 ? (
                         <>
