@@ -399,9 +399,7 @@ const Profile = () => {
                     setProfileImage(null) // Fallback
                 }
 
-                // If the server returns data.skills as an array
                 if (data.skills && Array.isArray(data.skills)) {
-                    // Convert that array to an object with numeric keys
                     const skillObj = {}
                     data.skills.forEach((skill, idx) => {
                         skillObj[idx] = skill
@@ -451,15 +449,16 @@ const Profile = () => {
 )}
 
 {!isCurrentUser && (
-    <TouchableOpacity
-        onPress={async () => {
-            const myUserId = await AsyncStorage.getItem('userId');
-            console.log('Navigating back to current user profile:', myUserId);
-            navigation.replace('Profile', {
-                userId: myUserId,
-                showBackButton: false,
-            });
-        }}
+   <TouchableOpacity
+   onPress={async () => {
+     const myUserId = await AsyncStorage.getItem('userId');
+     console.log('Navigating to tab profile view with my user ID:', myUserId);
+     navigation.navigate(STRINGS.profiletab, {
+       userId: myUserId,
+       showBackButton: false,
+     });
+   }}
+ 
         style={{
             backgroundColor: COLORS.orchid[900],
             padding: 10,

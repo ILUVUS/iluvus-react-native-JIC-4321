@@ -49,16 +49,6 @@ export default function Screen() {
                     }}
                 />
 
-<Stack.Screen
-  name="Profile"
-  component={Profile}
-  options={{
-    title: 'Profile',
-    headerShown: false, // Or true, depending on your design
-  }}
-/>
-
-
                 <Stack.Screen
                     name={STRINGS.loginscreen}
                     component={LoginScreen}
@@ -138,6 +128,17 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
+
+                
+<Stack.Screen
+  name="Profile"
+  component={Profile}
+  options={{
+    title: 'Profile',
+    headerShown: false, // Or true, depending on your design
+  }}
+/>
+
 
                 <Stack.Screen
                     name={STRINGS.notificationtab}
