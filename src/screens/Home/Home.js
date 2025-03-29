@@ -31,7 +31,7 @@ const Home = () => {
     const [refreshing, setRefreshing] = useState(false)
     const [searchValue, setSearchValue] = useState('')
     const [doneSearch, setDoneSearch] = useState(false)
-
+    const [trendingTopics, setTrendingTopics] = useState([])
     const navigation = useNavigation()
     const route = useRoute()
 
@@ -40,12 +40,25 @@ const Home = () => {
     }, [])
 
     useEffect(() => {
+        fetchTrendingTopics()
+    }, [])
+    
+    useEffect(() => {
         if (userId) fetchPosts()
     }, [userId])
 
     useEffect(() => {
-        if (route.params?.filters) fetchFilteredPosts(route.params.filters)
+        if (route.params?.filters) applyFilters(route.params.filters)
     }, [route.params?.filters])
+
+    const fetchTrendingTopics = async () => {
+        try {
+            const res = await axios.get(`${BASE_URL}/post/topicsOfTheDay`)
+            setTrendingTopics(res.data || [])
+        } catch (err) {
+            console.error('Failed to fetch topics of the day:', err)
+        }
+    }
 
     const fetchUserId = async () => {
         try {
@@ -110,6 +123,50 @@ const Home = () => {
         }
         setDoneSearch(true)
     }
+
+
+    const applyFilters = async (filters) => {
+        try {
+            let filtered = postData
+
+            if (filters.selectedFilters.includes('shared')) {
+                const res = await axios.get(
+                    `${BASE_URL}/post/getSharedPosts?userId=${userId}`
+                )
+                filtered = [...filtered, ...res.data]
+            }
+            if (filters.selectedFilters.includes('liked')) {
+                filtered = [
+                    ...filtered,
+                    ...postData.filter((post) => post.likedBy.includes(userId)),
+                ]
+            }
+            if (filters.selectedFilters.includes('tagged')) {
+                filtered = [
+                    ...filtered,
+                    ...postData.filter((post) => post.tagged.includes(userId)),
+                ]
+            }
+            if (filters.selectedFilters.includes('reported')) {
+                const res = await axios.get(`${BASE_URL}/post/getReportedPosts`)
+                filtered = [...filtered, ...res.data]
+            }
+            if (filters.selectedCommunities.length > 0) {
+                filtered = [
+                    ...filtered,
+                    ...postData.filter((post) =>
+                        filters.selectedCommunities.includes(post.community_id)
+                    ),
+                ]
+            }
+
+            // Remove duplicates
+            const uniqueFilteredPosts = [
+                ...new Map(filtered.map((post) => [post.id, post])).values(),
+            ]
+            setFilteredPosts(uniqueFilteredPosts)
+        } catch (err) {
+            console.log('Filter Error:', err)
 
     const fetchFilteredPosts = async (filters) => {
         const { selectedFilters, selectedCommunities } = filters
@@ -211,6 +268,66 @@ const Home = () => {
                             />
                         </TouchableOpacity>
                     </View>
+
+
+                    {trendingTopics.length > 0 && (
+                        <View className="mb-3 px-4">
+                            <View
+                                style={{
+                                    backgroundColor: '#F9F2FF',
+                                    borderRadius: 16,
+                                    padding: 15,
+                                    elevation: 3,
+                                    shadowColor: '#000',
+                                    shadowOffset: { width: 0, height: 1 },
+                                    shadowOpacity: 0.1,
+                                    shadowRadius: 2,
+                                }}
+                            >
+                                <Text className="mb-2 text-lg font-bold text-orchid-900">
+                                    Topics of the Day
+                                </Text>
+                                <ScrollView
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                >
+                                    {trendingTopics.map((topic, index) => (
+                                        <View
+                                            key={index}
+                                            style={{
+                                                backgroundColor:
+                                                    COLORS.orchid[100],
+                                                paddingVertical: 10,
+                                                paddingHorizontal: 15,
+                                                borderRadius: 16,
+                                                marginRight: 10,
+                                                elevation: 3,
+                                                shadowColor: '#000',
+                                                shadowOffset: {
+                                                    width: 0,
+                                                    height: 2,
+                                                },
+                                                shadowOpacity: 0.2,
+                                                shadowRadius: 3,
+                                                minWidth: 150,
+                                            }}
+                                        >
+                                            <Text className="text-base font-semibold text-orchid-900">
+                                                {topic.name}
+                                            </Text>
+                                            <Text className="text-sm text-gray-700">
+                                                {topic.count} post
+                                                {topic.count > 1
+                                                    ? 's'
+                                                    : ''}{' '}
+                                                today
+                                            </Text>
+                                        </View>
+                                    ))}
+                                </ScrollView>
+                            </View>
+                        </View>
+                    )}
 
                     {/* Post List Section */}
                     <View className="h-full w-full">
