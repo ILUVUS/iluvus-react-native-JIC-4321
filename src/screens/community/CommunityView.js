@@ -45,8 +45,13 @@ const CommunityView = ({ nav }) => {
     const [isJoined, setIsJoined] = useState(false)
     const [isWaiting, setIsWaiting] = useState(false)
 
-    const navigation = useNavigation()
-
+    const route = useRoute();
+    const navigation = useNavigation();
+    const { communityData, communityId } = route.params || {};
+    const initialCommunityId = communityId || communityData?.id || null;
+    
+    
+    
     const [communityInfo, setCommunityInfo] = useState({
         name: 'Community Name',
         host: 'Host Name',
@@ -92,39 +97,26 @@ const CommunityView = ({ nav }) => {
         getPendingRequests()
     }, [])
 
-    const getCommunityInfo = async () => {
-        axios({
-            method: 'GET',
-            url: `${BASE_URL}/community/getInfo?id=${globalCommunityId}`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                // split and strip the string
-                // const membersListAsArray = getListFromString(res.data.members)
-                setMembers(res.data.members)
-
-                // updade only name, description and rules fields
-                setCommunityInfo({
-                    name: res.data.name,
-                    description: res.data.description,
-                    rules: res.data.rules,
-                    posts: res.data.posts,
-                    followers: res.data.followers,
-                    members: res.data.members.length,
-                    owner: res.data.owner,
-                    image: res.data.image,
-                    // fake moderator
-                    moderators: res.data.moderators,
-                })
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-
-        return () => {}
-    }
+    const getCommunityInfo = async (id = globalCommunityId) => {
+        try {
+            const res = await axios.get(`${BASE_URL}/community/getInfo?id=${id}`);
+            setMembers(res.data.members);
+            setCommunityInfo({
+                name: res.data.name,
+                description: res.data.description,
+                rules: res.data.rules,
+                posts: res.data.posts,
+                followers: res.data.followers,
+                members: res.data.members.length,
+                owner: res.data.owner,
+                image: res.data.image,
+                moderators: res.data.moderators,
+            });
+        } catch (err) {
+            console.log("Failed to fetch community info:", err);
+        }
+    };
+    
 
     const getUser = async () => {
         const userId = await AsyncStorage.getItem('userId')
@@ -165,6 +157,43 @@ const CommunityView = ({ nav }) => {
             })
     }
 
+    useEffect(() => {
+        if (communityData) {
+            // You clicked a community from default view (not search)
+            setCommunityInfo({
+                name: communityData.name,
+                description: communityData.description,
+                rules: communityData.rules,
+                posts: communityData.posts || 0,
+                followers: communityData.followers || 0,
+                members: Array.isArray(communityData.members)
+                    ? communityData.members.length
+                    : 0,
+                owner: communityData.ownerId,
+                image: communityData.image,
+                moderators: communityData.moderators || [],
+            });
+            setMembers(communityData.members || []);
+            setGlobalCommunityId(communityData.id);
+        } else if (communityId) {
+            // You clicked a community from SEARCH
+            setGlobalCommunityId(communityId);
+            getCommunityInfo(communityId); // <-- pass the id explicitly
+        }
+    
+        checkIfPublic();
+        getVerified();
+        getPendingRequests();
+    }, []);
+    
+    
+    
+    useEffect(() => {
+        if (communityInfo.owner) {
+            getUserInfo(communityInfo.owner);
+        }
+    }, [communityInfo.owner]);
+    
     const getPendingRequests = async (communityId) => {
         setRefreshingPendingRequests(false)
         axios({
@@ -446,8 +475,9 @@ const CommunityView = ({ nav }) => {
                             )}
                         </View>
                         <Text className="mb-1 text-base text-white shadow shadow-slate-600">
-                            Host by {owner.lname}, {owner.fname}
-                        </Text>
+  Host by {owner?.lname || ''}, {owner?.fname || ''}
+</Text>
+
                         <View className="flex flex-row items-center justify-center gap-5">
                             <Text className="text-base text-white shadow shadow-slate-600">
                                 {communityInfo.members} Followers

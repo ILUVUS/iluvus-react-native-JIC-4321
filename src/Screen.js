@@ -2,6 +2,7 @@ import { LogBox } from 'react-native'
 
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
+import Profile from './screens/Profile/Profile';
 
 import STRINGS from './constants/strings'
 import PostScreen from './screens/Profile/PostScreen'
@@ -22,6 +23,7 @@ import MyCreatedGroup from './screens/community/MyCreatedGroup'
 import MediaViewer from './screens/community/components/MediaViewer'
 import ForgotPasswordScreen from './screens/login/ForgotPasswordScreen'
 import CommunityFilterScreen from './screens/community/CommunityFilterScreen'
+import HomeFilterScreen from './screens/Home/HomeFilterScreen'
 
 LogBox.ignoreAllLogs(true)
 
@@ -128,6 +130,17 @@ export default function Screen() {
                     }}
                 />
 
+                
+<Stack.Screen
+  name="Profile"
+  component={Profile}
+  options={{
+    title: 'Profile',
+    headerShown: false, // Or true, depending on your design
+  }}
+/>
+
+
                 <Stack.Screen
                     name={STRINGS.notificationtab}
                     component={Notification}
@@ -184,6 +197,14 @@ export default function Screen() {
                     component={CommunityFilterScreen}
                     options={{
                         title: 'Filter Communities',
+                        headerShown: true,
+                    }}
+                />
+                <Stack.Screen
+                    name="HomeFilterScreen"
+                    component={HomeFilterScreen}
+                    options={{
+                        title: 'Filter Posts',
                         headerShown: true,
                     }}
                 />

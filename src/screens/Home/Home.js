@@ -32,7 +32,6 @@ const Home = () => {
     const [searchValue, setSearchValue] = useState('')
     const [doneSearch, setDoneSearch] = useState(false)
     const [trendingTopics, setTrendingTopics] = useState([])
-
     const navigation = useNavigation()
     const route = useRoute()
 
@@ -43,7 +42,7 @@ const Home = () => {
     useEffect(() => {
         fetchTrendingTopics()
     }, [])
-
+    
     useEffect(() => {
         if (userId) fetchPosts()
     }, [userId])
@@ -125,6 +124,7 @@ const Home = () => {
         setDoneSearch(true)
     }
 
+
     const applyFilters = async (filters) => {
         try {
             let filtered = postData
@@ -167,6 +167,34 @@ const Home = () => {
             setFilteredPosts(uniqueFilteredPosts)
         } catch (err) {
             console.log('Filter Error:', err)
+
+    const fetchFilteredPosts = async (filters) => {
+        const { selectedFilters, selectedCommunities } = filters
+
+        const params = {}
+
+        if (selectedFilters.includes('shared')) {
+            params.sharedBy = userId
+        }
+
+        if (selectedFilters.includes('liked')) {
+            params.likedBy = userId
+        }
+
+        if (selectedCommunities.length > 0) {
+            params.communityName = selectedCommunities[0] // Supports one for now
+        }
+
+        try {
+            const response = await axios.get(`${BASE_URL}/post/filter`, {
+                params,
+            })
+
+            const data = response.data || []
+            setFilteredPosts(data)
+        } catch (err) {
+            console.error('Error fetching filtered posts:', err)
+            setFilteredPosts([])
         }
     }
 
@@ -240,6 +268,7 @@ const Home = () => {
                             />
                         </TouchableOpacity>
                     </View>
+
 
                     {trendingTopics.length > 0 && (
                         <View className="mb-3 px-4">
