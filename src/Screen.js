@@ -23,6 +23,7 @@ import MyCreatedGroup from './screens/community/MyCreatedGroup'
 import MediaViewer from './screens/community/components/MediaViewer'
 import ForgotPasswordScreen from './screens/login/ForgotPasswordScreen'
 import CommunityFilterScreen from './screens/community/CommunityFilterScreen'
+import HomeFilterScreen from './screens/Home/HomeFilterScreen'
 
 LogBox.ignoreAllLogs(true)
 
@@ -196,6 +197,14 @@ export default function Screen() {
                     component={CommunityFilterScreen}
                     options={{
                         title: 'Filter Communities',
+                        headerShown: true,
+                    }}
+                />
+                <Stack.Screen
+                    name="HomeFilterScreen"
+                    component={HomeFilterScreen}
+                    options={{
+                        title: 'Filter Posts',
                         headerShown: true,
                     }}
                 />
