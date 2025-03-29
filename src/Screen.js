@@ -13,6 +13,8 @@ import SetupCommunity from './screens/community/SetupCommunity'
 import CommunityView from './screens/community/CommunityView'
 import AuthScreen from './screens/login/Auth'
 import Post from './screens/community/Post'
+import ChatListScreen from './screens/Messages/ChatListScreen'
+import ChatRoomScreen from './screens/Messages/ChatRoomScreen'
 import Comments from './screens/community/Comments'
 import Verification from './screens/login/Verification'
 import Settings from './screens/Settings/Settings'
@@ -175,6 +177,24 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
+                <Stack.Screen
+  name="Messages"
+  component={ChatListScreen}
+  options={{
+    title: 'Messages',
+    headerShown: true,
+  }}
+/>
+
+<Stack.Screen
+  name="ChatRoom"
+  component={ChatRoomScreen}
+  options={{
+    title: 'Chat',
+    headerShown: true,
+  }}
+/>
+
 
                 <Stack.Screen
                     name={STRINGS.imageviewerscreen}

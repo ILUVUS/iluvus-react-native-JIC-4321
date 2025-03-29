@@ -8,6 +8,10 @@ import STRINGS from '../constants/strings'
 import Community from './community/Community'
 import Profile from './Profile/Profile'
 import Home from './Home/Home.js'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import ChatListScreen from '../screens/Messages/ChatListScreen'
+import ChatRoomScreen from '../screens/Messages/ChatRoomScreen'
+
 import Notification from './Notification/Notification'
 import Setting from './Settings/Settings'
 
@@ -25,9 +29,18 @@ function ProfileScreenNav() {
 
 function MessageScreenNav() {
     return (
-        <View className="flex h-screen justify-center bg-white p-2 align-middle">
-            <Text>MessageScreen!</Text>
-        </View>
+        <MessageStack.Navigator>
+            <MessageStack.Screen
+                name="ChatList"
+                component={ChatListScreen}
+                options={{ title: 'Messages' }}
+            />
+            <MessageStack.Screen
+                name="ChatRoom"
+                component={ChatRoomScreen}
+                options={{ title: 'Chat' }}
+            />
+        </MessageStack.Navigator>
     )
 }
 
@@ -36,6 +49,7 @@ function SettingsScreenNav() {
 }
 
 const Tab = createBottomTabNavigator()
+const MessageStack = createNativeStackNavigator()
 
 export default function HomeScreen() {
     return (
@@ -56,6 +70,11 @@ export default function HomeScreen() {
                                 ? 'person-circle'
                                 : 'person-circle-outline'
                             break
+                            case STRINGS.messagingtab:
+                                iconName = focused
+                                  ? 'chatbubble-ellipses'
+                                  : 'chatbubble-ellipses-outline'
+                                break
                         case STRINGS.notificationtab:
                             iconName = focused
                                 ? 'notifications'
@@ -90,6 +109,7 @@ export default function HomeScreen() {
                 name={STRINGS.profiletab}
                 component={ProfileScreenNav}
             />
+           <Tab.Screen name={STRINGS.messagingtab} component={MessageScreenNav} />
             <Tab.Screen
                 name={STRINGS.notificationtab}
                 component={Notification}

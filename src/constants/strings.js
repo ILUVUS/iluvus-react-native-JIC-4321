@@ -11,6 +11,7 @@ export default {
     homescreen: 'Main',
     logout: 'Logout',
     verificationscreen: 'Verification',
+    messagingtab: 'Messages',
 
     cancel: 'Cancel',
     verify: 'Verify',
