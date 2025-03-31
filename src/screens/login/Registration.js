@@ -327,7 +327,7 @@ const RegistrationScreen = ({}) => {
                             marginTop: 6,
                         }}
                     >
-                        View Terms and Conditions
+                        View and Conditions
                     </Text>
                 </TouchableOpacity>
 
@@ -373,8 +373,9 @@ const RegistrationScreen = ({}) => {
                                     }}
                                 >
                                     1. You must be at least 18 years old.{'\n'}
-                                    2. By using this app, you agree to treat every one with respect{'\n'}
-                                    3. You also agree to the rest: {'\n'}
+                                    2. By using this app, you agree to treat every one with respect.{'\n'}
+                                    3. You agree that your posts may be shared with others. {'\n'}
+                                    4. You also agree to the rest: {'\n'}
                                 </Text>
                             </ScrollView>
                             <TouchableOpacity
