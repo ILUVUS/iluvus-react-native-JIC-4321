@@ -1,17 +1,13 @@
-import { Alert, Settings, Text, View } from 'react-native'
-
+import { Alert, Text, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-
 import COLORS from '../constants/colors'
 import STRINGS from '../constants/strings'
 import Community from './community/Community'
 import Profile from './Profile/Profile'
 import Home from './Home/Home.js'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import ChatListScreen from '../screens/Messages/ChatListScreen'
-import ChatRoomScreen from '../screens/Messages/ChatRoomScreen'
-
+import ChatSearchScreen from './Messages/ChatSearchScreen'
 import Notification from './Notification/Notification'
 import Setting from './Settings/Settings'
 
@@ -26,23 +22,11 @@ function CommunityScreenNav() {
 function ProfileScreenNav() {
     return <Profile />
 }
+function MessagingScreenNav() {
+    return <ChatSearchScreen />
+  }
 
-function MessageScreenNav() {
-    return (
-        <MessageStack.Navigator>
-            <MessageStack.Screen
-                name="ChatList"
-                component={ChatListScreen}
-                options={{ title: 'Messages' }}
-            />
-            <MessageStack.Screen
-                name="ChatRoom"
-                component={ChatRoomScreen}
-                options={{ title: 'Chat' }}
-            />
-        </MessageStack.Navigator>
-    )
-}
+
 
 function SettingsScreenNav() {
     return <Setting />
@@ -109,8 +93,8 @@ export default function HomeScreen() {
                 name={STRINGS.profiletab}
                 component={ProfileScreenNav}
             />
-           <Tab.Screen name={STRINGS.messagingtab} component={MessageScreenNav} />
-            <Tab.Screen
+<Tab.Screen name={STRINGS.messagingtab} component={ChatSearchScreen} />
+<Tab.Screen
                 name={STRINGS.notificationtab}
                 component={Notification}
             />
