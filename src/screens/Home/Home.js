@@ -167,6 +167,8 @@ const Home = () => {
             setFilteredPosts(uniqueFilteredPosts)
         } catch (err) {
             console.log('Filter Error:', err)
+        }
+    }
 
     const fetchFilteredPosts = async (filters) => {
         const { selectedFilters, selectedCommunities } = filters
