@@ -9,8 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native'
-
-const BASE_URL = 'https://iluvusapi-524621294197.us-east1.run.app'
+import { BASE_URL } from '@env'
 
 export default function ChatRoomScreen({ route, navigation }) {
   const { chat, userId } = route.params

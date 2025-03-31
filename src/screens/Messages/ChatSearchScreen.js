@@ -10,8 +10,8 @@ import {
 } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
+import { BASE_URL } from '@env'
 
-const BASE_URL = 'https://iluvusapi-524621294197.us-east1.run.app'
 
 export default function ChatSearchScreen() {
     const navigation = useNavigation()
