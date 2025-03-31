@@ -101,26 +101,21 @@ export default function ChatSearchScreen() {
         creator: userId,
       }),
     })
-    .then(res => res.text())
-.then(chatId => {
-  try {
-    JSON.parse(chatId) // If this doesn't throw, it's an error message not an ID
-    console.error("Chat creation failed:", chatId)
-    Alert.alert("Error", "Chat couldn't be created")
-    return
-  } catch (_) {
-    // it's a valid chatId
+    .then(res => res.json())
+.then(data => {
+  if (!data.chatId) {
+    Alert.alert("Error", "Chat couldn't be created");
+    return;
   }
 
   navigation.navigate('ChatRoom', {
     chat: {
-      chatId,
+      chatId: data.chatId,
       participants: [userId, ...selectedUsers.map(u => u.id)],
       isGroup,
     },
     userId,
-  })
-  
+  });
 })
 
       .catch(console.error)
