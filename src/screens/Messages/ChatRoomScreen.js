@@ -35,13 +35,12 @@ export default function ChatRoomScreen({ route, navigation }) {
   }, [chat.chatId])
 
   const sendMessage = () => {
-    if (!text.trim()) return
-
-    const endpoint = isGroup
-    ? `${BASE_URL}/chat_message/group`
-    : `${BASE_URL}/chat_message/direct`
+    if (!text.trim()) return;
   
-
+    const endpoint = isGroup
+      ? `${BASE_URL}/chat_message/group`
+      : `${BASE_URL}/chat_message/direct`;
+  
     fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -53,15 +52,24 @@ export default function ChatRoomScreen({ route, navigation }) {
         timestamp: new Date().toISOString(),
       }),
     })
-      .then(res => res.json())
-      .then(newMessage => {
-        if (newMessage && newMessage.message) {
-          setMessages(prev => [...prev, newMessage])
-          setText('')
+      .then(async res => {
+        const text = await res.text();
+        try {
+          return JSON.parse(text); 
+        } catch {
+          console.error('Invalid JSON response:', text);
+          return null;
         }
       })
-      .catch(console.error)
-  }
+      .then(newMessage => {
+        if (newMessage && newMessage.message) {
+          setMessages(prev => [...prev, newMessage]);
+          setText('');
+        }
+      })
+      .catch(console.error);
+  };
+  
 
   return (
     <KeyboardAvoidingView
