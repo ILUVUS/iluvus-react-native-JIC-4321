@@ -327,7 +327,7 @@ const RegistrationScreen = ({}) => {
                             marginTop: 6,
                         }}
                     >
-                        View and Conditions
+                        View Terms and Conditions
                     </Text>
                 </TouchableOpacity>
 
