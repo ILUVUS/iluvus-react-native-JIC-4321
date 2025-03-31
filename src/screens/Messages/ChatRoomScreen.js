@@ -39,8 +39,9 @@ export default function ChatRoomScreen({ route, navigation }) {
     if (!text.trim()) return
 
     const endpoint = isGroup
-      ? `${BASE_URL}/chat_messsage/group`
-      : `${BASE_URL}/chat_messsage/direct`
+    ? `${BASE_URL}/chat_message/group`
+    : `${BASE_URL}/chat_message/direct`
+  
 
     fetch(endpoint, {
       method: 'POST',
