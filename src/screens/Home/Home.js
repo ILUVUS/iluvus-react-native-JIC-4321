@@ -52,7 +52,9 @@ const Home = () => {
     useEffect(() => {
         if (route.params?.filters) applyFilters(route.params.filters)
     }, [route.params?.filters])
-
+    useEffect(() => {
+        if (route.params?.filters) fetchFilteredPosts(route.params.filters)
+    }, [route.params?.filters])
     const fetchTrendingTopics = async () => {
         try {
             const res = await axios.get(`${BASE_URL}/post/topicsOfTheDay`)
