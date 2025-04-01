@@ -22,19 +22,51 @@ export default function ChatSearchScreen() {
   const [chats, setChats] = useState([])
   const [userId, setUserId] = useState(null)
 
-  useEffect(() => {
-    const fetchUserIdAndChats = async () => {
-      const id = await AsyncStorage.getItem('userId')
-      setUserId(id)
-      if (!id) return
+  
 
-      fetch(`${BASE_URL}/chat_room/getChats?userId=${id}`)
-      .then(res => res.json())
-        .then(data => setChats(Array.isArray(data) ? data : []))
-        .catch(console.error)
+  const getUserNameById = async (id) => {
+    try {
+      const res = await fetch(`${BASE_URL}/user/get?userId=${id}`);
+      const data = await res.json();
+      return data?.username || data?.fname || 'Unknown';
+
+    } catch (err) {
+      console.error('Failed to fetch username for ID:', id);
+      return 'Unknown';
     }
-    fetchUserIdAndChats()
-  }, [])
+  };
+
+  useEffect(() => {
+    fetchUserIdAndChats();
+  }, []);
+  
+  
+  const fetchUserIdAndChats = async () => {
+    const id = await AsyncStorage.getItem('userId');
+    setUserId(id);
+    if (!id) return;
+  
+    try {
+      const res = await fetch(`${BASE_URL}/chat_room/getChats?userId=${id}`);
+      const data = await res.json();
+  
+      const enrichedChats = await Promise.all(
+        data.map(async (chat) => {
+          const otherIds = chat.participants.filter(pid => pid !== id);
+          const names = await Promise.all(otherIds.map(getUserNameById));
+          return {
+            ...chat,
+            participantNames: names,
+          };
+        })
+      );
+  
+      setChats(enrichedChats);
+    } catch (err) {
+      console.error('Error fetching chats:', err);
+    }
+  };
+  
 
   useEffect(() => {
     if (search.length === 0) {
@@ -102,21 +134,27 @@ export default function ChatSearchScreen() {
       }),
     })
     .then(res => res.json())
-.then(data => {
-  if (!data.chatId) {
-    Alert.alert("Error", "Chat couldn't be created");
-    return;
-  }
-
-  navigation.navigate('ChatRoom', {
-    chat: {
-      chatId: data.chatId,
-      participants: [userId, ...selectedUsers.map(u => u.id)],
-      isGroup,
-    },
-    userId,
-  });
-})
+    .then(async (data) => {
+      if (!data.chatId) {
+        Alert.alert("Error", "Chat couldn't be created");
+        return;
+      }
+    
+      const otherIds = selectedUsers.map(u => u.id);
+      const names = await Promise.all(otherIds.map(getUserNameById));
+    
+      navigation.navigate('ChatRoom', {
+        chat: {
+          chatId: data.chatId,
+          participants: [userId, ...otherIds],
+          participantNames: names,
+          isGroup,
+          groupName: groupName || '',
+        },
+        userId,
+      });
+    })
+    
 
       .catch(console.error)
   }
@@ -159,10 +197,10 @@ export default function ChatSearchScreen() {
         data={chats}
         keyExtractor={(item) => item.chatId || Math.random().toString()}
         renderItem={({ item }) => {
-          const names = Array.isArray(item.participants)
-            ? item.participants.filter(id => id !== userId).join(', ')
-            : 'Unknown'
-
+          const displayName = item.isGroup
+            ? item.groupName || 'Unnamed Group'
+            : item.participantNames?.join(', ') || 'Direct Chat';
+        
           return (
             <TouchableOpacity
               style={styles.chatItem}
@@ -173,10 +211,11 @@ export default function ChatSearchScreen() {
                 })
               }
             >
-              <Text>{names}</Text>
+              <Text>{displayName}</Text>
             </TouchableOpacity>
-          )
+          );
         }}
+        
       />
     </View>
   )
