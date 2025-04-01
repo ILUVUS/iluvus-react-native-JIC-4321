@@ -21,18 +21,38 @@ export default function ChatRoomScreen({ route, navigation }) {
     ? chat.participants.find(id => id !== userId)
     : null
 
-  useEffect(() => {
-    if (!chat?.chatId) return
+  // useEffect(() => {
+  //   if (!chat?.chatId) return
 
-    fetch(`${BASE_URL}/chat_room/${chat.chatId}/recent_messages?page=0&size=50`)
+  //   fetch(`${BASE_URL}/chat_room/${chat.chatId}/recent_messages?page=0&size=50`)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       if (Array.isArray(data?.content)) {
+  //         setMessages(data.content)
+  //       }
+  //     })
+  //     .catch(console.error)
+  // }, [chat.chatId])
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const cached = await AsyncStorage.getItem(`chat_${chat.chatId}`);
+      if (cached) setMessages(JSON.parse(cached));
+  
+      fetch(`${BASE_URL}/chat_room/${chat.chatId}/recent_messages?page=0&size=200`)
       .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data?.content)) {
-          setMessages(data.content)
-        }
-      })
-      .catch(console.error)
-  }, [chat.chatId])
+        .then(data => {
+          if (Array.isArray(data?.content)) {
+            setMessages(data.content);
+            AsyncStorage.setItem(`chat_${chat.chatId}`, JSON.stringify(data.content));
+          }
+        })
+        .catch(console.error);
+    };
+  
+    fetchMessages();
+  }, [chat.chatId]);
+  
 
   const sendMessage = () => {
     if (!text.trim()) return;
@@ -63,10 +83,13 @@ export default function ChatRoomScreen({ route, navigation }) {
       })
       .then(newMessage => {
         if (newMessage && newMessage.message) {
-          setMessages(prev => [...prev, newMessage]);
+          const updatedMessages = [...messages, newMessage];
+          setMessages(updatedMessages);
+          AsyncStorage.setItem(`chat_${chat.chatId}`, JSON.stringify(updatedMessages));
           setText('');
         }
       })
+      
       .catch(console.error);
   };
   
