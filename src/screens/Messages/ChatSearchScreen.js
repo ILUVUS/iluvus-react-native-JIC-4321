@@ -56,8 +56,10 @@ export default function ChatSearchScreen() {
           const names = await Promise.all(otherIds.map(getUserNameById));
           return {
             ...chat,
+            chatId: chat.id || chat._id, 
             participantNames: names,
           };
+          
         })
       );
   
@@ -195,7 +197,7 @@ export default function ChatSearchScreen() {
       <Text style={styles.header}>Recent Chats</Text>
       <FlatList
         data={chats}
-        keyExtractor={(item) => item.chatId || Math.random().toString()}
+        keyExtractor={(item) => item.chatId?.toString() || Math.random().toString()}
         renderItem={({ item }) => {
           const displayName = item.isGroup
             ? item.groupName || 'Unnamed Group'

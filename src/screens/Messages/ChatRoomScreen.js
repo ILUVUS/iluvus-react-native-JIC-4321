@@ -21,18 +21,21 @@ export default function ChatRoomScreen({ route, navigation }) {
     ? chat.participants.find(id => id !== userId)
     : null
 
-  // useEffect(() => {
-  //   if (!chat?.chatId) return
+  useEffect(() => {
+    if (!chat?.chatId) {
+      console.warn("No chatId available, skipping fetch");
+      return;
+    }
 
-  //   fetch(`${BASE_URL}/chat_room/${chat.chatId}/recent_messages?page=0&size=50`)
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       if (Array.isArray(data?.content)) {
-  //         setMessages(data.content)
-  //       }
-  //     })
-  //     .catch(console.error)
-  // }, [chat.chatId])
+  fetch(`${BASE_URL}/chat_room/${chat.chatId}/recent_messages?page=0&size=50`)
+      .then(res => res.json())
+     .then(data => {
+        if (Array.isArray(data?.content)) {
+         setMessages(data.content)
+       }
+      })
+     .catch(console.error)
+  }, [chat.chatId])
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -71,6 +74,12 @@ export default function ChatRoomScreen({ route, navigation }) {
         message: text,
         timestamp: new Date().toISOString(),
       }),
+    })
+    .then(res => {
+      if (!res.ok) {
+        throw new Error(`Server error: ${res.status}`);
+      }
+      return res.text();
     })
       .then(async res => {
         const text = await res.text();
