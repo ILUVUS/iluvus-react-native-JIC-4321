@@ -32,6 +32,7 @@ const Home = () => {
     const [searchValue, setSearchValue] = useState('')
     const [doneSearch, setDoneSearch] = useState(false)
     const [trendingTopics, setTrendingTopics] = useState([])
+    const [popularTopics, setPopularTopics] = useState([])
     const navigation = useNavigation()
     const route = useRoute()
 
@@ -40,7 +41,8 @@ const Home = () => {
     }, [])
 
     useEffect(() => {
-        fetchTrendingTopics()
+        fetchTrendingTopics();
+        fetchPopularTopics();
     }, [])
     
     useEffect(() => {
@@ -57,6 +59,15 @@ const Home = () => {
             setTrendingTopics(res.data || [])
         } catch (err) {
             console.error('Failed to fetch topics of the day:', err)
+        }
+    }
+
+    const fetchPopularTopics = async () => {
+        try {
+            const res = await axios.get(`${BASE_URL}/post/popularTopics`)
+            setPopularTopics(res.data || [])
+        } catch (err) {
+            console.error('Failed to fetch popular topics:', err)
         }
     }
 
@@ -90,24 +101,6 @@ const Home = () => {
     }
 
     const handleSearch = async (text) => {
-        //setSearchValue(text);
-        //if (text.trim() === '') {
-        //    setFilteredPosts(postData);
-        //    return;
-        //}
-        /*
-       try {
-           const res = await axios.get(`${BASE_URL}/post/search?filter=${text}`, {
-               headers: { 'Content-Type': 'application/json' },
-           });
-           setFilteredPosts(res.data);
-       } catch (err) {
-           //alert("error: " + err);
-           console.log('Search API failed', err);
-           setFilteredPosts([]);
-       }
-        */
-        //alert("search value: " + searchValue);
         try {
             const res = await axios.get(`${BASE_URL}/post/search`, {
                 params: {
@@ -323,6 +316,58 @@ const Home = () => {
                                                     ? 's'
                                                     : ''}{' '}
                                                 today
+                                            </Text>
+                                        </View>
+                                    ))}
+                                </ScrollView>
+                            </View>
+                        </View>
+                    )}
+
+                    {popularTopics.length > 0 && (
+                        <View className="mb-3 px-4">
+                            <View
+                                style={{
+                                    backgroundColor: '#F9F2FF',
+                                    borderRadius: 16,
+                                    padding: 15,
+                                    elevation: 3,
+                                    shadowColor: '#000',
+                                    shadowOffset: { width: 0, height: 1 },
+                                    shadowOpacity: 0.1,
+                                    shadowRadius: 2,
+                                }}
+                            >
+                                <Text className="mb-2 text-lg font-bold text-orchid-900">
+                                    Popular Topics 🔥
+                                </Text>
+                                <ScrollView
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                >
+                                    {popularTopics.map((topic, index) => (
+                                        <View
+                                            key={index}
+                                            style={{
+                                                backgroundColor:
+                                                    COLORS.orchid[100],
+                                                paddingVertical: 10,
+                                                paddingHorizontal: 15,
+                                                borderRadius: 16,
+                                                marginRight: 10,
+                                                elevation: 3,
+                                                shadowColor: '#000',
+                                                shadowOffset: {
+                                                    width: 0,
+                                                    height: 2,
+                                                },
+                                                shadowOpacity: 0.2,
+                                                shadowRadius: 3,
+                                                minWidth: 150,
+                                            }}
+                                        >
+                                            <Text className="text-base font-semibold text-orchid-900">
+                                                {topic.name}
                                             </Text>
                                         </View>
                                     ))}
