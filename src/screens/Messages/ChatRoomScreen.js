@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {
   View,
   FlatList,
@@ -15,46 +15,30 @@ export default function ChatRoomScreen({ route, navigation }) {
   const { chat, userId } = route.params
   const [messages, setMessages] = useState([])
   const [text, setText] = useState('')
+  const flatListRef = useRef();
 
   const isGroup = chat?.isGroup
   const receiverId = !isGroup
     ? chat.participants.find(id => id !== userId)
     : null
 
-  useEffect(() => {
-    if (!chat?.chatId) {
-      console.warn("No chatId available, skipping fetch");
-      return;
-    }
+  // useEffect(() => {
+  //   if (!chat?.chatId) {
+  //     console.warn("No chatId available, skipping fetch");
+  //     return;
+  //   }
 
-  fetch(`${BASE_URL}/chat_room/${chat.chatId}/recent_messages?page=0&size=50`)
-      .then(res => res.json())
-     .then(data => {
-        if (Array.isArray(data?.content)) {
-         setMessages(data.content)
-       }
-      })
-     .catch(console.error)
-  }, [chat.chatId])
+  // fetch(`${BASE_URL}/chat_room/${chat.chatId}/recent_messages?page=0&size=50`)
+  //     .then(res => res.json())
+  //    .then(data => {
+  //       if (Array.isArray(data?.content)) {
+  //         setMessages(data.content.reverse());
+  //      }
+  //     })
+  //    .catch(console.error)
+  // }, [chat.chatId])
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      const cached = await AsyncStorage.getItem(`chat_${chat.chatId}`);
-      if (cached) setMessages(JSON.parse(cached));
-  
-      fetch(`${BASE_URL}/chat_room/${chat.chatId}/recent_messages?page=0&size=200`)
-      .then(res => res.json())
-        .then(data => {
-          if (Array.isArray(data?.content)) {
-            setMessages(data.content);
-            AsyncStorage.setItem(`chat_${chat.chatId}`, JSON.stringify(data.content));
-          }
-        })
-        .catch(console.error);
-    };
-  
-    fetchMessages();
-  }, [chat.chatId]);
+ 
   
 
   const sendMessage = () => {
@@ -99,9 +83,30 @@ export default function ChatRoomScreen({ route, navigation }) {
         }
       })
       
+      
       .catch(console.error);
   };
   
+  useEffect(() => {
+    const fetchMessages = async () => {
+      const cached = await AsyncStorage.getItem(`chat_${chat.chatId}`);
+      if (cached) setMessages(JSON.parse(cached));
+  
+      fetch(`${BASE_URL}/chat_room/${chat.chatId}/recent_messages?page=0&size=200`)
+      .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data?.content)) {
+            const ordered = data.content.reverse();
+            setMessages(ordered);
+            AsyncStorage.setItem(`chat_${chat.chatId}`, JSON.stringify(ordered));
+          }
+          
+        })
+        .catch(console.error);
+    };
+  
+    fetchMessages();
+  }, [chat.chatId]);
 
   return (
     <KeyboardAvoidingView
@@ -110,7 +115,10 @@ export default function ChatRoomScreen({ route, navigation }) {
       keyboardVerticalOffset={100}
     >
       <FlatList
+      ref={flatListRef}
         data={messages}
+        onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
+        onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <View
