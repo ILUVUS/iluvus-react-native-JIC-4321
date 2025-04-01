@@ -147,7 +147,7 @@ export default function ChatSearchScreen() {
     
       navigation.navigate('ChatRoom', {
         chat: {
-          chatId: data.chatId,
+          chatId: data.chatId || data.id,
           participants: [userId, ...otherIds],
           participantNames: names,
           isGroup,

@@ -64,7 +64,7 @@ export default function ChatRoomScreen({ route, navigation }) {
         if (!res.ok) {
           throw new Error(`Server error: ${res.status}`);
         }
-        return res.json(); // ✅ only one response read
+        return res.json(); //only one response read
       })
       .then(newMessage => {
         if (newMessage && newMessage.message) {
