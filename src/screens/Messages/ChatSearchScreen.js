@@ -28,8 +28,8 @@ export default function ChatSearchScreen() {
       setUserId(id)
       if (!id) return
 
-      fetch(`${BASE_URL}/user/getChats?userId=${id}`)
-        .then(res => res.json())
+      fetch(`${BASE_URL}/chat_room/getChats?userId=${id}`)
+      .then(res => res.json())
         .then(data => setChats(Array.isArray(data) ? data : []))
         .catch(console.error)
     }
