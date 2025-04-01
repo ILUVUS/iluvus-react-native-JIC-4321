@@ -42,39 +42,44 @@ export default function ChatRoomScreen({ route, navigation }) {
  
   
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!text.trim()) return;
   
     const endpoint = isGroup
       ? `${BASE_URL}/chat_message/group`
       : `${BASE_URL}/chat_message/direct`;
   
-    fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        roomId: chat.chatId,
-        senderId: userId,
-        receiverId: isGroup ? null : receiverId,
-        message: text,
-        timestamp: new Date().toISOString(),
-      }),
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`Server error: ${res.status}`);
-        }
-        return res.json(); // ✅ only one response read
-      })
-      .then(newMessage => {
-        if (newMessage && newMessage.message) {
-          const updatedMessages = [...messages, newMessage];
-          setMessages(updatedMessages);
-          AsyncStorage.setItem(`chat_${chat.chatId}`, JSON.stringify(updatedMessages));
-          setText('');
-        }
-      })
-      .catch(console.error);
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          roomId: chat.chatId,
+          senderId: userId,
+          receiverId: isGroup ? null : receiverId,
+          message: text,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+  
+      if (!res.ok) {
+        console.error('Failed to send message:', await res.text());
+        return;
+      }
+  
+      const newMessage = await res.json();
+  
+      if (newMessage && newMessage.message) {
+        const updatedMessages = [...messages, newMessage];
+        setMessages(updatedMessages);
+        await AsyncStorage.setItem(`chat_${chat.chatId}`, JSON.stringify(updatedMessages));
+        setText('');
+        flatListRef.current?.scrollToEnd({ animated: true }); // scroll to bottom
+      }
+  
+    } catch (err) {
+      console.error('Error sending message:', err);
+    }
   };
   
   
