@@ -10,6 +10,7 @@ import {
   Platform,
 } from 'react-native'
 import { BASE_URL } from '@env'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ChatRoomScreen({ route, navigation }) {
   const { chat, userId } = route.params
@@ -59,20 +60,11 @@ export default function ChatRoomScreen({ route, navigation }) {
         timestamp: new Date().toISOString(),
       }),
     })
-    .then(res => {
-      if (!res.ok) {
-        throw new Error(`Server error: ${res.status}`);
-      }
-      return res.text();
-    })
-      .then(async res => {
-        const text = await res.text();
-        try {
-          return JSON.parse(text); 
-        } catch {
-          console.error('Invalid JSON response:', text);
-          return null;
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
         }
+        return res.json(); // ✅ only one response read
       })
       .then(newMessage => {
         if (newMessage && newMessage.message) {
@@ -82,10 +74,9 @@ export default function ChatRoomScreen({ route, navigation }) {
           setText('');
         }
       })
-      
-      
       .catch(console.error);
   };
+  
   
   useEffect(() => {
     const fetchMessages = async () => {
@@ -132,8 +123,8 @@ export default function ChatRoomScreen({ route, navigation }) {
             ]}
           >
             <Text>{item.message}</Text>
-            <Text style={styles.timestamp}>{item.timestamp}</Text>
-          </View>
+            <Text style={styles.timestamp}>{new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+            </View>
         )}
       />
       <TextInput
