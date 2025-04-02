@@ -161,15 +161,23 @@ const NewPost = ({
     }, [pickedImages])
 
     useEffect(() => {
-        // console.log('Each image progress:', eachImageProgress)
-        if (eachImageProgress.length > 0) {
-            setUploadProgress(
-                eachImageProgress.reduce((a, b) => a + b, 0) /
-                    eachImageProgress.length /
-                    100
-            )
+        if (
+            Array.isArray(eachImageProgress) &&
+            eachImageProgress.length > 0 &&
+            eachImageProgress.every(p => typeof p === 'number')
+        ) {
+            let sum = 0
+            for (let i = 0; i < eachImageProgress.length; i++) {
+                sum += eachImageProgress[i]
+            }
+            const average = sum / eachImageProgress.length
+            setUploadProgress(average / 100)
+        } else {
+            setUploadProgress(0)
         }
     }, [eachImageProgress])
+    
+    
 
     const handlePublish = async () => {
         if (postContent.length === 0) {

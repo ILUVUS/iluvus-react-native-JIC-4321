@@ -10,6 +10,8 @@ import HomeScreen from './screens/HomeScreen'
 import LoginScreen from './screens/login/Login'
 import RegistrationScreen from './screens/login/Registration'
 import SetupCommunity from './screens/community/SetupCommunity'
+import ChatRoomScreen from './screens/Messages/ChatRoomScreen'
+
 import CommunityView from './screens/community/CommunityView'
 import AuthScreen from './screens/login/Auth'
 import Post from './screens/community/Post'
@@ -103,6 +105,8 @@ export default function Screen() {
                     }}
                 />
 
+<Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
+
                 <Stack.Screen
                     name={STRINGS.myGroup}
                     component={MyGroup}
@@ -175,6 +179,7 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
+               
 
                 <Stack.Screen
                     name={STRINGS.imageviewerscreen}
