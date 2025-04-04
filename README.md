@@ -123,6 +123,25 @@ npm start
 or scan the QR Code on the output with phone camera to run on Expo application.
 
 # Release Notes
+## Version 1.0.0
+
+### Features
+
+- Users can now create chatrooms to chat one-on-one with other users.
+- Users can additionally create group chatrooms to chat with 3-4 other users of their choosing.
+- Users can now view "Topics of the Day" on the home page to keep up with current events on the application.
+- Users can now explore popular topics from communities to keep up with and take part in community discussions.
+  
+### Bug Fixes
+- The community view was breaking when more than one community was included on the platform.
+- User Searching rendering is breaking, have to type slowly to ensure user would show up.
+
+### Known Issues
+
+-   The loading time across the application is still too long but variably.
+-   Dupilicate chats can be created (chatrooms with the same participants).
+-   User searching will autofill with viewed user after returning from the clicked profile view.
+
 ## Version 0.9.0
 
 ### Features
