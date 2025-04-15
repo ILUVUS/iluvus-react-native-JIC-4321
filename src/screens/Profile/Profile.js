@@ -173,12 +173,15 @@ const Profile = () => {
                     Alert.alert('Error', 'Cannot block without valid user IDs.');
                     return;
                   }
-                                  await axios.post(`${BASE_URL}/user/unblockUser`, null, {
-                    params: {
-                        unblockingUser: myUserId,
-                        userToUnblock: userId,
+                  await axios.post(`${BASE_URL}/user/blockUser`, {
+                    blockingUserId: myUserId,
+                    userToBlockId: userId,
+                  }, {
+                    headers: {
+                      'Content-Type': 'application/json',
                     },
-                });
+                  });
+                  
                 Alert.alert('Unblocked', 'This user has been unblocked.');
                 setIsBlocked(false);
             } else {
