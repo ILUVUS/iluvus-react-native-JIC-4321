@@ -114,6 +114,11 @@ const Profile = () => {
     }, [userId])
 
     useEffect(() => {
+        checkIfBlocked();
+      }, [profileUserId]);
+      
+
+    useEffect(() => {
         const checkUser = async () => {
             const loggedInUserId = await AsyncStorage.getItem('userId');
             setIsCurrentUser(loggedInUserId === profileUserId);
@@ -145,60 +150,61 @@ const Profile = () => {
 
     const checkIfBlocked = async () => {
         try {
-            const myUserId = await AsyncStorage.getItem('userId');
-            const response = await axios.get(`${BASE_URL}/user/get?userId=${userId}&viewerId=${myUserId}`);
-            
-            if (!response.data) {
-                // User is blocked OR has blocked this profile
-                setIsBlocked(true);
-            } else {
-                setIsBlocked(false);
-            }
+            const viewerId = await AsyncStorage.getItem('userId'); // current user (viewer)
+            const profileId = profileUserId; // user being viewed
+    
+            const response = await axios.get(`${BASE_URL}/user/get`, {
+                params: {
+                    userId: profileId,
+                    viewerId: viewerId,
+                },
+            });
+    
+            // if successful, not blocked
+            setIsBlocked(false);
         } catch (err) {
             if (err.response?.status === 403) {
-                setIsBlocked(true);
+                setIsBlocked(true); // blocked
             } else {
                 console.error('Error checking block status:', err);
             }
         }
     };
     
+    
     const handleBlockToggle = async () => {
         try {
-            const myUserId = await AsyncStorage.getItem('userId');
+            const viewerId = await AsyncStorage.getItem('userId');
+    
+            if (!viewerId || !userId) {
+                console.error('Missing viewerId or userId:', { viewerId, userId });
+                Alert.alert('Error', 'Missing user information.');
+                return;
+            }
     
             if (isBlocked) {
-                if (!myUserId || !userId) {
-                    console.error('Missing user IDs. Block request not sent.', { myUserId, userId });
-                    Alert.alert('Error', 'Cannot block without valid user IDs.');
-                    return;
-                  }
-                  await axios.post(`${BASE_URL}/user/blockUser`, {
-                    blockingUserId: myUserId,
-                    userToBlockId: userId,
-                  }, {
-                    headers: {
-                      'Content-Type': 'application/json',
+                await axios.post(`${BASE_URL}/user/unblockUser`, null, {
+                    params: {
+                        unblockingUser: viewerId,
+                        userToUnblock: userId,
                     },
-                  });
-                  
-                Alert.alert('Unblocked', 'This user has been unblocked.');
+                });
+                Alert.alert('Unblocked', 'User has been unblocked.');
                 setIsBlocked(false);
             } else {
-                // Block
                 await axios.post(`${BASE_URL}/user/blockUser`, null, {
                     params: {
-                        blockingUserId: myUserId,
+                        blockingUserId: viewerId,
                         userToBlockId: userId,
                     },
                 });
-                Alert.alert('Blocked', 'This user has been blocked.');
+                Alert.alert('Blocked', 'User has been blocked.');
                 setIsBlocked(true);
-                navigation.goBack(); 
+                navigation.goBack(); // optional
             }
         } catch (err) {
-            console.error('Error toggling block:', err);
-            Alert.alert('Error', 'Something went wrong. Please try again.');
+            console.error('Block toggle failed:', err);
+            Alert.alert('Error', 'Could not toggle block status.');
         }
     };
     
@@ -439,14 +445,13 @@ const Profile = () => {
     const getUserInfo = async () => {
         setUserInfo({});
         try {
-            const viewerId = await AsyncStorage.getItem('userId'); // logged-in user
-            const response = await axios.get(
-                `${BASE_URL}/user/get?userId=${userId}&viewerId=${viewerId}`,
-                {
-                    headers: { 'Content-Type': 'application/json' },
-                }
-            );
-    
+            const viewerId = await AsyncStorage.getItem('userId');
+            const response = await axios.get(`${BASE_URL}/user/get`, {
+                params: {
+                    userId: userId,
+                    viewerId: viewerId,
+                },
+            });
             const data = response.data;
             setUserInfo(data);
             setProfileBio(data.bio || '');
