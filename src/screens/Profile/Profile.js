@@ -174,39 +174,42 @@ const Profile = () => {
     
     const handleBlockToggle = async () => {
         try {
-            const viewerId = await AsyncStorage.getItem('userId');
+            const myUserId = await AsyncStorage.getItem('userId');
     
-            if (!viewerId || !userId) {
-                console.error('Missing viewerId or userId:', { viewerId, userId });
-                Alert.alert('Error', 'Missing user information.');
+            if (!myUserId || !userId) {
+                console.error('Missing user IDs. Request not sent.', { myUserId, userId });
+                Alert.alert('Error', 'Cannot proceed without valid user IDs.');
                 return;
             }
     
             if (isBlocked) {
                 await axios.post(`${BASE_URL}/user/unblockUser`, null, {
                     params: {
-                        unblockingUser: viewerId,
+                        unblockingUser: myUserId,
                         userToUnblock: userId,
                     },
                 });
-                Alert.alert('Unblocked', 'User has been unblocked.');
+    
+                Alert.alert('Unblocked', 'This user has been unblocked.');
                 setIsBlocked(false);
             } else {
-                await axios.post(`${BASE_URL}/user/blockUser`, null, {
-                    params: {
-                        blockingUserId: viewerId,
-                        userToBlockId: userId,
-                    },
+                await axios.post(`${BASE_URL}/user/blockUser`, {
+                    blockingUserId: myUserId,
+                    userToBlockId: userId,
+                }, {
+                    headers: { 'Content-Type': 'application/json' },
                 });
-                Alert.alert('Blocked', 'User has been blocked.');
+    
+                Alert.alert('Blocked', 'This user has been blocked.');
                 setIsBlocked(true);
-                navigation.goBack(); // optional
+                navigation.goBack();
             }
         } catch (err) {
-            console.error('Block toggle failed:', err);
-            Alert.alert('Error', 'Could not toggle block status.');
+            console.error('Error toggling block:', err);
+            Alert.alert('Error', 'Something went wrong. Please try again.');
         }
     };
+    
     
     // const fetchUserPosts = async () => {
     //     axios({
@@ -443,7 +446,7 @@ const Profile = () => {
     }, [userId])
 
     const getUserInfo = async () => {
-        setUserInfo({});
+        setUserInfo({});  
         try {
             const viewerId = await AsyncStorage.getItem('userId');
             const response = await axios.get(`${BASE_URL}/user/get`, {
@@ -452,6 +455,7 @@ const Profile = () => {
                     viewerId: viewerId,
                 },
             });
+    
             const data = response.data;
             setUserInfo(data);
             setProfileBio(data.bio || '');
@@ -462,7 +466,7 @@ const Profile = () => {
             if (data.image && data.image.trim().length > 0) {
                 setProfileImage(`data:image/jpeg;base64,${data.image}`);
             } else {
-                setProfileImage(null); // fallback
+                setProfileImage(null);
             }
     
             if (data.skills && Array.isArray(data.skills)) {
