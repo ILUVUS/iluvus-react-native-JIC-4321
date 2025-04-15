@@ -168,8 +168,12 @@ const Profile = () => {
             const myUserId = await AsyncStorage.getItem('userId');
     
             if (isBlocked) {
-                // Unblock
-                await axios.post(`${BASE_URL}/user/unblockUser`, null, {
+                if (!myUserId || !userId) {
+                    console.error('Missing user IDs. Block request not sent.', { myUserId, userId });
+                    Alert.alert('Error', 'Cannot block without valid user IDs.');
+                    return;
+                  }
+                                  await axios.post(`${BASE_URL}/user/unblockUser`, null, {
                     params: {
                         unblockingUser: myUserId,
                         userToUnblock: userId,
@@ -187,7 +191,7 @@ const Profile = () => {
                 });
                 Alert.alert('Blocked', 'This user has been blocked.');
                 setIsBlocked(true);
-                navigation.goBack(); // Optional: Exit after blocking
+                navigation.goBack(); 
             }
         } catch (err) {
             console.error('Error toggling block:', err);
