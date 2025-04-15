@@ -123,9 +123,9 @@ export default function ChatSearchScreen() {
   }
 
   const createChat = (groupName) => {
-    const participantIds = [userId, ...selectedUsers.map(u => u.id)].join(',')
-    const isGroup = selectedUsers.length > 1
-
+    const participantIds = [userId, ...selectedUsers.map(u => u.id)].join(',');
+    const isGroup = selectedUsers.length > 1;
+  
     fetch(`${BASE_URL}/chat_room/create`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -135,31 +135,38 @@ export default function ChatSearchScreen() {
         creator: userId,
       }),
     })
-    .then(res => res.json())
-    .then(async (data) => {
-      if (!data.chatId) {
-        Alert.alert("Error", "Chat couldn't be created");
-        return;
-      }
-    
-      const otherIds = selectedUsers.map(u => u.id);
-      const names = await Promise.all(otherIds.map(getUserNameById));
-    
-      navigation.navigate('ChatRoom', {
-        chat: {
-          chatId: data.chatId || data.id,
-          participants: [userId, ...otherIds],
-          participantNames: names,
-          isGroup,
-          groupName: groupName || '',
-        },
-        userId,
+      .then(res => res.json())
+      .then(async (data) => {
+        if (!data.chatId) {
+          // Check for block-related error
+          if (data.error && data.error.includes('block')) {
+            Alert.alert('Blocked', 'You or someone in the group has blocked each other. Please review participants.');
+          } else {
+            Alert.alert('Error', "Chat couldn't be created");
+          }
+          return;
+        }
+  
+        const otherIds = selectedUsers.map(u => u.id);
+        const names = await Promise.all(otherIds.map(getUserNameById));
+  
+        navigation.navigate('ChatRoom', {
+          chat: {
+            chatId: data.chatId || data.id,
+            participants: [userId, ...otherIds],
+            participantNames: names,
+            isGroup,
+            groupName: groupName || '',
+          },
+          userId,
+        });
+      })
+      .catch((error) => {
+        console.error('Error creating chat:', error);
+        Alert.alert('Error', 'Something went wrong. Please try again.');
       });
-    })
-    
-
-      .catch(console.error)
-  }
+  };
+  
 
   return (
     <View style={{ flex: 1, padding: 10 }}>
