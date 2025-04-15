@@ -78,11 +78,15 @@ const Settings = () => {
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
-    className="w-fit items-center justify-center rounded-3xl bg-orchid-900 px-5 py-4 shadow-md shadow-slate-200 mt-4"
-    onPress={() => navigation.navigate('BlockedUsersScreen', { userId })}
+    className="w-fit items-center justify-center rounded-3xl bg-red-600 px-5 py-4 shadow-md shadow-slate-200"
+    onPress={() => {
+        if (!userId) return
+        navigation.navigate('BlockedUsers', { userId })
+    }}
 >
-    <Text className="text-sm text-white font-bold">View Blocked Users</Text>
+    <Text className="text-sm text-white font-semibold">View Blocked Users</Text>
 </TouchableOpacity>
+
 
         </View>
     )
