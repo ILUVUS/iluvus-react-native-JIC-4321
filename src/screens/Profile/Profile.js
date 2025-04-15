@@ -455,7 +455,8 @@ const Profile = () => {
                     viewerId: viewerId,
                 },
             });
-    
+            console.log('[getUserInfo] viewerId:', viewerId);
+
             const data = response.data;
             setUserInfo(data);
             setProfileBio(data.bio || '');
