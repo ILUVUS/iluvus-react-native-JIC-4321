@@ -77,6 +77,13 @@ const Settings = () => {
                     <Text className="text-sm text-orchid-900">Logout</Text>
                 </TouchableOpacity>
             </View>
+            <TouchableOpacity
+    className="w-fit items-center justify-center rounded-3xl bg-orchid-900 px-5 py-4 shadow-md shadow-slate-200 mt-4"
+    onPress={() => navigation.navigate('BlockedUsersScreen', { userId })}
+>
+    <Text className="text-sm text-white font-bold">View Blocked Users</Text>
+</TouchableOpacity>
+
         </View>
     )
 }
