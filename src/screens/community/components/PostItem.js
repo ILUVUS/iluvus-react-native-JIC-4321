@@ -9,8 +9,9 @@ import {
     Image,
     Linking,
 } from 'react-native'
+
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faFlag, faStar } from '@fortawesome/free-solid-svg-icons'
+import { faFlag, faStar, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 import { faLeaf } from '@fortawesome/free-solid-svg-icons'
 import { faComment } from '@fortawesome/free-solid-svg-icons'
 import { faBullhorn } from '@fortawesome/free-solid-svg-icons'
@@ -48,8 +49,6 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
 
     const navigate = useNavigation()
 
-   
-
     useEffect(() => {
         setTaggedUsernames([])
         taggedUsers.map((userId) => {
@@ -67,7 +66,6 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
         // console.log('topic id', post.topicId)
         getPostTopicById(post.topicId)
     }, [post.topicId])
-
 
     const openSourceLink = () => {
         if (post.sourceLink && post.sourceLink.trim().length > 0) {
@@ -183,7 +181,6 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
             })
     }
 
-
     const getUserInfo = (userId) => {
         axios({
             method: 'GET',
@@ -260,10 +257,6 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
         }
     }, [post])
 
-    
-
-    
-
     useEffect(() => {
         const commentsLen = post['comments']?.length
         setCommentsNumber(commentsLen)
@@ -274,9 +267,6 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
     const [media_urls, setMediaUrls] = useState([])
 
     const openImageViewer = (medias, index) => {
-        // setMediaUrls(medias.map((url) => ({ uri: url })))
-        // setImageViewerIndex(index)
-        // setImageViewerVisible(true)
         navigate.navigate('MediaViewer', {
             medias: medias,
         })
@@ -310,13 +300,33 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
             <View className="mb-5 flex h-fit w-full flex-col items-start justify-start rounded-3xl bg-white shadow-md shadow-slate-300">
                 <View className="w-full p-5">
                     <View className="flex h-fit w-full flex-row items-start justify-between">
-                        <Text className="text-xl font-bold text-orchid-900 shadow">
-                            {post.author_id}
-                        </Text>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <Text className="text-xl font-bold text-orchid-900 shadow">
+                                {post.author_id}
+                            </Text>
+                            
+                            {post.reportedBy && post.reportedBy.length > 0 && (
+                                <TouchableOpacity
+                                    style={{ marginLeft: 8 }}
+                                    onPress={() =>
+                                        Alert.alert(
+                                            `This post has been reported. It is currently being reviewed by moderators as it could contain sensitive or triggering content. Please view with caution.`
+                                        )
+                                    }
+                                >
+                                    <FontAwesomeIcon
+                                        icon={faExclamationTriangle}
+                                        size={18}
+                                        color="orange"
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        </View>
                         <Text className="text-xs text-orchid-600">
                             {displayDatetime(post.dateTime)}
                         </Text>
                     </View>
+
                     <View className="my-2 flex h-fit w-full flex-row flex-wrap items-start justify-start">
                         <View
                             key={topic.id}
@@ -419,25 +429,24 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
 
                     {/* SHARE BUTTON HERE */}
                     <TouchableOpacity onPress={() => handleShare()}>
-    <FontAwesomeIcon
-        icon={faBullhorn}
-        color={COLORS.blue}
-        size={22}
-    />
-</TouchableOpacity>
+                        <FontAwesomeIcon
+                            icon={faBullhorn}
+                            color={COLORS.blue}
+                            size={22}
+                        />
+                    </TouchableOpacity>
 
-{post.sharedBy && post.sharedBy.length > 0 && (
-    <Text className="text-xs text-orchid-600">
-        Shared by {post.sharedBy.length} user(s)
-    </Text>
-)}
+                    {post.sharedBy && post.sharedBy.length > 0 && (
+                        <Text className="text-xs text-orchid-600">
+                            Shared by {post.sharedBy.length} user(s)
+                        </Text>
+                    )}
 
-{post.type === 'Shared' && post.author_id !== userId && (
-    <Text style={{ fontStyle: 'italic', color: 'gray' }}>
-        Shared from {post.author_id}
-    </Text>
-)}
-
+                    {post.type === 'Shared' && post.author_id !== userId && (
+                        <Text style={{ fontStyle: 'italic', color: 'gray' }}>
+                            Shared from {post.author_id}
+                        </Text>
+                    )}
 
                     {/* CHECK SOURCE BUTTON HERE */}
                     {post.sourceLink && (
