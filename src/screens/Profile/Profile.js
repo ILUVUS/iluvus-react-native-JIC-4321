@@ -298,62 +298,54 @@ const Profile = () => {
     };
     
     const handlePickImage = async () => {
-        // // Request media library permissions
-        // const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        // if (status !== 'granted') {
-        //     Alert.alert(
-        //         'Permission Required',
-        //         'We need media library permissions to let you pick an image.'
-        //     );
-        //     return;
-        // }
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permissionResult.granted) {
+          Alert.alert("Permission required", "Media library access is required to upload a profile image.");
+          return;
+        }
+      
+        const result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
+        });
+      
+        if (!result.canceled && result.assets.length > 0) {
+          const image = result.assets[0];
+          await handleUploadImage(image);
+        }
+      };
 
-        // Open media library
+    const handleUploadImage = async (image) => {
+        const formData = new FormData();
+      
+        formData.append('userId', userId);  // Replace this with actual user ID
+        formData.append('image', {
+          uri: Platform.OS === 'ios' ? image.uri.replace('file://', '') : image.uri,
+          name: 'profile.jpg',
+          type: 'image/jpeg',
+        });
+      
         try {
-            const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                base64: true,
-                aspect: [1, 1], // Square image2w
-                quality: 1,
-            })
-
-            if (!result.canceled) {
-                const base64Image = result.assets[0].base64
-                handleUploadImage(base64Image)
-            }
+          const response = await fetch(`${BASE_URL}/user/editProfileImage`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            body: formData,
+          });
+      
+          if (!response.ok) throw new Error('Upload failed');
+      
+          const imageUrl = await response.text(); 
+          setProfileImage(imageUrl); 
+          getUserInfo(userId);       
         } catch (error) {
-            console.error('Error picking an image:', error)
-            Alert.alert('Error', 'Unable to pick an image. Please try again.')
+          console.error('Image upload failed:', error);
+          Alert.alert('Upload Failed', 'Could not update profile image. Try again.');
         }
-    }
-
-    const handleUploadImage = async (base64Image) => {
-        if (!isCurrentUser) {
-            Alert.alert('Unauthorized', 'You can only edit your own profile.')
-            return
-        }
-        try {
-            const response = await axios.post(
-                `${BASE_URL}/user/editProfileImage`,
-                {
-                    userId,
-                    image: base64Image,
-                }
-            )
-            if (response.status === 200) {
-                Alert.alert('Success', 'Profile image updated successfully!')
-                setProfileImage(base64Image)
-                getUserInfo(userId)
-            }
-        } catch (error) {
-            console.error('Error uploading image:', error)
-            Alert.alert(
-                'Error',
-                'Failed to update the profile image. Please try again.'
-            )
-        }
-    }
+      };
 
     const getTopics = async (name) => {
         axios({
