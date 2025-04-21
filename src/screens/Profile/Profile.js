@@ -457,10 +457,14 @@ const Profile = () => {
             setRelationshipStatus(data.relationshipStatus || '');
     
             if (data.image && data.image.trim().length > 0) {
-                setProfileImage(`data:image/jpeg;base64,${data.image}`);
-            } else {
+                if (data.image.startsWith('http')) {
+                  setProfileImage(data.image); 
+                } else {
+                  setProfileImage(`data:image/jpeg;base64,${data.image}`); // base64 fallback
+                }
+              } else {
                 setProfileImage(null);
-            }
+              }
     
             if (data.skills && Array.isArray(data.skills)) {
                 const skillObj = {};
