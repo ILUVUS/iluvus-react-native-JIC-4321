@@ -63,10 +63,13 @@ export default function ChatRoomScreen({ route, navigation }) {
       });
   
       if (!res.ok) {
-        console.error('Failed to send message:', await res.text());
+        const errorText = await res.text();
+        if (errorText.includes("blocked")) {
+          Alert.alert("Cannot send message", "You have blocked or been blocked by this user.");
+        }
         return;
       }
-  
+      
       const newMessage = await res.json();
   
       if (newMessage && newMessage.message) {

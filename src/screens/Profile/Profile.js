@@ -48,7 +48,8 @@ const Profile = () => {
     const [selectedTopic, setSelectedTopic] = useState({})
     const [interestList, setInterestList] = useState({})
     const [jobStatus, setJobStatus] = useState('')
-   
+    const [isBlocked, setIsBlocked] = useState(false);
+
     const [jobDetails, setJobDetails] = useState('')
     const [profileBio, setProfileBio] = useState('')
     const [profileImage, setProfileImage] = useState('')
@@ -113,6 +114,11 @@ const Profile = () => {
     }, [userId])
 
     useEffect(() => {
+        checkIfBlocked();
+      }, [profileUserId]);
+      
+
+    useEffect(() => {
         const checkUser = async () => {
             const loggedInUserId = await AsyncStorage.getItem('userId');
             setIsCurrentUser(loggedInUserId === profileUserId);
@@ -142,6 +148,69 @@ const Profile = () => {
     }
     
 
+    const checkIfBlocked = async () => {
+        try {
+            const viewerId = await AsyncStorage.getItem('userId'); // current user (viewer)
+            const profileId = profileUserId; // user being viewed
+    
+            const response = await axios.get(`${BASE_URL}/user/get`, {
+                params: {
+                    userId: profileId,
+                    viewerId: viewerId,
+                },
+            });
+    
+            // if successful, not blocked
+            setIsBlocked(false);
+        } catch (err) {
+            if (err.response?.status === 403) {
+                setIsBlocked(true); // blocked
+            } else {
+                console.error('Error checking block status:', err);
+            }
+        }
+    };
+    
+    
+    const handleBlockToggle = async () => {
+        try {
+            const myUserId = await AsyncStorage.getItem('userId');
+    
+            if (!myUserId || !userId) {
+                console.error('Missing user IDs. Request not sent.', { myUserId, userId });
+                Alert.alert('Error', 'Cannot proceed without valid user IDs.');
+                return;
+            }
+    
+            if (isBlocked) {
+                await axios.post(`${BASE_URL}/user/unblockUser`, null, {
+                    params: {
+                        unblockingUser: myUserId,
+                        userToUnblock: userId,
+                    },
+                });
+    
+                Alert.alert('Unblocked', 'This user has been unblocked.');
+                setIsBlocked(false);
+            } else {
+                await axios.post(`${BASE_URL}/user/blockUser`, {
+                    blockingUserId: myUserId,
+                    userToBlockId: userId,
+                }, {
+                    headers: { 'Content-Type': 'application/json' },
+                });
+    
+                Alert.alert('Blocked', 'This user has been blocked.');
+                setIsBlocked(true);
+                navigation.goBack();
+            }
+        } catch (err) {
+            console.error('Error toggling block:', err);
+            Alert.alert('Error', 'Something went wrong. Please try again.');
+        }
+    };
+    
+    
     // const fetchUserPosts = async () => {
     //     axios({
     //         method: 'GET',
@@ -377,40 +446,47 @@ const Profile = () => {
     }, [userId])
 
     const getUserInfo = async () => {
-        setUserInfo({})
-        axios({
-            method: 'GET',
-            url: `${BASE_URL}/user/get?userId=${userId}`,
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((res) => {
-                const data = res.data
-                setUserInfo(data)
-                setProfileBio(data.bio || '')
-                setJobStatus(data.jobStatus || '')
-                setJobDetails(data.jobDetails || '')
-                setRelationshipStatus(data.relationshipStatus || '')
+        setUserInfo({});  
+        try {
+            const viewerId = await AsyncStorage.getItem('userId');
+            const response = await axios.get(`${BASE_URL}/user/get`, {
+                params: {
+                    userId: userId,
+                    viewerId: viewerId,
+                },
+            });
+            console.log('[getUserInfo] viewerId:', viewerId);
 
-                if (data.image && data.image.trim().length > 0) {
-                    setProfileImage(`data:image/jpeg;base64,${data.image}`)
-                } else {
-                    setProfileImage(null) // Fallback
-                }
-
-                if (data.skills && Array.isArray(data.skills)) {
-                    const skillObj = {}
-                    data.skills.forEach((skill, idx) => {
-                        skillObj[idx] = skill
-                    })
-                    setSelectedSkills(skillObj)
-                }
-            })
-            .catch((err) => {
-                console.log('Cannot get user info' + err)
-            })
-    }
+            const data = response.data;
+            setUserInfo(data);
+            setProfileBio(data.bio || '');
+            setJobStatus(data.jobStatus || '');
+            setJobDetails(data.jobDetails || '');
+            setRelationshipStatus(data.relationshipStatus || '');
+    
+            if (data.image && data.image.trim().length > 0) {
+                setProfileImage(`data:image/jpeg;base64,${data.image}`);
+            } else {
+                setProfileImage(null);
+            }
+    
+            if (data.skills && Array.isArray(data.skills)) {
+                const skillObj = {};
+                data.skills.forEach((skill, idx) => {
+                    skillObj[idx] = skill;
+                });
+                setSelectedSkills(skillObj);
+            }
+        } catch (err) {
+            console.error('Cannot get user info', err);
+    
+            if (err.response?.status === 403) {
+                Alert.alert('Blocked', 'You cannot view this profile.');
+                navigation.goBack(); // exit the screen
+            }
+        }
+    };
+    
 
     useEffect(() => {
         setSelectedTopic(userInfo.interest)
@@ -471,6 +547,23 @@ const Profile = () => {
         </Text>
     </TouchableOpacity>
 )}
+
+{!isCurrentUser && (
+    <TouchableOpacity
+        onPress={handleBlockToggle}
+        style={{
+            backgroundColor: isBlocked ? 'gray' : 'crimson',
+            padding: 10,
+            marginHorizontal: 10,
+            borderRadius: 10,
+        }}
+    >
+        <Text style={{ color: 'white', textAlign: 'center', fontWeight: 'bold' }}>
+            {isBlocked ? 'Unblock This User' : 'Block This User'}
+        </Text>
+    </TouchableOpacity>
+)}
+
 
 
             <KeyboardAvoidingView
