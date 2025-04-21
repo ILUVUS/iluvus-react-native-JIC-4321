@@ -78,7 +78,7 @@ const Settings = () => {
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
-    className="w-fit items-center justify-center rounded-3xl bg-red-600 px-5 py-4 shadow-md shadow-slate-200"
+    className="mt-6 w-fit items-center justify-center rounded-3xl bg-red-600 px-5 py-4 shadow-md shadow-slate-200"
     onPress={() => {
         if (!userId) return
         navigation.navigate('BlockedUsers', { userId })
