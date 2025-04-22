@@ -10,7 +10,7 @@ We're working on a social media app called ILUVUS, which focuses on celebrating 
 
 We're developing our own platform instead of using existing ones because they don't prioritize the celebration and recognition of these communities' accomplishments. Our focus is on offering a unique user experience that celebrates diversity. By doing this, we can ensure strict moderation of hateful posts and messages and promote positivity effectively.
 
-## Getting Started
+## Installation Guide: Getting Started
 
 ### Technology Stack:
 
@@ -123,6 +123,23 @@ npm start
 or scan the QR Code on the output with phone camera to run on Expo application.
 
 # Release Notes
+## Version 1.1.0
+
+### Features
+
+- Users can now block other users of their choosing
+- Users can additionally view warnings for potential sensitive or triggering content on reported posts that are still under review
+- Users can now review and report other users in their community to a community moderator for final review.
+  
+### Bug Fixes
+- The loading time for the profile picture, posts, and communities was slowing down the entire app
+- Notifications for direct messaging/chats and sharing posts had a default icon that wasn't displaying properly.
+
+### Known Issues
+
+- If the owner of a community reports a post, that post will automatically be deleted
+- Creating posts with pictures is no longer publishing correctly.
+
 ## Version 1.0.0
 
 ### Features
