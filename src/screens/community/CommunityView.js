@@ -372,6 +372,15 @@ const CommunityView = ({ nav }) => {
         })
     }
 
+    const viewReportedUsers = () => {
+        getUser().then((userId) => {
+            navigation.navigate(STRINGS.reportscreen, {
+                communityId: globalCommunityId,
+                moderatorId: userId,
+            })
+        })
+    }
+
     const editCommunity = () => {
         Alert.alert('Editing Community')
     }
@@ -582,10 +591,25 @@ const CommunityView = ({ nav }) => {
                         <View className="mb-5 flex h-fit w-full flex-col items-center justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
                             <View className="flex w-full flex-row items-center justify-between">
                                 <Text className="text-2xl font-bold text-orchid-900">
-                                    {STRINGS.review_reports}
+                                    Reported Posts
                                 </Text>
                                 <TouchableOpacity
                                     onPress={() => viewAllReports()}
+                                    className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-gold-900 px-3 py-2 "
+                                >
+                                    <Text className="text-md text-orchid-900">
+                                        View All
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <View className="mb-5 flex h-fit w-full flex-col items-center justify-start rounded-3xl bg-white p-5 shadow-md shadow-slate-300">
+                            <View className="flex w-full flex-row items-center justify-between">
+                                <Text className="text-2xl font-bold text-orchid-900">
+                                    Reported Users
+                                </Text>
+                                <TouchableOpacity
+                                    onPress={() => viewReportedUsers()}
                                     className="flex h-fit w-fit flex-row flex-wrap items-center justify-center rounded-full bg-gold-900 px-3 py-2 "
                                 >
                                     <Text className="text-md text-orchid-900">
