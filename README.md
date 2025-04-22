@@ -109,6 +109,12 @@ git clone https://github.com/ILUVUS/iluvus-react-native-JIA-3317.git
 npm install
 ```
 
+or if that does not work:
+
+```bash
+npm install --legacy-peer-deps
+```
+
 4. Build and run the application:
 
 ```bash

@@ -51,7 +51,7 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
-  <Stack.Screen name="BlockedUsers" component={BlockedUsersScreen} />
+  <Stack.Screen name="Blocked Users" component={BlockedUsersScreen} />
 
                 <Stack.Screen
                     name={STRINGS.loginscreen}
