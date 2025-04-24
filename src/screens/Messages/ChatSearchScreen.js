@@ -52,7 +52,7 @@ export default function ChatSearchScreen() {
   
       const enrichedChats = await Promise.all(
         data.map(async (chat) => {
-          const otherIds = chat.participants.filter(pid => pid !== id);
+          const otherIds = chat.participants.filter(pid => pid.toString() !== id.toString());
           const names = await Promise.all(otherIds.map(getUserNameById));
           return {
             ...chat,
