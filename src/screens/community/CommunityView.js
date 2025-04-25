@@ -133,7 +133,6 @@ const CommunityView = ({ nav }) => {
 
     useEffect(() => {
         getUserInfo(communityInfo.owner)
-
         if (communityInfo.moderators) {
             getUser().then((userId) => {
                 setIsModerator(communityInfo.moderators.includes(userId))

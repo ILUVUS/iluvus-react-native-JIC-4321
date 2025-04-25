@@ -14,6 +14,7 @@ import ChatRoomScreen from './screens/Messages/ChatRoomScreen'
 import BlockedUsersScreen from './screens/Blocked/BlockedUsersScreen'
 import CommunityView from './screens/community/CommunityView'
 import AuthScreen from './screens/login/Auth'
+import ReportedUsersScreen from './screens/Report/ReportedUsersScreen';
 import Post from './screens/community/Post'
 import Comments from './screens/community/Comments'
 import Verification from './screens/login/Verification'
