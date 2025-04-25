@@ -198,16 +198,20 @@ const Profile = () => {
                 Alert.alert('Unblocked', 'This user has been unblocked.');
                 setIsBlocked(false);
             } else {
-                await axios.post(`${BASE_URL}/user/blockUser`, {
-                    blockingUserId: myUserId,
-                    userToBlockId: userId,
-                }, {
-                    headers: { 'Content-Type': 'application/json' },
-                });
+               // For POST /user/blockUser
+await axios.post(
+    `${BASE_URL}/user/blockUser`,
+    {}, // Empty body
+    {
+      params: {
+        blockingUserId: myUserId,
+        userToBlockId: userId,
+      },
+    }
+  );
     
                 Alert.alert('Blocked', 'This user has been blocked.');
                 setIsBlocked(true);
-                navigation.goBack();
             }
         } catch (err) {
             console.error('Error toggling block:', err);
