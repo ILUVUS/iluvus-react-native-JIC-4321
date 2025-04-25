@@ -14,7 +14,7 @@ import ChatRoomScreen from './screens/Messages/ChatRoomScreen'
 import BlockedUsersScreen from './screens/Blocked/BlockedUsersScreen'
 import CommunityView from './screens/community/CommunityView'
 import AuthScreen from './screens/login/Auth'
-import ReportedUsersScreen from './screens/Report/ReportedUsersScreen';
+import ReportedUsersScreen from './screens/Moderator/ReportedUsersScreen';
 import Post from './screens/community/Post'
 import Comments from './screens/community/Comments'
 import Verification from './screens/login/Verification'
@@ -58,8 +58,11 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
-  <Stack.Screen name="BlockedUsers" component={BlockedUsersScreen} />
 
+  <Stack.Screen 
+  name="BlockedUsers"
+   component={BlockedUsersScreen}
+    />
                 <Stack.Screen
                     name={STRINGS.loginscreen}
                     component={LoginScreen}
@@ -113,7 +116,10 @@ export default function Screen() {
                     }}
                 />
 
-<Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
+<Stack.Screen
+ name="ChatRoom" 
+ component={ChatRoomScreen} 
+ />
 
                 <Stack.Screen
                     name={STRINGS.myGroup}
@@ -148,7 +154,7 @@ export default function Screen() {
   component={Profile}
   options={{
     title: 'Profile',
-    headerShown: false, // Or true, depending on your design
+    headerShown: false, 
   }}
 />
 

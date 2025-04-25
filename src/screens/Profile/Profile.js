@@ -151,7 +151,12 @@ const Profile = () => {
     const checkIfBlocked = async () => {
         try {
             const viewerId = await AsyncStorage.getItem('userId'); // current user (viewer)
-            const profileId = profileUserId; // user being viewed
+            const profileId = profileUserId;
+    
+            if (viewerId === profileId) {
+                setIsBlocked(false);
+                return;
+            }
     
             const response = await axios.get(`${BASE_URL}/user/get`, {
                 params: {
@@ -160,16 +165,16 @@ const Profile = () => {
                 },
             });
     
-            // if successful, not blocked
-            setIsBlocked(false);
+            setIsBlocked(false); // Not blocked
         } catch (err) {
             if (err.response?.status === 403) {
-                setIsBlocked(true); // blocked
+                setIsBlocked(true); // Blocked by or blocked the profile user
             } else {
                 console.error('Error checking block status:', err);
             }
         }
     };
+    
     
     
     const handleBlockToggle = async () => {

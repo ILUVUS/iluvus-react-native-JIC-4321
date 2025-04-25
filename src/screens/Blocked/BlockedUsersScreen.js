@@ -2,14 +2,18 @@ import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { BASE_URL } from '@env'
+import { useFocusEffect } from '@react-navigation/native';
 
 const BlockedUsersScreen = ({ route }) => {
     const { userId } = route.params
     const [blockedUsers, setBlockedUsers] = useState([])
 
-    useEffect(() => {
-        fetchBlockedUsers()
-    }, [userId])
+    useFocusEffect(
+        useCallback(() => {
+            fetchBlockedUsers()
+        }, [userId])
+    );
+    
 
     const fetchBlockedUsers = async () => {
         try {
