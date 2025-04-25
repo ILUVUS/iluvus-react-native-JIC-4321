@@ -310,7 +310,7 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                                     style={{ marginLeft: 8 }}
                                     onPress={() =>
                                         Alert.alert(
-                                            `This post has been reported ${post.reportedBy.length} time(s) Please view with caution.`
+                                            `This post has been reported ${post.reportedBy.length} time(s). It is currently being reviewed by moderators as it could contain sensitive or triggering content. Please view with caution.`
                                         )
                                     }
                                 >
