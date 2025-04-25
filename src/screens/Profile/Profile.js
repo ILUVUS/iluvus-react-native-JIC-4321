@@ -199,14 +199,15 @@ const Profile = () => {
                 setIsBlocked(false);
             } else {
                // For POST /user/blockUser
+// In Profile.js
 await axios.post(
     `${BASE_URL}/user/blockUser`,
-    {}, // Empty body
+    { // Send as JSON body
+      blockingUserId: myUserId,
+      userToBlockId: userId,
+    },
     {
-      params: {
-        blockingUserId: myUserId,
-        userToBlockId: userId,
-      },
+      headers: { 'Content-Type': 'application/json' },
     }
   );
     
