@@ -33,9 +33,6 @@ import {
 } from '../../../utils/Utils'
 import { useNavigation } from '@react-navigation/native'
 
-const [reportReason, setReportReason] = useState('');
-const [reportModalVisible, setReportModalVisible] = useState(false);
-
 const PostItem = ({ post, userId, displayCommunityName }) => {
     console.log('POST DEBUG:', post);
     const [isCommentVisible, setIsCommentVisible] = useState(false)
@@ -45,6 +42,9 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
     const [commentText, setCommentText] = useState('')
     const [taggedUsers, setTaggedUsers] = useState([])
 
+    const [reportReason, setReportReason] = useState('');
+    const [reportModalVisible, setReportModalVisible] = useState(false);
+    
     const [taggedUsernames, setTaggedUsernames] = useState([])
     const [topic, setTopic] = useState({})
     const [community, setCommunity] = useState({})
@@ -142,7 +142,6 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
         );
     };
     
-
     const handleReport = () => {
         setReportModalVisible(false); // close modal
     
