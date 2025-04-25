@@ -44,6 +44,12 @@ export default function Screen() {
                     }}
                 />
                 <Stack.Screen
+  name="ReportedUsersScreen"
+  component={ReportedUsersScreen}
+  options={{ title: 'Moderation Panel' }}
+/>
+
+                <Stack.Screen
                     name={STRINGS.comment}
                     component={Comments}
                     options={{

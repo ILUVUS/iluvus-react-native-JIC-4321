@@ -33,6 +33,9 @@ import {
 } from '../../../utils/Utils'
 import { useNavigation } from '@react-navigation/native'
 
+const [reportReason, setReportReason] = useState('');
+const [reportModalVisible, setReportModalVisible] = useState(false);
+
 const PostItem = ({ post, userId, displayCommunityName }) => {
     console.log('POST DEBUG:', post);
     const [isCommentVisible, setIsCommentVisible] = useState(false)
@@ -130,37 +133,36 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
             'Report Post',
             'Are you sure you want to report this post?',
             [
+                { text: 'Cancel', style: 'cancel' },
                 {
-                    text: 'Cancel',
-                    onPress: () => console.log('Cancel Pressed'),
-                    style: 'cancel',
+                    text: 'Yes',
+                    onPress: () => setReportModalVisible(true),
                 },
-                { text: 'Yes', onPress: () => handleReport() },
-            ],
-            { cancelable: false }
-        )
-    }
+            ]
+        );
+    };
+    
 
     const handleReport = () => {
-        axios({
-            method: 'POST',
-            url: `${BASE_URL}/post/report`,
-            data: {
-                postId: post.id,
-                userId: userId,
-            },
-            headers: {
-                'Content-Type': 'application/json',
-            },
+        setReportModalVisible(false); // close modal
+    
+        axios.post(`${BASE_URL}/post/report`, {
+            postId: post.id,
+            reporterId: userId,
+            reason: reportReason || 'No reason provided',
+        }, {
+            headers: { 'Content-Type': 'application/json' }
         })
-            .then((res) => {
-                Alert.alert('Post Reported')
-                // console.log(res.data)
-            })
-            .catch((err) => {
-                console.log('Cannot like the post', err)
-            })
-    }
+        .then(() => {
+            Alert.alert('Reported', 'Post and user have been reported.');
+            setReportReason('');
+        })
+        .catch((err) => {
+            console.log('Report failed', err);
+            Alert.alert('Error', 'Could not report post.');
+        });
+    };
+    
 
     const handleShare = () => {
         axios({
@@ -538,6 +540,29 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                     </View>
                 )}
             />
+
+{reportModalVisible && (
+    <View className="absolute top-0 left-0 right-0 bottom-0 z-50 items-center justify-center bg-black bg-opacity-40">
+        <View className="w-11/12 rounded-xl bg-white p-4 shadow-lg">
+            <Text className="mb-2 text-lg font-bold">Why are you reporting this post?</Text>
+            <TextInput
+                placeholder="Reason (e.g., spam, abuse)"
+                className="mb-4 rounded-lg border border-gray-300 p-2"
+                value={reportReason}
+                onChangeText={setReportReason}
+            />
+            <View className="flex-row justify-end space-x-3">
+                <TouchableOpacity onPress={() => setReportModalVisible(false)}>
+                    <Text className="text-red-500 font-semibold">Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleReport}>
+                    <Text className="text-blue-600 font-semibold">Submit</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    </View>
+)}
+
         </>
     )
 }

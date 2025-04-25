@@ -365,12 +365,14 @@ const CommunityView = ({ nav }) => {
 
     const viewAllReports = () => {
         getUser().then((userId) => {
-            navigation.navigate(STRINGS.reportscreen, {
-                communityId: globalCommunityId,
-                moderatorId: userId,
-            })
-        })
-    }
+          navigation.navigate(STRINGS.reportscreen, {
+            communityId: globalCommunityId,
+            isHost,
+            isModerator,
+          });
+        });
+      };
+      
 
     const editCommunity = () => {
         Alert.alert('Editing Community')
