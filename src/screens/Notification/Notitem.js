@@ -11,6 +11,8 @@ import {
     faStar,
     faComment,
     faCircleInfo,
+    faBullhorn, // for SHARE
+    faEnvelope,   // for NEW_DIRECT_MESSAGE
 } from '@fortawesome/free-solid-svg-icons'
 import COLORS from '../../constants/colors'
 import axios from 'axios'
@@ -21,7 +23,6 @@ const NotItemIdentify = ({ data }) => {
     let tag = faTag
     let bgColor = 'bg-orchid-100'
 
-    // Object.keys(data).map((key) => {
     switch (data.type) {
         case 'TAG':
             msg = data.message
@@ -47,10 +48,22 @@ const NotItemIdentify = ({ data }) => {
             bgColor = 'bg-blue-100'
             break
 
+        case 'NEW_DIRECT_MESSAGE':
+            msg = data.message || 'You received a new direct message.'
+            tag = faEnvelope
+            bgColor = 'bg-purple-100'
+            break
+
+        case 'SHARE':
+            msg = data.message || 'Someone shared a post with you.'
+            tag = faBullhorn
+            bgColor = 'bg-green-100'
+            break
+
         default:
             msg = data.message
             tag = faCircleInfo
-            bgColor = 'bg-gray-100'
+            bgColor = 'bg-grey-100'
             break
     }
 
