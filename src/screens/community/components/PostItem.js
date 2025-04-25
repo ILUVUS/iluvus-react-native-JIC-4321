@@ -428,25 +428,26 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                     </View>
 
                     {/* SHARE BUTTON HERE */}
-                    <TouchableOpacity onPress={() => handleShare()}>
-                        <FontAwesomeIcon
-                            icon={faBullhorn}
-                            color={COLORS.blue}
-                            size={22}
-                        />
-                    </TouchableOpacity>
 
-                    {post.sharedBy && post.sharedBy.length > 0 && (
-                        <Text className="text-xs text-orchid-600">
-                            Shared by {post.sharedBy.length} user(s)
-                        </Text>
-                    )}
+                    <View className="flex flex-row items-center justify-center space-x-2">
+    <TouchableOpacity onPress={() => handleShare()}>
+        <FontAwesomeIcon
+            icon={faBullhorn}
+            color={COLORS.blue}
+            size={22}
+        />
+    </TouchableOpacity>
+    <Text className="text-sm text-orchid-600">
+        {post.sharedBy ? post.sharedBy.length : 0}
+    </Text>
+</View>
 
-                    {post.type === 'Shared' && post.author_id !== userId && (
+
+                    {/* {post.type === 'Shared' && post.author_id !== userId && (
                         <Text style={{ fontStyle: 'italic', color: 'gray' }}>
                             Shared from {post.author_id}
                         </Text>
-                    )}
+                    )} */}
 
                     {/* CHECK SOURCE BUTTON HERE */}
                     {post.sourceLink && (
