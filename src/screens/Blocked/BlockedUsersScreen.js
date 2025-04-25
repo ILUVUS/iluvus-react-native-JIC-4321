@@ -26,6 +26,14 @@ const BlockedUsersScreen = ({ route }) => {
         }, [userId])
     )
 
+    useEffect(() => {
+        const fetchUserId = async () => {
+          const storedUserId = await AsyncStorage.getItem('userId');
+          setUserId(route.params?.userId || storedUserId);
+        };
+        fetchUserId();
+      }, []);
+      
     const fetchBlockedUsers = async () => {
         try {
             const res = await axios.get(`${BASE_URL}/user/getBlockedUsers?userId=${userId}`)

@@ -459,14 +459,21 @@ await axios.post(
         setUserInfo({});  
         try {
             const viewerId = await AsyncStorage.getItem('userId');
+            const profileId = userId || (await AsyncStorage.getItem('userId')); // Fallback
+        
+            if (!profileId || !viewerId) {
+              Alert.alert('Error', 'User ID not found.');
+              return;
+            }
+        
             const response = await axios.get(`${BASE_URL}/user/get`, {
-                params: {
-                    userId: userId,
-                    viewerId: viewerId,
-                },
+              params: {
+                userId: profileId,
+                viewerId: viewerId, 
+              },
             });
-            console.log('[getUserInfo] viewerId:', viewerId);
-
+        
+        
             const data = response.data;
             setUserInfo(data);
             setProfileBio(data.bio || '');
@@ -488,15 +495,13 @@ await axios.post(
                 setSelectedSkills(skillObj);
             }
         } catch (err) {
-            console.error('Cannot get user info', err);
-    
+            // Handle 403 error (blocked user)
             if (err.response?.status === 403) {
-                Alert.alert('Blocked', 'You cannot view this profile.');
-                navigation.goBack(); // exit the screen
+              Alert.alert('Blocked', 'You cannot view this profile.');
+              navigation.goBack();
             }
-        }
-    };
-    
+          }
+        };
 
     useEffect(() => {
         setSelectedTopic(userInfo.interest)
