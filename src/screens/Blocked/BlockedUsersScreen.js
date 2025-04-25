@@ -33,35 +33,30 @@ const BlockedUsersScreen = ({ route }) => {
         };
         fetchUserId();
       }, []);
-      
+
     const fetchBlockedUsers = async () => {
         try {
-            const res = await axios.get(`${BASE_URL}/user/getBlockedUsers?userId=${userId}`)
-            console.log("Blocked users fetched:", res.data)
-            setBlockedUsers(res.data || [])
+            console.log('[BlockedUsers] Fetching blocked users for:', userId);
+            const res = await axios.get(`${BASE_URL}/user/getBlockedUsers?userId=${userId}`);
+            console.log('[BlockedUsers] API Response:', res.data);
+            setBlockedUsers(res.data || []);
         } catch (err) {
-            console.error('Error fetching blocked users:', err)
-            setBlockedUsers([]) // fallback to empty
-        } finally {
-            setRefreshing(false)
+            console.error('[BlockedUsers] Fetch Error:', err.message, err.response?.data);
         }
-    }
+    };
 
     const handleUnblock = async (blockedUserId) => {
+        console.log('[BlockedUsers] Unblocking user:', blockedUserId);
         try {
             await axios.post(`${BASE_URL}/user/unblockUser`, null, {
-                params: {
-                    unblockingUser: userId,
-                    userToUnblock: blockedUserId,
-                },
-            })
-            Alert.alert('Unblocked', 'User has been unblocked.')
-            fetchBlockedUsers()
+                params: { unblockingUser: userId, userToUnblock: blockedUserId },
+            });
+            console.log('[BlockedUsers] Unblock Success');
+            fetchBlockedUsers(); // Force refresh
         } catch (err) {
-            console.error('Error unblocking user:', err)
-            Alert.alert('Error', 'Failed to unblock user.')
+            console.error('[BlockedUsers] Unblock Error:', err.response?.data);
         }
-    }
+    };
 
     const onRefresh = useCallback(() => {
         setRefreshing(true)

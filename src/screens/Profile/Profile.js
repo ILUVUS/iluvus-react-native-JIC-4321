@@ -180,46 +180,24 @@ const Profile = () => {
     const handleBlockToggle = async () => {
         try {
             const myUserId = await AsyncStorage.getItem('userId');
+            console.log('[Profile] Blocking - My ID:', myUserId, 'Target ID:', userId);
     
-            if (!myUserId || !userId) {
-                console.error('Missing user IDs. Request not sent.', { myUserId, userId });
-                Alert.alert('Error', 'Cannot proceed without valid user IDs.');
-                return;
-            }
+            const response = await axios.post(
+                `${BASE_URL}/user/blockUser`,
+                { blockingUserId: myUserId, userToBlockId: userId },
+                { headers: { 'Content-Type': 'application/json' } }
+            );
     
-            if (isBlocked) {
-                await axios.post(`${BASE_URL}/user/unblockUser`, null, {
-                    params: {
-                        unblockingUser: myUserId,
-                        userToUnblock: userId,
-                    },
-                });
-    
-                Alert.alert('Unblocked', 'This user has been unblocked.');
-                setIsBlocked(false);
-            } else {
-               // For POST /user/blockUser
-// In Profile.js
-await axios.post(
-    `${BASE_URL}/user/blockUser`,
-    { // Send as JSON body
-      blockingUserId: myUserId,
-      userToBlockId: userId,
-    },
-    {
-      headers: { 'Content-Type': 'application/json' },
-    }
-  );
-    
-                Alert.alert('Blocked', 'This user has been blocked.');
-                setIsBlocked(true);
-            }
+            console.log('[Profile] Block API Response:', response.data);
+            Alert.alert('Blocked', 'User blocked successfully.');
+            setIsBlocked(true);
+            
+            // Refresh blocked users list
+            navigation.navigate('BlockedUsers', { userId: myUserId }); 
         } catch (err) {
-            console.error('Error toggling block:', err);
-            Alert.alert('Error', 'Something went wrong. Please try again.');
+            console.error('[Profile] Block Error:', err.response?.data);
         }
     };
-    
     
     // const fetchUserPosts = async () => {
     //     axios({
