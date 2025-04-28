@@ -20,6 +20,7 @@ import Verification from './screens/login/Verification'
 import Settings from './screens/Settings/Settings'
 import Notification from './screens/Notification/Notification'
 import ReportView from './screens/Report/ReportView'
+import ReportUsersView from './screens/Report/ReportUsersView'
 import MyGroup from './screens/community/MyGroup'
 import MyCreatedGroup from './screens/community/MyCreatedGroup'
 import MediaViewer from './screens/community/components/MediaViewer'
@@ -172,6 +173,16 @@ export default function Screen() {
                         headerShown: true,
                     }}
                 />
+
+                <Stack.Screen
+                    name={'Report Users'}
+                    component={ReportUsersView}
+                    options={{
+                        title: 'Report Users',
+                        headerShown: true,
+                    }}
+                />
+
                 <Stack.Screen
                     name={STRINGS.MyCreatedGroup}
                     component={MyCreatedGroup}

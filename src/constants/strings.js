@@ -155,6 +155,7 @@ export default {
 
     // report
     reportscreen: 'Report',
+    report_users_screen: 'Report Users',
     review_reports: 'Review Reports',
 
     keep_post_title: 'Keep Post',

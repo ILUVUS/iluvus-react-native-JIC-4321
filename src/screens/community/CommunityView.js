@@ -374,7 +374,7 @@ const CommunityView = ({ nav }) => {
 
     const viewReportedUsers = () => {
         getUser().then((userId) => {
-            navigation.navigate(STRINGS.reportscreen, {
+            navigation.navigate('Report Users', {
                 communityId: globalCommunityId,
                 moderatorId: userId,
             })

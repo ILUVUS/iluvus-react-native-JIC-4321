@@ -301,9 +301,18 @@ const PostItem = ({ post, userId, displayCommunityName }) => {
                 <View className="w-full p-5">
                     <View className="flex h-fit w-full flex-row items-start justify-between">
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
                             <Text className="text-xl font-bold text-orchid-900 shadow">
-                                {post.author_id}
+                                {post.author_id + "\t"}
                             </Text>
+
+                            <TouchableOpacity
+                                onPress={() => Alert.alert('User has been reported!')}
+                            >
+                                <Text className="text-xl font-bold text-orchid-900 shadow">
+                                       🚩
+                                </Text>
+                            </TouchableOpacity>
                             
                             {post.reportedBy && post.reportedBy.length > 0 && (
                                 <TouchableOpacity
